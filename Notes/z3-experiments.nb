@@ -1,0 +1,3094 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 13.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[    147437,       3086]
+NotebookOptionsPosition[    135075,       2893]
+NotebookOutlinePosition[    135913,       2918]
+CellTagsIndexPosition[    135870,       2915]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData["Quit"], "Input",
+ CellChangeTimes->{{3.885499847776585*^9, 3.88549984840849*^9}},
+ CellLabel->"In[5]:=",ExpressionUUID->"6efa40d2-ef9a-45a0-9b3f-ba5476097842"],
+
+Cell[CellGroupData[{
+
+Cell["Init", "Section",
+ CellChangeTimes->{{3.885486649548361*^9, 
+  3.885486649948159*^9}},ExpressionUUID->"802255ed-e927-4cfd-a9e6-\
+080caa6a83a7"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+  "PacletDirectoryLoad", "[", "\"\<~/git/ForeignFunctionInterface\>\"", "]"}],
+   ";"}]], "Input",
+ CellChangeTimes->{{3.8722657359036007`*^9, 3.872265749775318*^9}, {
+   3.8853980583899918`*^9, 3.8853980705025873`*^9}, 3.885486639134413*^9, 
+   3.885499871620277*^9},
+ CellLabel->"In[1]:=",ExpressionUUID->"894f7af0-9712-48c3-bd96-46865a8ae166"],
+
+Cell[BoxData[
+ RowBox[{"Needs", "[", "\"\<ChristopherWolfram`ForeignFunctionInterface`\>\"",
+   "]"}]], "Input",
+ CellChangeTimes->{{3.875231050673148*^9, 3.875231056107067*^9}, {
+  3.879044690576518*^9, 3.879044692718449*^9}},
+ CellLabel->"In[2]:=",ExpressionUUID->"55384678-3c68-4d3e-9556-72943012d291"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"$LibZ3", "=", 
+   RowBox[{"Switch", "[", 
+    RowBox[{
+    "$SystemID", ",", "\[IndentingNewLine]", "\"\<Linux-x86-64\>\"", ",", 
+     "\"\</home/linuxbrew/.linuxbrew/Cellar/z3/4.12.1/lib/libz3.so.4.12.1.0\>\
+\"", ",", "\[IndentingNewLine]", "\"\<MacOSX-x86-64\>\"", ",", 
+     "\"\</usr/local/Cellar/z3/4.12.1/lib/libz3.4.12.1.0.dylib\>\""}], 
+    "\[IndentingNewLine]", "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.885486655317377*^9, 3.8854866758213053`*^9}, {
+  3.885502661048849*^9, 3.885502699565289*^9}},
+ CellLabel->"In[3]:=",ExpressionUUID->"5645a96a-c4c8-4c59-a5ae-80d20e0d5b1f"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Scratch space", "Section",
+ CellChangeTimes->{{3.88548665145229*^9, 
+  3.885486653084256*^9}},ExpressionUUID->"3d29069a-0985-4916-9bcc-\
+aa3350d26720"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"makeConfigC", "=", 
+   RowBox[{"ForeignFunctionLoad", "[", 
+    RowBox[{"$LibZ3", ",", "\[IndentingNewLine]", "\"\<Z3_mk_config\>\"", ",", 
+     RowBox[{
+      RowBox[{"{", "}"}], "->", "\"\<OpaqueRawPointer\>\""}]}], "]"}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.885486990600999*^9, 3.885486995096592*^9}, 
+   3.8854872326174994`*^9},
+ CellLabel->"In[4]:=",ExpressionUUID->"69a1ebe6-3af9-420e-ae71-86b0c1f5960b"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"deleteConfigC", "=", 
+   RowBox[{"ForeignFunctionLoad", "[", 
+    RowBox[{
+    "$LibZ3", ",", "\[IndentingNewLine]", "\"\<Z3_del_config\>\"", ",", 
+     RowBox[{
+      RowBox[{"{", "\"\<OpaqueRawPointer\>\"", "}"}], "->", 
+      "\"\<Void\>\""}]}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.885487032258277*^9, 3.885487050618655*^9}, 
+   3.885487231753813*^9},
+ CellLabel->"In[5]:=",ExpressionUUID->"dee8bdeb-eac2-4222-b41c-0772c202b1a7"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"config", "=", 
+  RowBox[{"CreateManagedObject", "[", 
+   RowBox[{
+    RowBox[{"makeConfigC", "[", "]"}], ",", "deleteConfigC"}], 
+   "]"}]}]], "Input",
+ CellChangeTimes->{{3.885487000425709*^9, 3.885487003601028*^9}, {
+  3.8854870524993267`*^9, 3.885487057723805*^9}, {3.88548726621986*^9, 
+  3.885487266626333*^9}},
+ CellLabel->"In[6]:=",ExpressionUUID->"d38b0a34-ec26-44eb-911b-1a8afe86d51b"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   TagBox["ManagedObject",
+    "SummaryHead"], "[", 
+   DynamicModuleBox[{Typeset`open$$ = False, Typeset`embedState$$ = "Ready"}, 
+    
+    TemplateBox[{
+      PaneSelectorBox[{False -> GridBox[{{
+            PaneBox[
+             ButtonBox[
+              DynamicBox[
+               FEPrivate`FrontEndResource["FEBitmaps", "SummaryBoxOpener"]], 
+              ButtonFunction :> (Typeset`open$$ = True), Appearance -> None, 
+              BaseStyle -> {}, Evaluator -> Automatic, Method -> 
+              "Preemptive"], Alignment -> {Center, Center}, ImageSize -> 
+             Dynamic[{
+               Automatic, 
+                3.5 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                 Magnification])}]], 
+            GridBox[{{
+               TagBox["\"value: \"", "SummaryItem"], 
+               TagBox[
+                InterpretationBox[
+                 RowBox[{
+                   TagBox["OpaqueRawPointer", "SummaryHead"], "[", 
+                   
+                   DynamicModuleBox[{
+                    Typeset`open$$ = False, Typeset`embedState$$ = "Ready"}, 
+                    TemplateBox[{
+                    PaneSelectorBox[{False -> GridBox[{{
+                    GridBox[{{
+                    TagBox["\"address: \"", "SummaryItem"]}, {
+                    TagBox[
+                    TagBox[
+                    InterpretationBox[
+                    StyleBox[
+                    SubscriptBox["\"60000016d6c0\"", "\"16\""], 
+                    ShowStringCharacters -> False], 105553117763264, Editable -> 
+                    False], BaseForm[#, 16]& ], "SummaryItem"]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, 
+                    AutoDelete -> False, 
+                    GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    GridBoxSpacings -> {
+                    "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+                    BaseStyle -> {
+                    ShowStringCharacters -> False, NumberMarks -> False, 
+                    PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Top}}}, AutoDelete -> 
+                    False, GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    BaselinePosition -> {1, 1}], True -> GridBox[{{
+                    GridBox[{{
+                    TagBox["\"address: \"", "SummaryItem"]}, {
+                    TagBox[
+                    TagBox[
+                    InterpretationBox[
+                    StyleBox[
+                    SubscriptBox["\"60000016d6c0\"", "\"16\""], 
+                    ShowStringCharacters -> False], 105553117763264, Editable -> 
+                    False], BaseForm[#, 16]& ], "SummaryItem"]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, 
+                    AutoDelete -> False, 
+                    GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    GridBoxSpacings -> {
+                    "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+                    BaseStyle -> {
+                    ShowStringCharacters -> False, NumberMarks -> False, 
+                    PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Top}}}, AutoDelete -> 
+                    False, GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    BaselinePosition -> {1, 1}]}, 
+                    Dynamic[Typeset`open$$], ImageSize -> Automatic]}, 
+                    "SummaryPanel"], DynamicModuleValues :> {}], "]"}], 
+                 ChristopherWolfram`ForeignFunctionInterface`OpaqueRawPointer[
+                 105553117763264], Selectable -> False, Editable -> False, 
+                 SelectWithContents -> True], "SummaryItem"]}, {
+               TagBox["\"freeing function: \"", "SummaryItem"], 
+               TagBox[
+                InterpretationBox[
+                 RowBox[{
+                   TagBox["ForeignFunction", "SummaryHead"], "[", 
+                   
+                   DynamicModuleBox[{
+                    Typeset`open$$ = False, Typeset`embedState$$ = "Ready"}, 
+                    TemplateBox[{
+                    PaneSelectorBox[{False -> GridBox[{{
+                    PaneBox[
+                    ButtonBox[
+                    DynamicBox[
+                    FEPrivate`FrontEndResource[
+                    "FEBitmaps", "SummaryBoxOpener"]], 
+                    ButtonFunction :> (Typeset`open$$ = True), Appearance -> 
+                    None, BaseStyle -> {}, Evaluator -> Automatic, Method -> 
+                    "Preemptive"], Alignment -> {Center, Center}, ImageSize -> 
+                    Dynamic[{Automatic, 
+                    3.5 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
+                    GridBox[{{
+                    TagBox["\"name: \"", "SummaryItem"], 
+                    TagBox["\"Z3_del_config\"", "SummaryItem"]}, {
+                    TagBox["\"type: \"", "SummaryItem"], 
+                    TagBox[
+                    RowBox[{
+                    RowBox[{"{", "\"OpaqueRawPointer\"", "}"}], "\[Rule]", 
+                    "\"Void\""}], "SummaryItem"]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, 
+                    AutoDelete -> False, 
+                    GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    GridBoxSpacings -> {
+                    "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+                    BaseStyle -> {
+                    ShowStringCharacters -> False, NumberMarks -> False, 
+                    PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Top}}}, AutoDelete -> 
+                    False, GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    BaselinePosition -> {1, 1}], True -> GridBox[{{
+                    PaneBox[
+                    ButtonBox[
+                    DynamicBox[
+                    FEPrivate`FrontEndResource[
+                    "FEBitmaps", "SummaryBoxCloser"]], 
+                    ButtonFunction :> (Typeset`open$$ = False), Appearance -> 
+                    None, BaseStyle -> {}, Evaluator -> Automatic, Method -> 
+                    "Preemptive"], Alignment -> {Center, Center}, ImageSize -> 
+                    Dynamic[{Automatic, 
+                    3.5 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
+                    GridBox[{{
+                    TagBox["\"name: \"", "SummaryItem"], 
+                    TagBox["\"Z3_del_config\"", "SummaryItem"]}, {
+                    TagBox["\"type: \"", "SummaryItem"], 
+                    TagBox[
+                    RowBox[{
+                    RowBox[{"{", "\"OpaqueRawPointer\"", "}"}], "\[Rule]", 
+                    "\"Void\""}], "SummaryItem"]}, {
+                    TagBox["\"library: \"", "SummaryItem"], 
+                    TagBox[
+                    "\"/usr/local/Cellar/z3/4.12.1/lib/libz3.4.12.1.0.dylib\"\
+", "SummaryItem"]}}, GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, 
+                    AutoDelete -> False, 
+                    GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    GridBoxSpacings -> {
+                    "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+                    BaseStyle -> {
+                    ShowStringCharacters -> False, NumberMarks -> False, 
+                    PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Top}}}, AutoDelete -> 
+                    False, GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    BaselinePosition -> {1, 1}]}, 
+                    Dynamic[Typeset`open$$], ImageSize -> Automatic]}, 
+                    "SummaryPanel"], DynamicModuleValues :> {}], "]"}], 
+                 ChristopherWolfram`ForeignFunctionInterface`ForeignFunction[
+                  DataStructure["RawForeignFunction", $Failed]], Selectable -> 
+                 False, Editable -> False, SelectWithContents -> True], 
+                "SummaryItem"]}}, 
+             GridBoxAlignment -> {
+              "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+             False, GridBoxItemSize -> {
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+             GridBoxSpacings -> {"Columns" -> {{2}}, "Rows" -> {{Automatic}}},
+              BaseStyle -> {
+              ShowStringCharacters -> False, NumberMarks -> False, 
+               PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+          GridBoxAlignment -> {"Columns" -> {{Left}}, "Rows" -> {{Top}}}, 
+          AutoDelete -> False, 
+          GridBoxItemSize -> {
+           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+          BaselinePosition -> {1, 1}], True -> GridBox[{{
+            PaneBox[
+             ButtonBox[
+              DynamicBox[
+               FEPrivate`FrontEndResource["FEBitmaps", "SummaryBoxCloser"]], 
+              ButtonFunction :> (Typeset`open$$ = False), Appearance -> None, 
+              BaseStyle -> {}, Evaluator -> Automatic, Method -> 
+              "Preemptive"], Alignment -> {Center, Center}, ImageSize -> 
+             Dynamic[{
+               Automatic, 
+                3.5 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                 Magnification])}]], 
+            GridBox[{{
+               TagBox["\"value: \"", "SummaryItem"], 
+               TagBox[
+                InterpretationBox[
+                 RowBox[{
+                   TagBox["OpaqueRawPointer", "SummaryHead"], "[", 
+                   
+                   DynamicModuleBox[{
+                    Typeset`open$$ = False, Typeset`embedState$$ = "Ready"}, 
+                    TemplateBox[{
+                    PaneSelectorBox[{False -> GridBox[{{
+                    GridBox[{{
+                    TagBox["\"address: \"", "SummaryItem"]}, {
+                    TagBox[
+                    TagBox[
+                    InterpretationBox[
+                    StyleBox[
+                    SubscriptBox["\"60000016d6c0\"", "\"16\""], 
+                    ShowStringCharacters -> False], 105553117763264, Editable -> 
+                    False], BaseForm[#, 16]& ], "SummaryItem"]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, 
+                    AutoDelete -> False, 
+                    GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    GridBoxSpacings -> {
+                    "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+                    BaseStyle -> {
+                    ShowStringCharacters -> False, NumberMarks -> False, 
+                    PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Top}}}, AutoDelete -> 
+                    False, GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    BaselinePosition -> {1, 1}], True -> GridBox[{{
+                    GridBox[{{
+                    TagBox["\"address: \"", "SummaryItem"]}, {
+                    TagBox[
+                    TagBox[
+                    InterpretationBox[
+                    StyleBox[
+                    SubscriptBox["\"60000016d6c0\"", "\"16\""], 
+                    ShowStringCharacters -> False], 105553117763264, Editable -> 
+                    False], BaseForm[#, 16]& ], "SummaryItem"]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, 
+                    AutoDelete -> False, 
+                    GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    GridBoxSpacings -> {
+                    "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+                    BaseStyle -> {
+                    ShowStringCharacters -> False, NumberMarks -> False, 
+                    PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Top}}}, AutoDelete -> 
+                    False, GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    BaselinePosition -> {1, 1}]}, 
+                    Dynamic[Typeset`open$$], ImageSize -> Automatic]}, 
+                    "SummaryPanel"], DynamicModuleValues :> {}], "]"}], 
+                 ChristopherWolfram`ForeignFunctionInterface`OpaqueRawPointer[
+                 105553117763264], Selectable -> False, Editable -> False, 
+                 SelectWithContents -> True], "SummaryItem"]}, {
+               TagBox["\"freeing function: \"", "SummaryItem"], 
+               TagBox[
+                InterpretationBox[
+                 RowBox[{
+                   TagBox["ForeignFunction", "SummaryHead"], "[", 
+                   
+                   DynamicModuleBox[{
+                    Typeset`open$$ = False, Typeset`embedState$$ = "Ready"}, 
+                    TemplateBox[{
+                    PaneSelectorBox[{False -> GridBox[{{
+                    PaneBox[
+                    ButtonBox[
+                    DynamicBox[
+                    FEPrivate`FrontEndResource[
+                    "FEBitmaps", "SummaryBoxOpener"]], 
+                    ButtonFunction :> (Typeset`open$$ = True), Appearance -> 
+                    None, BaseStyle -> {}, Evaluator -> Automatic, Method -> 
+                    "Preemptive"], Alignment -> {Center, Center}, ImageSize -> 
+                    Dynamic[{Automatic, 
+                    3.5 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
+                    GridBox[{{
+                    TagBox["\"name: \"", "SummaryItem"], 
+                    TagBox["\"Z3_del_config\"", "SummaryItem"]}, {
+                    TagBox["\"type: \"", "SummaryItem"], 
+                    TagBox[
+                    RowBox[{
+                    RowBox[{"{", "\"OpaqueRawPointer\"", "}"}], "\[Rule]", 
+                    "\"Void\""}], "SummaryItem"]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, 
+                    AutoDelete -> False, 
+                    GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    GridBoxSpacings -> {
+                    "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+                    BaseStyle -> {
+                    ShowStringCharacters -> False, NumberMarks -> False, 
+                    PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Top}}}, AutoDelete -> 
+                    False, GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    BaselinePosition -> {1, 1}], True -> GridBox[{{
+                    PaneBox[
+                    ButtonBox[
+                    DynamicBox[
+                    FEPrivate`FrontEndResource[
+                    "FEBitmaps", "SummaryBoxCloser"]], 
+                    ButtonFunction :> (Typeset`open$$ = False), Appearance -> 
+                    None, BaseStyle -> {}, Evaluator -> Automatic, Method -> 
+                    "Preemptive"], Alignment -> {Center, Center}, ImageSize -> 
+                    Dynamic[{Automatic, 
+                    3.5 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
+                    GridBox[{{
+                    TagBox["\"name: \"", "SummaryItem"], 
+                    TagBox["\"Z3_del_config\"", "SummaryItem"]}, {
+                    TagBox["\"type: \"", "SummaryItem"], 
+                    TagBox[
+                    RowBox[{
+                    RowBox[{"{", "\"OpaqueRawPointer\"", "}"}], "\[Rule]", 
+                    "\"Void\""}], "SummaryItem"]}, {
+                    TagBox["\"library: \"", "SummaryItem"], 
+                    TagBox[
+                    "\"/usr/local/Cellar/z3/4.12.1/lib/libz3.4.12.1.0.dylib\"\
+", "SummaryItem"]}}, GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, 
+                    AutoDelete -> False, 
+                    GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    GridBoxSpacings -> {
+                    "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+                    BaseStyle -> {
+                    ShowStringCharacters -> False, NumberMarks -> False, 
+                    PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Top}}}, AutoDelete -> 
+                    False, GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    BaselinePosition -> {1, 1}]}, 
+                    Dynamic[Typeset`open$$], ImageSize -> Automatic]}, 
+                    "SummaryPanel"], DynamicModuleValues :> {}], "]"}], 
+                 ChristopherWolfram`ForeignFunctionInterface`ForeignFunction[
+                  DataStructure["RawForeignFunction", $Failed]], Selectable -> 
+                 False, Editable -> False, SelectWithContents -> True], 
+                "SummaryItem"]}, {
+               TagBox["\"payload: \"", "SummaryItem"], 
+               TagBox[
+                InterpretationBox[
+                 RowBox[{
+                   TagBox["OpaqueRawPointer", "SummaryHead"], "[", 
+                   
+                   DynamicModuleBox[{
+                    Typeset`open$$ = False, Typeset`embedState$$ = "Ready"}, 
+                    TemplateBox[{
+                    PaneSelectorBox[{False -> GridBox[{{
+                    GridBox[{{
+                    TagBox["\"address: \"", "SummaryItem"]}, {
+                    TagBox[
+                    TagBox[
+                    InterpretationBox[
+                    StyleBox[
+                    SubscriptBox["\"60000016d6c0\"", "\"16\""], 
+                    ShowStringCharacters -> False], 105553117763264, Editable -> 
+                    False], BaseForm[#, 16]& ], "SummaryItem"]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, 
+                    AutoDelete -> False, 
+                    GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    GridBoxSpacings -> {
+                    "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+                    BaseStyle -> {
+                    ShowStringCharacters -> False, NumberMarks -> False, 
+                    PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Top}}}, AutoDelete -> 
+                    False, GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    BaselinePosition -> {1, 1}], True -> GridBox[{{
+                    GridBox[{{
+                    TagBox["\"address: \"", "SummaryItem"]}, {
+                    TagBox[
+                    TagBox[
+                    InterpretationBox[
+                    StyleBox[
+                    SubscriptBox["\"60000016d6c0\"", "\"16\""], 
+                    ShowStringCharacters -> False], 105553117763264, Editable -> 
+                    False], BaseForm[#, 16]& ], "SummaryItem"]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, 
+                    AutoDelete -> False, 
+                    GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    GridBoxSpacings -> {
+                    "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+                    BaseStyle -> {
+                    ShowStringCharacters -> False, NumberMarks -> False, 
+                    PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Top}}}, AutoDelete -> 
+                    False, GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    BaselinePosition -> {1, 1}]}, 
+                    Dynamic[Typeset`open$$], ImageSize -> Automatic]}, 
+                    "SummaryPanel"], DynamicModuleValues :> {}], "]"}], 
+                 ChristopherWolfram`ForeignFunctionInterface`OpaqueRawPointer[
+                 105553117763264], Selectable -> False, Editable -> False, 
+                 SelectWithContents -> True], "SummaryItem"]}}, 
+             GridBoxAlignment -> {
+              "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+             False, GridBoxItemSize -> {
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+             GridBoxSpacings -> {"Columns" -> {{2}}, "Rows" -> {{Automatic}}},
+              BaseStyle -> {
+              ShowStringCharacters -> False, NumberMarks -> False, 
+               PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+          GridBoxAlignment -> {"Columns" -> {{Left}}, "Rows" -> {{Top}}}, 
+          AutoDelete -> False, 
+          GridBoxItemSize -> {
+           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+          BaselinePosition -> {1, 1}]}, 
+       Dynamic[Typeset`open$$], ImageSize -> Automatic]},
+     "SummaryPanel"],
+    DynamicModuleValues:>{}], "]"}],
+  ChristopherWolfram`ForeignFunctionInterface`ManagedObject[
+  "ManagedObject", $Failed],
+  Editable->False,
+  SelectWithContents->True,
+  Selectable->False]], "Output",
+ CellChangeTimes->{{3.88548700388524*^9, 3.885487007246476*^9}, 
+   3.885487058025116*^9, 3.885487266949943*^9, 3.885502786220245*^9, 
+   3.885506229418297*^9, 3.885562421332644*^9},
+ CellLabel->"Out[6]=",ExpressionUUID->"6c3f0d52-ee96-4459-b3eb-e1364bd1edba"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"makeContextC", "=", 
+   RowBox[{"ForeignFunctionLoad", "[", 
+    RowBox[{
+    "$LibZ3", ",", "\[IndentingNewLine]", "\"\<Z3_mk_context\>\"", ",", 
+     RowBox[{
+      RowBox[{"{", "\"\<OpaqueRawPointer\>\"", "}"}], "->", 
+      "\"\<OpaqueRawPointer\>\""}]}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.885486805699375*^9, 3.8854868242104692`*^9}, {
+  3.885486860204764*^9, 3.885486861219779*^9}, {3.88548719856079*^9, 
+  3.88548722771393*^9}},
+ CellLabel->"In[7]:=",ExpressionUUID->"88e7f79d-83e9-4db6-a32f-84d828dfc2e9"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"deleteContextC", "=", 
+   RowBox[{"ForeignFunctionLoad", "[", 
+    RowBox[{
+    "$LibZ3", ",", "\[IndentingNewLine]", "\"\<Z3_del_context\>\"", ",", 
+     RowBox[{
+      RowBox[{"{", "\"\<OpaqueRawPointer\>\"", "}"}], "->", 
+      "\"\<Void\>\""}]}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.885487211864501*^9, 3.8854872293935213`*^9}},
+ CellLabel->"In[8]:=",ExpressionUUID->"04953843-03b7-4f4d-bb19-c0b55d8f4fa2"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"context", "=", 
+  RowBox[{"CreateManagedObject", "[", 
+   RowBox[{
+    RowBox[{"makeContextC", "[", "config", "]"}], ",", "deleteContextC"}], 
+   "]"}]}]], "Input",
+ CellChangeTimes->{{3.88548687865387*^9, 3.885486879708192*^9}, {
+  3.8854872399538527`*^9, 3.8854872692035103`*^9}},
+ CellLabel->"In[9]:=",ExpressionUUID->"ef447ead-fe49-4de2-a1cd-ac3c535fd4a9"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   TagBox["ManagedObject",
+    "SummaryHead"], "[", 
+   DynamicModuleBox[{Typeset`open$$ = False, Typeset`embedState$$ = "Ready"}, 
+    
+    TemplateBox[{
+      PaneSelectorBox[{False -> GridBox[{{
+            PaneBox[
+             ButtonBox[
+              DynamicBox[
+               FEPrivate`FrontEndResource["FEBitmaps", "SummaryBoxOpener"]], 
+              ButtonFunction :> (Typeset`open$$ = True), Appearance -> None, 
+              BaseStyle -> {}, Evaluator -> Automatic, Method -> 
+              "Preemptive"], Alignment -> {Center, Center}, ImageSize -> 
+             Dynamic[{
+               Automatic, 
+                3.5 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                 Magnification])}]], 
+            GridBox[{{
+               TagBox["\"value: \"", "SummaryItem"], 
+               TagBox[
+                InterpretationBox[
+                 RowBox[{
+                   TagBox["OpaqueRawPointer", "SummaryHead"], "[", 
+                   
+                   DynamicModuleBox[{
+                    Typeset`open$$ = False, Typeset`embedState$$ = "Ready"}, 
+                    TemplateBox[{
+                    PaneSelectorBox[{False -> GridBox[{{
+                    GridBox[{{
+                    TagBox["\"address: \"", "SummaryItem"]}, {
+                    TagBox[
+                    TagBox[
+                    InterpretationBox[
+                    StyleBox[
+                    SubscriptBox["\"7fa85883a600\"", "\"16\""], 
+                    ShowStringCharacters -> False], 140361016256000, Editable -> 
+                    False], BaseForm[#, 16]& ], "SummaryItem"]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, 
+                    AutoDelete -> False, 
+                    GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    GridBoxSpacings -> {
+                    "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+                    BaseStyle -> {
+                    ShowStringCharacters -> False, NumberMarks -> False, 
+                    PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Top}}}, AutoDelete -> 
+                    False, GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    BaselinePosition -> {1, 1}], True -> GridBox[{{
+                    GridBox[{{
+                    TagBox["\"address: \"", "SummaryItem"]}, {
+                    TagBox[
+                    TagBox[
+                    InterpretationBox[
+                    StyleBox[
+                    SubscriptBox["\"7fa85883a600\"", "\"16\""], 
+                    ShowStringCharacters -> False], 140361016256000, Editable -> 
+                    False], BaseForm[#, 16]& ], "SummaryItem"]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, 
+                    AutoDelete -> False, 
+                    GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    GridBoxSpacings -> {
+                    "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+                    BaseStyle -> {
+                    ShowStringCharacters -> False, NumberMarks -> False, 
+                    PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Top}}}, AutoDelete -> 
+                    False, GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    BaselinePosition -> {1, 1}]}, 
+                    Dynamic[Typeset`open$$], ImageSize -> Automatic]}, 
+                    "SummaryPanel"], DynamicModuleValues :> {}], "]"}], 
+                 ChristopherWolfram`ForeignFunctionInterface`OpaqueRawPointer[
+                 140361016256000], Selectable -> False, Editable -> False, 
+                 SelectWithContents -> True], "SummaryItem"]}, {
+               TagBox["\"freeing function: \"", "SummaryItem"], 
+               TagBox[
+                InterpretationBox[
+                 RowBox[{
+                   TagBox["ForeignFunction", "SummaryHead"], "[", 
+                   
+                   DynamicModuleBox[{
+                    Typeset`open$$ = False, Typeset`embedState$$ = "Ready"}, 
+                    TemplateBox[{
+                    PaneSelectorBox[{False -> GridBox[{{
+                    PaneBox[
+                    ButtonBox[
+                    DynamicBox[
+                    FEPrivate`FrontEndResource[
+                    "FEBitmaps", "SummaryBoxOpener"]], 
+                    ButtonFunction :> (Typeset`open$$ = True), Appearance -> 
+                    None, BaseStyle -> {}, Evaluator -> Automatic, Method -> 
+                    "Preemptive"], Alignment -> {Center, Center}, ImageSize -> 
+                    Dynamic[{Automatic, 
+                    3.5 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
+                    GridBox[{{
+                    TagBox["\"name: \"", "SummaryItem"], 
+                    TagBox["\"Z3_del_context\"", "SummaryItem"]}, {
+                    TagBox["\"type: \"", "SummaryItem"], 
+                    TagBox[
+                    RowBox[{
+                    RowBox[{"{", "\"OpaqueRawPointer\"", "}"}], "\[Rule]", 
+                    "\"Void\""}], "SummaryItem"]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, 
+                    AutoDelete -> False, 
+                    GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    GridBoxSpacings -> {
+                    "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+                    BaseStyle -> {
+                    ShowStringCharacters -> False, NumberMarks -> False, 
+                    PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Top}}}, AutoDelete -> 
+                    False, GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    BaselinePosition -> {1, 1}], True -> GridBox[{{
+                    PaneBox[
+                    ButtonBox[
+                    DynamicBox[
+                    FEPrivate`FrontEndResource[
+                    "FEBitmaps", "SummaryBoxCloser"]], 
+                    ButtonFunction :> (Typeset`open$$ = False), Appearance -> 
+                    None, BaseStyle -> {}, Evaluator -> Automatic, Method -> 
+                    "Preemptive"], Alignment -> {Center, Center}, ImageSize -> 
+                    Dynamic[{Automatic, 
+                    3.5 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
+                    GridBox[{{
+                    TagBox["\"name: \"", "SummaryItem"], 
+                    TagBox["\"Z3_del_context\"", "SummaryItem"]}, {
+                    TagBox["\"type: \"", "SummaryItem"], 
+                    TagBox[
+                    RowBox[{
+                    RowBox[{"{", "\"OpaqueRawPointer\"", "}"}], "\[Rule]", 
+                    "\"Void\""}], "SummaryItem"]}, {
+                    TagBox["\"library: \"", "SummaryItem"], 
+                    TagBox[
+                    "\"/usr/local/Cellar/z3/4.12.1/lib/libz3.4.12.1.0.dylib\"\
+", "SummaryItem"]}}, GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, 
+                    AutoDelete -> False, 
+                    GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    GridBoxSpacings -> {
+                    "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+                    BaseStyle -> {
+                    ShowStringCharacters -> False, NumberMarks -> False, 
+                    PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Top}}}, AutoDelete -> 
+                    False, GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    BaselinePosition -> {1, 1}]}, 
+                    Dynamic[Typeset`open$$], ImageSize -> Automatic]}, 
+                    "SummaryPanel"], DynamicModuleValues :> {}], "]"}], 
+                 ChristopherWolfram`ForeignFunctionInterface`ForeignFunction[
+                  DataStructure["RawForeignFunction", $Failed]], Selectable -> 
+                 False, Editable -> False, SelectWithContents -> True], 
+                "SummaryItem"]}}, 
+             GridBoxAlignment -> {
+              "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+             False, GridBoxItemSize -> {
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+             GridBoxSpacings -> {"Columns" -> {{2}}, "Rows" -> {{Automatic}}},
+              BaseStyle -> {
+              ShowStringCharacters -> False, NumberMarks -> False, 
+               PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+          GridBoxAlignment -> {"Columns" -> {{Left}}, "Rows" -> {{Top}}}, 
+          AutoDelete -> False, 
+          GridBoxItemSize -> {
+           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+          BaselinePosition -> {1, 1}], True -> GridBox[{{
+            PaneBox[
+             ButtonBox[
+              DynamicBox[
+               FEPrivate`FrontEndResource["FEBitmaps", "SummaryBoxCloser"]], 
+              ButtonFunction :> (Typeset`open$$ = False), Appearance -> None, 
+              BaseStyle -> {}, Evaluator -> Automatic, Method -> 
+              "Preemptive"], Alignment -> {Center, Center}, ImageSize -> 
+             Dynamic[{
+               Automatic, 
+                3.5 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                 Magnification])}]], 
+            GridBox[{{
+               TagBox["\"value: \"", "SummaryItem"], 
+               TagBox[
+                InterpretationBox[
+                 RowBox[{
+                   TagBox["OpaqueRawPointer", "SummaryHead"], "[", 
+                   
+                   DynamicModuleBox[{
+                    Typeset`open$$ = False, Typeset`embedState$$ = "Ready"}, 
+                    TemplateBox[{
+                    PaneSelectorBox[{False -> GridBox[{{
+                    GridBox[{{
+                    TagBox["\"address: \"", "SummaryItem"]}, {
+                    TagBox[
+                    TagBox[
+                    InterpretationBox[
+                    StyleBox[
+                    SubscriptBox["\"7fa85883a600\"", "\"16\""], 
+                    ShowStringCharacters -> False], 140361016256000, Editable -> 
+                    False], BaseForm[#, 16]& ], "SummaryItem"]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, 
+                    AutoDelete -> False, 
+                    GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    GridBoxSpacings -> {
+                    "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+                    BaseStyle -> {
+                    ShowStringCharacters -> False, NumberMarks -> False, 
+                    PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Top}}}, AutoDelete -> 
+                    False, GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    BaselinePosition -> {1, 1}], True -> GridBox[{{
+                    GridBox[{{
+                    TagBox["\"address: \"", "SummaryItem"]}, {
+                    TagBox[
+                    TagBox[
+                    InterpretationBox[
+                    StyleBox[
+                    SubscriptBox["\"7fa85883a600\"", "\"16\""], 
+                    ShowStringCharacters -> False], 140361016256000, Editable -> 
+                    False], BaseForm[#, 16]& ], "SummaryItem"]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, 
+                    AutoDelete -> False, 
+                    GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    GridBoxSpacings -> {
+                    "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+                    BaseStyle -> {
+                    ShowStringCharacters -> False, NumberMarks -> False, 
+                    PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Top}}}, AutoDelete -> 
+                    False, GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    BaselinePosition -> {1, 1}]}, 
+                    Dynamic[Typeset`open$$], ImageSize -> Automatic]}, 
+                    "SummaryPanel"], DynamicModuleValues :> {}], "]"}], 
+                 ChristopherWolfram`ForeignFunctionInterface`OpaqueRawPointer[
+                 140361016256000], Selectable -> False, Editable -> False, 
+                 SelectWithContents -> True], "SummaryItem"]}, {
+               TagBox["\"freeing function: \"", "SummaryItem"], 
+               TagBox[
+                InterpretationBox[
+                 RowBox[{
+                   TagBox["ForeignFunction", "SummaryHead"], "[", 
+                   
+                   DynamicModuleBox[{
+                    Typeset`open$$ = False, Typeset`embedState$$ = "Ready"}, 
+                    TemplateBox[{
+                    PaneSelectorBox[{False -> GridBox[{{
+                    PaneBox[
+                    ButtonBox[
+                    DynamicBox[
+                    FEPrivate`FrontEndResource[
+                    "FEBitmaps", "SummaryBoxOpener"]], 
+                    ButtonFunction :> (Typeset`open$$ = True), Appearance -> 
+                    None, BaseStyle -> {}, Evaluator -> Automatic, Method -> 
+                    "Preemptive"], Alignment -> {Center, Center}, ImageSize -> 
+                    Dynamic[{Automatic, 
+                    3.5 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
+                    GridBox[{{
+                    TagBox["\"name: \"", "SummaryItem"], 
+                    TagBox["\"Z3_del_context\"", "SummaryItem"]}, {
+                    TagBox["\"type: \"", "SummaryItem"], 
+                    TagBox[
+                    RowBox[{
+                    RowBox[{"{", "\"OpaqueRawPointer\"", "}"}], "\[Rule]", 
+                    "\"Void\""}], "SummaryItem"]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, 
+                    AutoDelete -> False, 
+                    GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    GridBoxSpacings -> {
+                    "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+                    BaseStyle -> {
+                    ShowStringCharacters -> False, NumberMarks -> False, 
+                    PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Top}}}, AutoDelete -> 
+                    False, GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    BaselinePosition -> {1, 1}], True -> GridBox[{{
+                    PaneBox[
+                    ButtonBox[
+                    DynamicBox[
+                    FEPrivate`FrontEndResource[
+                    "FEBitmaps", "SummaryBoxCloser"]], 
+                    ButtonFunction :> (Typeset`open$$ = False), Appearance -> 
+                    None, BaseStyle -> {}, Evaluator -> Automatic, Method -> 
+                    "Preemptive"], Alignment -> {Center, Center}, ImageSize -> 
+                    Dynamic[{Automatic, 
+                    3.5 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
+                    GridBox[{{
+                    TagBox["\"name: \"", "SummaryItem"], 
+                    TagBox["\"Z3_del_context\"", "SummaryItem"]}, {
+                    TagBox["\"type: \"", "SummaryItem"], 
+                    TagBox[
+                    RowBox[{
+                    RowBox[{"{", "\"OpaqueRawPointer\"", "}"}], "\[Rule]", 
+                    "\"Void\""}], "SummaryItem"]}, {
+                    TagBox["\"library: \"", "SummaryItem"], 
+                    TagBox[
+                    "\"/usr/local/Cellar/z3/4.12.1/lib/libz3.4.12.1.0.dylib\"\
+", "SummaryItem"]}}, GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, 
+                    AutoDelete -> False, 
+                    GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    GridBoxSpacings -> {
+                    "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+                    BaseStyle -> {
+                    ShowStringCharacters -> False, NumberMarks -> False, 
+                    PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Top}}}, AutoDelete -> 
+                    False, GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    BaselinePosition -> {1, 1}]}, 
+                    Dynamic[Typeset`open$$], ImageSize -> Automatic]}, 
+                    "SummaryPanel"], DynamicModuleValues :> {}], "]"}], 
+                 ChristopherWolfram`ForeignFunctionInterface`ForeignFunction[
+                  DataStructure["RawForeignFunction", $Failed]], Selectable -> 
+                 False, Editable -> False, SelectWithContents -> True], 
+                "SummaryItem"]}, {
+               TagBox["\"payload: \"", "SummaryItem"], 
+               TagBox[
+                InterpretationBox[
+                 RowBox[{
+                   TagBox["OpaqueRawPointer", "SummaryHead"], "[", 
+                   
+                   DynamicModuleBox[{
+                    Typeset`open$$ = False, Typeset`embedState$$ = "Ready"}, 
+                    TemplateBox[{
+                    PaneSelectorBox[{False -> GridBox[{{
+                    GridBox[{{
+                    TagBox["\"address: \"", "SummaryItem"]}, {
+                    TagBox[
+                    TagBox[
+                    InterpretationBox[
+                    StyleBox[
+                    SubscriptBox["\"7fa85883a600\"", "\"16\""], 
+                    ShowStringCharacters -> False], 140361016256000, Editable -> 
+                    False], BaseForm[#, 16]& ], "SummaryItem"]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, 
+                    AutoDelete -> False, 
+                    GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    GridBoxSpacings -> {
+                    "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+                    BaseStyle -> {
+                    ShowStringCharacters -> False, NumberMarks -> False, 
+                    PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Top}}}, AutoDelete -> 
+                    False, GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    BaselinePosition -> {1, 1}], True -> GridBox[{{
+                    GridBox[{{
+                    TagBox["\"address: \"", "SummaryItem"]}, {
+                    TagBox[
+                    TagBox[
+                    InterpretationBox[
+                    StyleBox[
+                    SubscriptBox["\"7fa85883a600\"", "\"16\""], 
+                    ShowStringCharacters -> False], 140361016256000, Editable -> 
+                    False], BaseForm[#, 16]& ], "SummaryItem"]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, 
+                    AutoDelete -> False, 
+                    GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    GridBoxSpacings -> {
+                    "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+                    BaseStyle -> {
+                    ShowStringCharacters -> False, NumberMarks -> False, 
+                    PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Top}}}, AutoDelete -> 
+                    False, GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    BaselinePosition -> {1, 1}]}, 
+                    Dynamic[Typeset`open$$], ImageSize -> Automatic]}, 
+                    "SummaryPanel"], DynamicModuleValues :> {}], "]"}], 
+                 ChristopherWolfram`ForeignFunctionInterface`OpaqueRawPointer[
+                 140361016256000], Selectable -> False, Editable -> False, 
+                 SelectWithContents -> True], "SummaryItem"]}}, 
+             GridBoxAlignment -> {
+              "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+             False, GridBoxItemSize -> {
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+             GridBoxSpacings -> {"Columns" -> {{2}}, "Rows" -> {{Automatic}}},
+              BaseStyle -> {
+              ShowStringCharacters -> False, NumberMarks -> False, 
+               PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+          GridBoxAlignment -> {"Columns" -> {{Left}}, "Rows" -> {{Top}}}, 
+          AutoDelete -> False, 
+          GridBoxItemSize -> {
+           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+          BaselinePosition -> {1, 1}]}, 
+       Dynamic[Typeset`open$$], ImageSize -> Automatic]},
+     "SummaryPanel"],
+    DynamicModuleValues:>{}], "]"}],
+  ChristopherWolfram`ForeignFunctionInterface`ManagedObject[
+  "ManagedObject", $Failed],
+  Editable->False,
+  SelectWithContents->True,
+  Selectable->False]], "Output",
+ CellChangeTimes->{{3.885487249864419*^9, 3.8854872695488253`*^9}, 
+   3.885502790281661*^9, 3.885506229647334*^9, 3.885562421556945*^9},
+ CellLabel->"Out[9]=",ExpressionUUID->"7995dc89-b1d0-4754-9293-398775aa5954"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"makeTrueC", "=", 
+   RowBox[{"ForeignFunctionLoad", "[", 
+    RowBox[{"$LibZ3", ",", "\"\<Z3_mk_true\>\"", ",", 
+     RowBox[{
+      RowBox[{"{", "\"\<OpaqueRawPointer\>\"", "}"}], "->", 
+      "\"\<OpaqueRawPointer\>\""}]}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.885487675233337*^9, 3.885487690321486*^9}, 
+   3.885487746684725*^9},
+ CellLabel->"In[10]:=",ExpressionUUID->"b4580e14-9a2c-45d6-a0aa-607b43b71ae4"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"makeFalseC", "=", 
+   RowBox[{"ForeignFunctionLoad", "[", 
+    RowBox[{"$LibZ3", ",", "\"\<Z3_mk_false\>\"", ",", 
+     RowBox[{
+      RowBox[{"{", "\"\<OpaqueRawPointer\>\"", "}"}], "->", 
+      "\"\<OpaqueRawPointer\>\""}]}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.8854879604516277`*^9, 3.885487962867535*^9}},
+ CellLabel->"In[11]:=",ExpressionUUID->"26aea444-a74a-4757-b9bb-c98a080ead2c"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"makeNotC", "=", 
+   RowBox[{"ForeignFunctionLoad", "[", 
+    RowBox[{"$LibZ3", ",", "\"\<Z3_mk_not\>\"", ",", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"\"\<OpaqueRawPointer\>\"", ",", "\"\<OpaqueRawPointer\>\""}], 
+       "}"}], "->", "\"\<OpaqueRawPointer\>\""}]}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.885487749515706*^9, 3.8854877573492117`*^9}},
+ CellLabel->"In[12]:=",ExpressionUUID->"54128786-d1aa-403a-b462-748bee6da6d6"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"makeEqualsC", "=", 
+   RowBox[{"ForeignFunctionLoad", "[", 
+    RowBox[{"$LibZ3", ",", "\"\<Z3_mk_eq\>\"", ",", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+       "\"\<OpaqueRawPointer\>\"", ",", "\"\<OpaqueRawPointer\>\"", ",", 
+        "\"\<OpaqueRawPointer\>\""}], "}"}], "->", 
+      "\"\<OpaqueRawPointer\>\""}]}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.885487933818801*^9, 3.885487942754932*^9}},
+ CellLabel->"In[13]:=",ExpressionUUID->"a824d6c5-e252-4b94-abb1-e0a38f4d9c08"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"makeIntegerSymbolC", "=", 
+   RowBox[{"ForeignFunctionLoad", "[", 
+    RowBox[{"$LibZ3", ",", "\"\<Z3_mk_int_symbol\>\"", ",", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"\"\<OpaqueRawPointer\>\"", ",", "\"\<CInt\>\""}], "}"}], 
+      "->", "\"\<OpaqueRawPointer\>\""}]}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.8855061123934793`*^9, 3.8855061824628057`*^9}},
+ CellLabel->"In[14]:=",ExpressionUUID->"08f2c64e-c74d-49ab-ab71-768e6ea1a9b9"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"makeConstantC", "=", 
+   RowBox[{"ForeignFunctionLoad", "[", 
+    RowBox[{"$LibZ3", ",", "\"\<Z3_mk_const\>\"", ",", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+       "\"\<OpaqueRawPointer\>\"", ",", "\"\<OpaqueRawPointer\>\"", ",", 
+        "\"\<OpaqueRawPointer\>\""}], "}"}], "->", 
+      "\"\<OpaqueRawPointer\>\""}]}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.8855063072929583`*^9, 3.8855063238191547`*^9}},
+ CellLabel->"In[15]:=",ExpressionUUID->"7ce2860f-207f-48e7-952c-9d7ba97ee7e7"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"makeBooleanSortC", "=", 
+   RowBox[{"ForeignFunctionLoad", "[", 
+    RowBox[{"$LibZ3", ",", "\"\<Z3_mk_bool_sort\>\"", ",", 
+     RowBox[{
+      RowBox[{"{", "\"\<OpaqueRawPointer\>\"", "}"}], "->", 
+      "\"\<OpaqueRawPointer\>\""}]}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.885506342814898*^9, 3.885506359766037*^9}},
+ CellLabel->"In[16]:=",ExpressionUUID->"91ffcb4d-3a39-420e-9ffe-46a46a8b1586"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"simplifyC", "=", 
+   RowBox[{"ForeignFunctionLoad", "[", 
+    RowBox[{"$LibZ3", ",", "\"\<Z3_simplify\>\"", ",", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"\"\<OpaqueRawPointer\>\"", ",", "\"\<OpaqueRawPointer\>\""}], 
+       "}"}], "->", "\"\<OpaqueRawPointer\>\""}]}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.885487432128158*^9, 3.885487456370118*^9}},
+ CellLabel->"In[17]:=",ExpressionUUID->"b4b30be7-fbec-4417-80d0-79f3ae426e8a"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"getASTKindC", "=", 
+   RowBox[{"ForeignFunctionLoad", "[", 
+    RowBox[{"$LibZ3", ",", "\"\<Z3_get_ast_kind\>\"", ",", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"\"\<OpaqueRawPointer\>\"", ",", "\"\<OpaqueRawPointer\>\""}], 
+       "}"}], "->", "\"\<CInt\>\""}]}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.885507730196014*^9, 3.885507755093696*^9}},
+ CellLabel->"In[18]:=",ExpressionUUID->"4292865a-4ce0-4017-b77d-fe10ca265be2"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"getASTAppC", "=", 
+   RowBox[{"ForeignFunctionLoad", "[", 
+    RowBox[{"$LibZ3", ",", "\"\<Z3_to_app\>\"", ",", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"\"\<OpaqueRawPointer\>\"", ",", "\"\<OpaqueRawPointer\>\""}], 
+       "}"}], "->", "\"\<OpaqueRawPointer\>\""}]}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.885507930519339*^9, 3.885507952624365*^9}},
+ CellLabel->"In[19]:=",ExpressionUUID->"680388f7-9faa-4985-9970-32ed1604f6b4"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"getAppDeclC", "=", 
+   RowBox[{"ForeignFunctionLoad", "[", 
+    RowBox[{"$LibZ3", ",", "\"\<Z3_get_app_decl\>\"", ",", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"\"\<OpaqueRawPointer\>\"", ",", "\"\<OpaqueRawPointer\>\""}], 
+       "}"}], "->", "\"\<OpaqueRawPointer\>\""}]}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.885507994796959*^9, 3.885508017616272*^9}},
+ CellLabel->"In[20]:=",ExpressionUUID->"37277874-53ef-4b99-9041-65887c798565"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"getDeclKindC", "=", 
+   RowBox[{"ForeignFunctionLoad", "[", 
+    RowBox[{"$LibZ3", ",", "\"\<Z3_get_decl_kind\>\"", ",", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"\"\<OpaqueRawPointer\>\"", ",", "\"\<OpaqueRawPointer\>\""}], 
+       "}"}], "->", "\"\<CInt\>\""}]}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.885508027280711*^9, 3.8855080460598917`*^9}},
+ CellLabel->"In[21]:=",ExpressionUUID->"e7b930a0-0e56-4b62-999f-d0be266b8479"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"getAppNumArgsC", "=", 
+   RowBox[{"ForeignFunctionLoad", "[", 
+    RowBox[{"$LibZ3", ",", "\"\<Z3_get_app_num_args\>\"", ",", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"\"\<OpaqueRawPointer\>\"", ",", "\"\<OpaqueRawPointer\>\""}], 
+       "}"}], "->", "\"\<CUnsignedInt\>\""}]}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.885508142143979*^9, 3.885508168415337*^9}},
+ CellLabel->"In[22]:=",ExpressionUUID->"6b8fb21d-a3f8-494c-9273-4e797b800fcc"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"getDeclNameSymbolC", "=", 
+   RowBox[{"ForeignFunctionLoad", "[", 
+    RowBox[{"$LibZ3", ",", "\"\<Z3_get_decl_name\>\"", ",", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"\"\<OpaqueRawPointer\>\"", ",", "\"\<OpaqueRawPointer\>\""}], 
+       "}"}], "->", "\"\<OpaqueRawPointer\>\""}]}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.8855098055283003`*^9, 3.8855098307076883`*^9}},
+ CellLabel->"In[23]:=",ExpressionUUID->"48dd509b-f1c3-4c29-bd74-f62bd5ed69a8"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"getSymbolStringC", "=", 
+   RowBox[{"ForeignFunctionLoad", "[", 
+    RowBox[{"$LibZ3", ",", "\"\<Z3_get_symbol_string\>\"", ",", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"\"\<OpaqueRawPointer\>\"", ",", "\"\<OpaqueRawPointer\>\""}], 
+       "}"}], "->", 
+      RowBox[{"\"\<RawPointer\>\"", "::[", "\"\<CUnsignedChar\>\"", "]"}]}]}],
+     "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.885509767246026*^9, 3.885509802125458*^9}},
+ CellLabel->"In[24]:=",ExpressionUUID->"b0c1f9a2-3c61-4cc8-957c-a316eefa868b"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"astToStringC", "=", 
+   RowBox[{"ForeignFunctionLoad", "[", 
+    RowBox[{"$LibZ3", ",", "\"\<Z3_ast_to_string\>\"", ",", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"\"\<OpaqueRawPointer\>\"", ",", "\"\<OpaqueRawPointer\>\""}], 
+       "}"}], "->", 
+      RowBox[{"\"\<RawPointer\>\"", "::[", "\"\<CUnsignedChar\>\"", "]"}]}]}],
+     "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.885487540252103*^9, 3.885487559245819*^9}},
+ CellLabel->"In[25]:=",ExpressionUUID->"fbc8b288-4810-4150-bd3c-e84c79879d50"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"astToString", "[", 
+   RowBox[{"context_", ",", "ast_"}], "]"}], ":=", 
+  RowBox[{"ImportRawMemory", "[", 
+   RowBox[{
+    RowBox[{"astToStringC", "[", 
+     RowBox[{"context", ",", "ast"}], "]"}], ",", "\"\<String\>\""}], 
+   "]"}]}]], "Input",
+ CellChangeTimes->{{3.885487856881188*^9, 3.885487890249346*^9}},
+ CellLabel->"In[26]:=",ExpressionUUID->"11e01d1c-1e34-4636-b996-acb30fa644cf"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"astToString", "[", 
+  RowBox[{"context", ",", 
+   RowBox[{"makeTrueC", "[", "context", "]"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.8854877094669943`*^9, 3.8854877244104757`*^9}, {
+  3.885487873089525*^9, 3.885487892498184*^9}},
+ CellLabel->"In[17]:=",ExpressionUUID->"8cdd521c-9546-4f1f-93ad-21fbeec405b0"],
+
+Cell[BoxData["\<\"true\"\>"], "Output",
+ CellChangeTimes->{{3.88548771737396*^9, 3.885487727598145*^9}, {
+   3.885487875686995*^9, 3.8854878930160093`*^9}, 3.885502797292501*^9},
+ CellLabel->"Out[17]=",ExpressionUUID->"5d4c5d01-13fa-456f-8546-6c5e8b447634"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"astToString", "[", 
+  RowBox[{"context", ",", 
+   RowBox[{"makeNotC", "[", 
+    RowBox[{"context", ",", 
+     RowBox[{"makeTrueC", "[", "context", "]"}]}], "]"}]}], "]"}]], "Input",
+ CellChangeTimes->{
+  3.885487774781118*^9, {3.8854878807218227`*^9, 3.8854878937140923`*^9}},
+ CellLabel->"In[18]:=",ExpressionUUID->"d1be47e8-9086-4b2b-b433-306e389e1748"],
+
+Cell[BoxData["\<\"(not true)\"\>"], "Output",
+ CellChangeTimes->{{3.885487775384707*^9, 3.885487778217276*^9}, {
+   3.8854878829965477`*^9, 3.885487894328004*^9}, 3.8855027993558893`*^9},
+ CellLabel->"Out[18]=",ExpressionUUID->"c2f907d8-45b1-4556-a1a0-6c658de5a4c0"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"astToString", "[", 
+  RowBox[{"context", ",", 
+   RowBox[{"simplifyC", "[", 
+    RowBox[{"context", ",", 
+     RowBox[{"makeNotC", "[", 
+      RowBox[{"context", ",", 
+       RowBox[{"makeTrueC", "[", "context", "]"}]}], "]"}]}], "]"}]}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.885487788517003*^9, 3.885487792677394*^9}, {
+  3.885487895226473*^9, 3.8854878968573027`*^9}},
+ CellLabel->"In[19]:=",ExpressionUUID->"1eb25e81-19a5-48e6-ab2d-7ab6183e078c"],
+
+Cell[BoxData["\<\"false\"\>"], "Output",
+ CellChangeTimes->{3.885487793264928*^9, 3.8854878972389812`*^9, 
+  3.885502801077778*^9},
+ CellLabel->"Out[19]=",ExpressionUUID->"f2f21a04-d5b6-4052-a369-974cae642fab"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"astToString", "[", 
+  RowBox[{"context", ",", 
+   RowBox[{"makeEqualsC", "[", 
+    RowBox[{"context", ",", 
+     RowBox[{"makeNotC", "[", 
+      RowBox[{"context", ",", 
+       RowBox[{"makeTrueC", "[", "context", "]"}]}], "]"}], ",", 
+     RowBox[{"makeNotC", "[", 
+      RowBox[{"context", ",", 
+       RowBox[{"makeFalseC", "[", "context", "]"}]}], "]"}]}], "]"}]}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.885487948146785*^9, 3.8854879685642223`*^9}},
+ CellLabel->"In[20]:=",ExpressionUUID->"6cb72ce1-496e-444e-b6e7-5406c6cc86c0"],
+
+Cell[BoxData["\<\"(= (not true) (not false))\"\>"], "Output",
+ CellChangeTimes->{{3.8854879539206257`*^9, 3.8854879689104433`*^9}, 
+   3.8855028015702467`*^9},
+ CellLabel->"Out[20]=",ExpressionUUID->"a6b01463-7bcb-4875-bafa-071d809fd9c5"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"astToString", "[", 
+  RowBox[{"context", ",", 
+   RowBox[{"simplifyC", "[", 
+    RowBox[{"context", ",", 
+     RowBox[{"makeEqualsC", "[", 
+      RowBox[{"context", ",", 
+       RowBox[{"makeNotC", "[", 
+        RowBox[{"context", ",", 
+         RowBox[{"makeTrueC", "[", "context", "]"}]}], "]"}], ",", 
+       RowBox[{"makeNotC", "[", 
+        RowBox[{"context", ",", 
+         RowBox[{"makeFalseC", "[", "context", "]"}]}], "]"}]}], "]"}]}], 
+    "]"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.885487980556644*^9, 3.885487984900666*^9}},
+ CellLabel->"In[21]:=",ExpressionUUID->"ee40c9de-f145-4b3c-b90a-f77a97c11127"],
+
+Cell[BoxData["\<\"false\"\>"], "Output",
+ CellChangeTimes->{3.885487985436088*^9, 3.8855028020681543`*^9},
+ CellLabel->"Out[21]=",ExpressionUUID->"163b296d-ff3e-435e-9c35-c417198634b1"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"var", "=", 
+   RowBox[{"makeConstantC", "[", 
+    RowBox[{"context", ",", 
+     RowBox[{"makeIntegerSymbolC", "[", 
+      RowBox[{"context", ",", "12"}], "]"}], ",", 
+     RowBox[{"makeBooleanSortC", "[", "context", "]"}]}], "]"}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.885506582917005*^9, 3.885506587028346*^9}},
+ CellLabel->"In[27]:=",ExpressionUUID->"431ce040-19fa-43ac-bbc6-1d3a42fee0f8"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"eq", "=", 
+   RowBox[{"makeEqualsC", "[", 
+    RowBox[{"context", ",", 
+     RowBox[{"makeNotC", "[", 
+      RowBox[{"context", ",", 
+       RowBox[{"makeTrueC", "[", "context", "]"}]}], "]"}], ",", 
+     RowBox[{"makeNotC", "[", 
+      RowBox[{"context", ",", "var"}], "]"}]}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.885506611165944*^9, 3.885506614109704*^9}},
+ CellLabel->"In[28]:=",ExpressionUUID->"14313518-3c9f-41f3-a495-e24cf0a8f255"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"astToString", "[", 
+  RowBox[{"context", ",", "eq"}], "]"}]], "Input",
+ CellChangeTimes->{{3.885506602705851*^9, 3.885506615634677*^9}},
+ CellLabel->"In[29]:=",ExpressionUUID->"ef0a5a8a-6aeb-42a6-baca-e0f1b72158db"],
+
+Cell[BoxData["\<\"(= (not true) (not k!12))\"\>"], "Output",
+ CellChangeTimes->{{3.88550660337815*^9, 3.885506616119578*^9}, 
+   3.8855624294347887`*^9},
+ CellLabel->"Out[29]=",ExpressionUUID->"415a4cd5-feea-4761-a76f-ab1265b7baa9"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"astToString", "[", 
+  RowBox[{"context", ",", 
+   RowBox[{"simplifyC", "[", 
+    RowBox[{"context", ",", "eq"}], "]"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.8855066190727673`*^9, 3.885506622527938*^9}},
+ CellLabel->"In[39]:=",ExpressionUUID->"12cfafc8-84db-47ff-8012-5b436ad0d471"],
+
+Cell[BoxData["\<\"k!12\"\>"], "Output",
+ CellChangeTimes->{3.8855066228219852`*^9},
+ CellLabel->"Out[39]=",ExpressionUUID->"e5a0db08-6912-42a7-aad5-a7efb97faa81"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"FullSimplify", "[", 
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{"!", "True"}], ")"}], "==", 
+   RowBox[{"(", 
+    RowBox[{"!", "k12"}], ")"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.885506630852599*^9, 3.885506650879242*^9}},
+ CellLabel->"In[42]:=",ExpressionUUID->"fc799cf2-ed97-4910-b809-94c743e9fc79"],
+
+Cell[BoxData[
+ RowBox[{"False", "\[Equal]", 
+  RowBox[{"!", "k12"}]}]], "Output",
+ CellChangeTimes->{{3.885506636739596*^9, 3.885506651219365*^9}},
+ CellLabel->"Out[42]=",ExpressionUUID->"d579d244-b19d-427a-a588-82e3cffde771"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"getASTKindC", "[", 
+  RowBox[{"context", ",", "var"}], "]"}]], "Input",
+ CellChangeTimes->{{3.885507762185871*^9, 3.8855077653387136`*^9}},
+ CellLabel->"In[45]:=",ExpressionUUID->"4ae3a97b-cdce-4e2c-9c0d-2221937cab74"],
+
+Cell[BoxData["1"], "Output",
+ CellChangeTimes->{3.885507765627788*^9},
+ CellLabel->"Out[45]=",ExpressionUUID->"cbe759a7-3622-405f-bb64-4912bdb7db13"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"getASTKindC", "[", 
+  RowBox[{"context", ",", "eq"}], "]"}]], "Input",
+ CellChangeTimes->{{3.885507769076029*^9, 3.885507769140061*^9}},
+ CellLabel->"In[46]:=",ExpressionUUID->"d7045b11-7126-4203-b307-d2d5b4aaa7b2"],
+
+Cell[BoxData["1"], "Output",
+ CellChangeTimes->{3.88550776955271*^9},
+ CellLabel->"Out[46]=",ExpressionUUID->"f0ef8e10-6661-4451-99e5-746e2b187502"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", "OLD", " ", "*)"}], "\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"getDeclKindC", " ", ":=", " ", 
+     RowBox[{"getDeclKindC", " ", "=", "\n", "\t", 
+      RowBox[{"ForeignFunctionLoad", "[", 
+       RowBox[{"$LibZ3", ",", " ", "\"\<Z3_get_decl_kind\>\"", ",", " ", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{
+          "\"\<OpaqueRawPointer\>\"", ",", " ", "\"\<OpaqueRawPointer\>\""}], 
+          "}"}], " ", "->", " ", "\"\<CInt\>\""}]}], "]"}]}]}], ";"}], "\n", 
+   "\n", 
+   RowBox[{
+    RowBox[{"$KindIDDeclarations", " ", "=", " ", 
+     RowBox[{"AssociationMap", "[", 
+      RowBox[{"Reverse", ",", " ", "$DeclarationKindIDs"}], "]"}]}], ";"}], 
+   "\n", "\n", 
+   RowBox[{
+    RowBox[{"fromDecl", "[", 
+     RowBox[{"ctx_", ",", " ", "decl_"}], "]"}], " ", ":=", "\n", "\t", 
+    RowBox[{"Z3ASTNode", "[", 
+     RowBox[{"$KindIDDeclarations", "[", 
+      RowBox[{"getDeclKindC", "[", 
+       RowBox[{"ctx", ",", " ", "decl"}], "]"}], "]"}], "]"}]}]}]}]], "Code",
+ CellChangeTimes->{{3.885561857405758*^9, 3.885562033381412*^9}, {
+  3.885562092857362*^9, 3.885562093177232*^9}, {3.88556222933892*^9, 
+  3.885562377832254*^9}, {3.8855624340786247`*^9, 3.885562619414668*^9}, {
+  3.885563108704403*^9, 
+  3.885563111582391*^9}},ExpressionUUID->"e1a8453c-e707-468e-99af-\
+8d56ee30e2ca"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"getSymbolKindC", " ", ":=", " ", 
+    RowBox[{"getSymbolKindC", " ", "=", "\n", "\t", 
+     RowBox[{"ForeignFunctionLoad", "[", 
+      RowBox[{"$LibZ3", ",", " ", "\"\<Z3_get_symbol_kind\>\"", ",", " ", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+         "\"\<OpaqueRawPointer\>\"", ",", " ", "\"\<OpaqueRawPointer\>\""}], 
+         "}"}], " ", "->", " ", "\"\<CInt\>\""}]}], "]"}]}]}], ";"}], "\n", 
+  "\t"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"getSymbolIntC", " ", ":=", " ", 
+    RowBox[{"getSymbolIntC", " ", "=", "\n", "\t", 
+     RowBox[{"ForeignFunctionLoad", "[", 
+      RowBox[{"$LibZ3", ",", " ", "\"\<Z3_get_symbol_int\>\"", ",", " ", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+         "\"\<OpaqueRawPointer\>\"", ",", " ", "\"\<OpaqueRawPointer\>\""}], 
+         "}"}], " ", "->", " ", "\"\<CInt\>\""}]}], "]"}]}]}], ";"}], "\n", 
+  "\t"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"getSymbolStringC", " ", ":=", " ", 
+    RowBox[{"getSymbolStringC", " ", "=", "\n", "\t", 
+     RowBox[{"ForeignFunctionLoad", "[", 
+      RowBox[{"$LibZ3", ",", " ", "\"\<Z3_get_symbol_string\>\"", ",", " ", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+         "\"\<OpaqueRawPointer\>\"", ",", " ", "\"\<OpaqueRawPointer\>\""}], 
+         "}"}], " ", "->", " ", 
+        RowBox[{
+        "\"\<RawPointer\>\"", "::[", "\"\<CUnsignedChar\>\"", "]"}]}]}], 
+      "]"}]}]}], ";"}], "\n"}], "\n", 
+ RowBox[{
+  RowBox[{"fromSymbol", "[", 
+   RowBox[{"ctx_", ",", " ", "sym_"}], "]"}], " ", ":=", "\n", "\t", 
+  RowBox[{"With", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"kind", " ", "=", " ", 
+      RowBox[{"getSymbolKindC", "[", 
+       RowBox[{"ctx", ",", " ", "sym"}], "]"}]}], "}"}], ",", "\n", "\t\t", 
+    RowBox[{"Switch", "[", 
+     RowBox[{"kind", ",", "\n", "\t\t", "\n", "\t\t\t", 
+      RowBox[{"$SymbolKindIDs", "[", "\"\<Z3_INT_SYMBOL\>\"", "]"}], ",", 
+      "\n", "\t\t\t\t", 
+      RowBox[{"Z3Symbol", "[", 
+       RowBox[{"getSymbolIntC", "[", 
+        RowBox[{"ctx", ",", " ", "sym"}], "]"}], "]"}], ",", "\n", "\t\t\t\t",
+       "\n", "\t\t\t", 
+      RowBox[{"$SymbolKindIDs", "[", "\"\<Z3_STRING_SYMBOL\>\"", "]"}], ",", 
+      "\n", "\t\t\t\t", 
+      RowBox[{"Z3Symbol", "[", 
+       RowBox[{"ImportRawMemory", "[", 
+        RowBox[{
+         RowBox[{"getSymbolStringC", "[", 
+          RowBox[{"ctx", ",", " ", "sym"}], "]"}], ",", " ", 
+         "\"\<String\>\""}], "]"}], "]"}], ",", "\n", "\t\t\t", "\n", 
+      "\t\t\t", "_", ",", "\n", "\t\t\t\t", 
+      RowBox[{"With", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"kindName", " ", "=", " ", 
+          RowBox[{"Replace", "[", 
+           RowBox[{"kind", ",", " ", 
+            RowBox[{"AssociationMap", "[", 
+             RowBox[{"Reverse", ",", "$SymbolKindIDs"}], "]"}]}], "]"}]}], 
+         "}"}], ",", "\n", "\t\t\t\t\t", 
+        RowBox[{
+         RowBox[{"Message", "[", 
+          RowBox[{
+           RowBox[{"FromAST", "::", "unsupportedSymbolkind"}], ",", " ", 
+           "kindName"}], "]"}], ";", "\n", "\t\t\t\t\t", 
+         RowBox[{"Failure", "[", 
+          RowBox[{"\"\<UnsupportedKind\>\"", ",", " ", 
+           RowBox[{"<|", "\n", "\t\t\t\t\t\t", 
+            RowBox[{
+             RowBox[{"\"\<MessageTemplate\>\"", " ", ":>", " ", 
+              RowBox[{"FromAST", "::", "unsupportedSymbolkind"}]}], ",", "\n",
+              "\t\t\t\t\t\t", 
+             RowBox[{"\"\<MessageParameters\>\"", " ", "->", " ", 
+              RowBox[{"{", "kindName", "}"}]}], ",", "\n", "\t\t\t\t\t\t", 
+             RowBox[{"\"\<SymbolKindName\>\"", " ", "->", " ", "kindName"}], 
+             ",", "\n", "\t\t\t\t\t\t", 
+             RowBox[{"\"\<SymbolKindID\>\"", " ", "->", " ", "kind"}]}], "\n",
+             "\t\t\t\t\t", "|>"}]}], "]"}]}]}], "\n", "\t\t\t\t", "]"}]}], 
+     "\n", "\t\t", "]"}]}], "\n", "\t", "]"}]}]}], "Code",
+ CellChangeTimes->{{3.885561857405758*^9, 3.885562033381412*^9}, {
+  3.885562092857362*^9, 3.885562093177232*^9}, {3.88556222933892*^9, 
+  3.885562377832254*^9}, {3.8855624340786247`*^9, 3.885562619414668*^9}, {
+  3.8855627647503967`*^9, 3.885562790906383*^9}, {3.8855631140489073`*^9, 
+  3.8855631791843367`*^9}, {3.8855632143472424`*^9, 3.885563266214437*^9}, {
+  3.885563296904004*^9, 3.885563297985114*^9}, {3.8855679807024727`*^9, 
+  3.885568018776649*^9}, {3.885568074957152*^9, 3.885568155120501*^9}, {
+  3.885568199851137*^9, 3.885568209367322*^9}},
+ CellLabel->"In[99]:=",ExpressionUUID->"df487084-f03d-4a67-be16-45e5bf7c97f7"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"getDeclNameSymbolC", " ", ":=", " ", 
+    RowBox[{"getDeclNameSymbolC", " ", "=", "\n", "\t", 
+     RowBox[{"ForeignFunctionLoad", "[", 
+      RowBox[{"$LibZ3", ",", " ", "\"\<Z3_get_decl_name\>\"", ",", " ", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+         "\"\<OpaqueRawPointer\>\"", ",", " ", "\"\<OpaqueRawPointer\>\""}], 
+         "}"}], " ", "->", " ", "\"\<OpaqueRawPointer\>\""}]}], "]"}]}]}], 
+   ";"}], "\n"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"getDeclKindC", " ", ":=", " ", 
+    RowBox[{"getDeclKindC", " ", "=", "\n", "\t", 
+     RowBox[{"ForeignFunctionLoad", "[", 
+      RowBox[{"$LibZ3", ",", " ", "\"\<Z3_get_decl_kind\>\"", ",", " ", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+         "\"\<OpaqueRawPointer\>\"", ",", " ", "\"\<OpaqueRawPointer\>\""}], 
+         "}"}], " ", "->", " ", "\"\<CInt\>\""}]}], "]"}]}]}], ";"}], 
+  "\n"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"$KindIDDeclarations", " ", "=", " ", 
+    RowBox[{"AssociationMap", "[", 
+     RowBox[{"Reverse", ",", " ", "$DeclarationKindIDs"}], "]"}]}], ";"}], 
+  "\n"}], "\n", 
+ RowBox[{
+  RowBox[{"fromDecl", "[", 
+   RowBox[{"ctx_", ",", " ", "decl_"}], "]"}], " ", ":=", "\n", "\t", 
+  RowBox[{"Z3Declaration", "[", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{"$KindIDDeclarations", "[", 
+     RowBox[{"getDeclKindC", "[", 
+      RowBox[{"ctx", ",", " ", "decl"}], "]"}], "]"}], ",", "\n", "\t\t", 
+    RowBox[{"fromSymbol", "[", 
+     RowBox[{"ctx", ",", " ", 
+      RowBox[{"getDeclNameSymbolC", "[", 
+       RowBox[{"ctx", ",", " ", "decl"}], "]"}]}], "]"}]}], "\n", "\t", 
+   "]"}]}]}], "Code",
+ CellChangeTimes->{{3.885561857405758*^9, 3.885562033381412*^9}, {
+  3.885562092857362*^9, 3.885562093177232*^9}, {3.88556222933892*^9, 
+  3.885562377832254*^9}, {3.8855624340786247`*^9, 3.885562619414668*^9}, {
+  3.8855627647503967`*^9, 3.885562790906383*^9}, {3.885568175721291*^9, 
+  3.885568194028798*^9}, {3.885568392909519*^9, 3.885568398251711*^9}, {
+  3.8855686499250107`*^9, 3.885568687274255*^9}},
+ CellLabel->
+  "In[109]:=",ExpressionUUID->"6a821b7f-9d95-4de3-912b-a531121aa22b"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"getAppArgC", " ", ":=", " ", 
+    RowBox[{"getAppArgC", " ", "=", "\n", "\t", 
+     RowBox[{"ForeignFunctionLoad", "[", 
+      RowBox[{"$LibZ3", ",", " ", "\"\<Z3_get_app_arg\>\"", ",", " ", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+         "\"\<OpaqueRawPointer\>\"", ",", " ", "\"\<OpaqueRawPointer\>\"", 
+          ",", " ", "\"\<CUnsignedInt\>\""}], "}"}], " ", "->", " ", 
+        "\"\<OpaqueRawPointer\>\""}]}], "]"}]}]}], ";"}], "\n"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"getAppNumArgsC", " ", ":=", " ", 
+    RowBox[{"getAppNumArgsC", " ", "=", "\n", "\t", 
+     RowBox[{"ForeignFunctionLoad", "[", 
+      RowBox[{"$LibZ3", ",", " ", "\"\<Z3_get_app_num_args\>\"", ",", " ", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+         "\"\<OpaqueRawPointer\>\"", ",", " ", "\"\<OpaqueRawPointer\>\""}], 
+         "}"}], " ", "->", " ", "\"\<CUnsignedInt\>\""}]}], "]"}]}]}], ";"}], 
+  "\n", "\t"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"getAppDeclC", " ", ":=", " ", 
+    RowBox[{"getAppDeclC", " ", "=", "\n", "\t", 
+     RowBox[{"ForeignFunctionLoad", "[", 
+      RowBox[{"$LibZ3", ",", " ", "\"\<Z3_get_app_decl\>\"", ",", " ", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+         "\"\<OpaqueRawPointer\>\"", ",", " ", "\"\<OpaqueRawPointer\>\""}], 
+         "}"}], " ", "->", " ", "\"\<OpaqueRawPointer\>\""}]}], "]"}]}]}], 
+   ";"}], "\n"}], "\n", 
+ RowBox[{
+  RowBox[{"fromApp", "[", 
+   RowBox[{"ctx_", ",", " ", "app_"}], "]"}], " ", ":=", "\n", "\t", 
+  RowBox[{"With", "[", 
+   RowBox[{
+    RowBox[{"{", "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{"numArgs", " ", "=", " ", 
+       RowBox[{"getAppNumArgsC", "[", 
+        RowBox[{"ctx", ",", " ", "app"}], "]"}]}], ",", "\n", "\t\t\t", 
+      RowBox[{"decl", " ", "=", " ", 
+       RowBox[{"getAppDeclC", "[", 
+        RowBox[{"ctx", ",", " ", "app"}], "]"}]}]}], "\n", "\t\t", "}"}], ",",
+     "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"fromDecl", "[", 
+      RowBox[{"ctx", ",", " ", "decl"}], "]"}], "@@", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"FromAST", "[", 
+         RowBox[{"ctx", ",", " ", 
+          RowBox[{"getAppArgC", "[", 
+           RowBox[{"ctx", ",", " ", "app", ",", " ", 
+            RowBox[{"#", "-", "1"}]}], "]"}]}], "]"}], " ", "&"}], "/@", " ", 
+       
+       RowBox[{"Range", "[", "numArgs", "]"}]}], ")"}]}]}], "\n", "\t", 
+   "]"}]}]}], "Code",
+ CellChangeTimes->{{3.885561857405758*^9, 3.885562033381412*^9}, {
+  3.885562092857362*^9, 3.885562093177232*^9}, {3.88556222933892*^9, 
+  3.885562377832254*^9}, {3.8855624340786247`*^9, 3.885562506008163*^9}},
+ CellLabel->"In[69]:=",ExpressionUUID->"817bbef6-e5b7-4b31-aefa-a76ea5ec7188"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"FromAST", "::", "unsupportedASTkind"}], " ", "=", " ", 
+   "\"\<Unsupported AST kind `1`.\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"FromAST", "::", "unsupportedSymbolkind"}], " ", "=", " ", 
+   "\"\<Unsupported symbol kind `1`.\>\""}], ";"}]}], "Code",
+ CellChangeTimes->{{3.885556659420727*^9, 3.885556684806539*^9}, {
+  3.885563183975136*^9, 
+  3.88556320117312*^9}},ExpressionUUID->"397d200f-5437-4c0e-a7f5-\
+fbd078d95f82"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"getASTKindC", " ", ":=", " ", 
+    RowBox[{"getASTKindC", " ", "=", "\n", "\t", 
+     RowBox[{"ForeignFunctionLoad", "[", 
+      RowBox[{"$LibZ3", ",", " ", "\"\<Z3_get_ast_kind\>\"", ",", " ", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+         "\"\<OpaqueRawPointer\>\"", ",", " ", "\"\<OpaqueRawPointer\>\""}], 
+         "}"}], " ", "->", " ", "\"\<CInt\>\""}]}], "]"}]}]}], ";"}], "\n", 
+  "\t"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"getASTAppC", " ", ":=", " ", 
+    RowBox[{"getASTAppC", " ", "=", "\n", "\t", 
+     RowBox[{"ForeignFunctionLoad", "[", 
+      RowBox[{"$LibZ3", ",", " ", "\"\<Z3_to_app\>\"", ",", " ", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+         "\"\<OpaqueRawPointer\>\"", ",", " ", "\"\<OpaqueRawPointer\>\""}], 
+         "}"}], " ", "->", " ", "\"\<OpaqueRawPointer\>\""}]}], "]"}]}]}], 
+   ";"}], "\n"}], "\n", 
+ RowBox[{
+  RowBox[{"FromAST", "[", 
+   RowBox[{"ctx_", ",", " ", "ast_"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"With", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"kind", " ", "=", " ", 
+      RowBox[{"getASTKindC", "[", 
+       RowBox[{"ctx", ",", "ast"}], "]"}]}], "}"}], ",", 
+    "\[IndentingNewLine]", "\t\t", 
+    RowBox[{"Switch", "[", 
+     RowBox[{"kind", ",", "\n", "\t\t", "\n", "\t\t\t", 
+      RowBox[{"$ASTKindIDs", "[", "\"\<Z3_APP_AST\>\"", "]"}], ",", "\n", 
+      "\t\t\t\t", 
+      RowBox[{"fromApp", "[", 
+       RowBox[{"ctx", ",", " ", 
+        RowBox[{"getASTAppC", "[", 
+         RowBox[{"ctx", ",", " ", "ast"}], "]"}]}], "]"}], ",", "\n", "\t\t", 
+      "\n", "\t\t\t", "_", ",", "\n", "\t\t\t\t", 
+      RowBox[{"With", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"kindName", " ", "=", " ", 
+          RowBox[{"Replace", "[", 
+           RowBox[{"kind", ",", " ", 
+            RowBox[{"AssociationMap", "[", 
+             RowBox[{"Reverse", ",", "$ASTKindIDs"}], "]"}]}], "]"}]}], "}"}],
+         ",", "\n", "\t\t\t\t\t", 
+        RowBox[{
+         RowBox[{"Message", "[", 
+          RowBox[{
+           RowBox[{"FromAST", "::", "unsupportedASTkind"}], ",", " ", 
+           "kindName"}], "]"}], ";", "\n", "\t\t\t\t\t", 
+         RowBox[{"Failure", "[", 
+          RowBox[{"\"\<UnsupportedKind\>\"", ",", " ", 
+           RowBox[{"<|", "\n", "\t\t\t\t\t\t", 
+            RowBox[{
+             RowBox[{"\"\<MessageTemplate\>\"", " ", ":>", " ", 
+              RowBox[{"FromAST", "::", "unsupportedASTkind"}]}], ",", "\n", 
+             "\t\t\t\t\t\t", 
+             RowBox[{"\"\<MessageParameters\>\"", " ", "->", " ", 
+              RowBox[{"{", "kindName", "}"}]}], ",", "\n", "\t\t\t\t\t\t", 
+             RowBox[{"\"\<ASTKindName\>\"", " ", "->", " ", "kindName"}], ",",
+              "\n", "\t\t\t\t\t\t", 
+             RowBox[{"\"\<ASTKindID\>\"", " ", "->", " ", "kind"}]}], "\n", 
+            "\t\t\t\t\t", "|>"}]}], "]"}]}]}], "\n", "\t\t\t\t", "]"}]}], 
+     "\n", "\t\t", "]"}]}], "\n", "\t", "]"}]}]}], "Code",
+ CellChangeTimes->{{3.88556192189382*^9, 3.885561947369919*^9}, {
+   3.885562046834907*^9, 3.8855620496832743`*^9}, 3.885562095996641*^9, {
+   3.885563187080124*^9, 
+   3.885563189885249*^9}},ExpressionUUID->"b50f45a1-7378-4418-8060-\
+2d7eb00bb78a"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"FromAST", "[", 
+  RowBox[{"context", ",", "eq"}], "]"}]], "Input",
+ CellChangeTimes->{{3.885556755149578*^9, 3.885556760123355*^9}, {
+  3.8855626416173563`*^9, 3.885562645851969*^9}},
+ CellLabel->
+  "In[113]:=",ExpressionUUID->"04395f95-5a9d-4624-a45b-d6df447cf5d9"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Z3Declaration", "[", 
+   RowBox[{"\<\"Z3_OP_EQ\"\>", ",", 
+    RowBox[{"Z3Symbol", "[", "\<\"=\"\>", "]"}]}], "]"}], "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Z3Declaration", "[", 
+     RowBox[{"\<\"Z3_OP_NOT\"\>", ",", 
+      RowBox[{"Z3Symbol", "[", "\<\"not\"\>", "]"}]}], "]"}], "[", 
+    RowBox[{
+     RowBox[{"Z3Declaration", "[", 
+      RowBox[{"\<\"Z3_OP_TRUE\"\>", ",", 
+       RowBox[{"Z3Symbol", "[", "\<\"true\"\>", "]"}]}], "]"}], "[", "]"}], 
+    "]"}], ",", 
+   RowBox[{
+    RowBox[{"Z3Declaration", "[", 
+     RowBox[{"\<\"Z3_OP_NOT\"\>", ",", 
+      RowBox[{"Z3Symbol", "[", "\<\"not\"\>", "]"}]}], "]"}], "[", 
+    RowBox[{
+     RowBox[{"Z3Declaration", "[", 
+      RowBox[{"\<\"Z3_OP_UNINTERPRETED\"\>", ",", 
+       RowBox[{"Z3Symbol", "[", "12", "]"}]}], "]"}], "[", "]"}], "]"}]}], 
+  "]"}]], "Output",
+ CellChangeTimes->{
+  3.8855567606800737`*^9, {3.885556874653783*^9, 3.885556898657255*^9}, 
+   3.885558730166234*^9, {3.885562026915029*^9, 3.8855620519063263`*^9}, {
+   3.885562454371954*^9, 3.885562474321931*^9}, {3.885562626709257*^9, 
+   3.8855626461103067`*^9}, 3.8855682121870537`*^9, 3.885568402630822*^9, 
+   3.885568690516177*^9},
+ CellLabel->
+  "Out[113]=",ExpressionUUID->"f978880c-09bf-4967-ba4c-d962020e520c"]
+}, Open  ]],
+
+Cell["\<\
+ Z3_NUMERAL_AST,
+  141\[NonBreakingSpace]    Z3_APP_AST,
+  142\[NonBreakingSpace]    Z3_VAR_AST,
+  143\[NonBreakingSpace]    Z3_QUANTIFIER_AST,
+  144\[NonBreakingSpace]    Z3_SORT_AST,
+  145\[NonBreakingSpace]    Z3_FUNC_DECL_AST,
+  146\[NonBreakingSpace]    Z3_UNKNOWN_AST = 1000\
+\>", "Program",
+ CellChangeTimes->{
+  3.885507803853244*^9},ExpressionUUID->"81dc2f07-ae7b-45b7-89cc-\
+f8702785d042"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"getASTAppC", "[", 
+  RowBox[{"context", ",", "var"}], "]"}]], "Input",
+ CellChangeTimes->{{3.8855079733411617`*^9, 3.8855079881382933`*^9}},
+ CellLabel->"In[61]:=",ExpressionUUID->"9575d397-09cb-4b2e-8661-eae0b51a5ff4"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   TagBox["OpaqueRawPointer",
+    "SummaryHead"], "[", 
+   DynamicModuleBox[{Typeset`open$$ = False, Typeset`embedState$$ = "Ready"}, 
+    
+    TemplateBox[{
+      PaneSelectorBox[{False -> GridBox[{{
+            GridBox[{{
+               TagBox["\"address: \"", "SummaryItem"]}, {
+               TagBox[
+                TagBox[
+                 InterpretationBox[
+                  StyleBox[
+                   SubscriptBox["\"7fd1ce8dff70\"", "\"16\""], 
+                   ShowStringCharacters -> False], 140539090304880, Editable -> 
+                  False], BaseForm[#, 16]& ], "SummaryItem"]}}, 
+             GridBoxAlignment -> {
+              "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+             False, GridBoxItemSize -> {
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+             GridBoxSpacings -> {"Columns" -> {{2}}, "Rows" -> {{Automatic}}},
+              BaseStyle -> {
+              ShowStringCharacters -> False, NumberMarks -> False, 
+               PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+          GridBoxAlignment -> {"Columns" -> {{Left}}, "Rows" -> {{Top}}}, 
+          AutoDelete -> False, 
+          GridBoxItemSize -> {
+           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+          BaselinePosition -> {1, 1}], True -> GridBox[{{
+            GridBox[{{
+               TagBox["\"address: \"", "SummaryItem"]}, {
+               TagBox[
+                TagBox[
+                 InterpretationBox[
+                  StyleBox[
+                   SubscriptBox["\"7fd1ce8dff70\"", "\"16\""], 
+                   ShowStringCharacters -> False], 140539090304880, Editable -> 
+                  False], BaseForm[#, 16]& ], "SummaryItem"]}}, 
+             GridBoxAlignment -> {
+              "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+             False, GridBoxItemSize -> {
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+             GridBoxSpacings -> {"Columns" -> {{2}}, "Rows" -> {{Automatic}}},
+              BaseStyle -> {
+              ShowStringCharacters -> False, NumberMarks -> False, 
+               PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+          GridBoxAlignment -> {"Columns" -> {{Left}}, "Rows" -> {{Top}}}, 
+          AutoDelete -> False, 
+          GridBoxItemSize -> {
+           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+          BaselinePosition -> {1, 1}]}, 
+       Dynamic[Typeset`open$$], ImageSize -> Automatic]},
+     "SummaryPanel"],
+    DynamicModuleValues:>{}], "]"}],
+  ChristopherWolfram`ForeignFunctionInterface`OpaqueRawPointer[
+  140539090304880],
+  Editable->False,
+  SelectWithContents->True,
+  Selectable->False]], "Output",
+ CellChangeTimes->{{3.8855079789642344`*^9, 3.885507988338316*^9}, 
+   3.885508060035594*^9},
+ CellLabel->"Out[61]=",ExpressionUUID->"00f8bd26-0b2a-4c78-8a2c-1cab32b59653"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"getDeclKindC", "[", 
+  RowBox[{"context", ",", 
+   RowBox[{"getAppDeclC", "[", 
+    RowBox[{"context", ",", 
+     RowBox[{"getASTAppC", "[", 
+      RowBox[{"context", ",", "var"}], "]"}]}], "]"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.885508061976614*^9, 3.885508073324247*^9}, {
+  3.885513128449608*^9, 3.885513131074831*^9}},
+ CellLabel->
+  "In[167]:=",ExpressionUUID->"6df73d25-c033-4339-9309-a26644fac1e0"],
+
+Cell[BoxData["45102"], "Output",
+ CellChangeTimes->{{3.885508065754593*^9, 3.8855080735537443`*^9}, {
+  3.885513129247003*^9, 3.8855131313564377`*^9}},
+ CellLabel->
+  "Out[167]=",ExpressionUUID->"34b7678b-9891-407d-822d-9ab04ab6d6b0"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ImportRawMemory", "[", 
+  RowBox[{
+   RowBox[{"getSymbolStringC", "[", 
+    RowBox[{"context", ",", 
+     RowBox[{"getDeclNameSymbolC", "[", 
+      RowBox[{"context", ",", 
+       RowBox[{"getAppDeclC", "[", 
+        RowBox[{"context", ",", 
+         RowBox[{"getASTAppC", "[", 
+          RowBox[{"context", ",", "var"}], "]"}]}], "]"}]}], "]"}]}], "]"}], 
+   ",", "\"\<String\>\""}], "]"}]], "Input",
+ CellChangeTimes->{{3.885509835168852*^9, 3.885509862573441*^9}},
+ CellLabel->"In[81]:=",ExpressionUUID->"f41c58d5-a262-45d3-b8a1-ff508723515a"],
+
+Cell[BoxData["\<\"12\"\>"], "Output",
+ CellChangeTimes->{{3.885509840454418*^9, 3.88550986502385*^9}},
+ CellLabel->"Out[81]=",ExpressionUUID->"ce90830c-59fc-4f82-b1f7-f4a54943eaa9"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"getDeclKindC", "[", 
+  RowBox[{"context", ",", 
+   RowBox[{"getAppDeclC", "[", 
+    RowBox[{"context", ",", 
+     RowBox[{"getASTAppC", "[", 
+      RowBox[{"context", ",", "eq"}], "]"}]}], "]"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.885508076398748*^9, 3.885508076444666*^9}, {
+  3.885513132772601*^9, 3.885513134452216*^9}},
+ CellLabel->
+  "In[169]:=",ExpressionUUID->"5d8d8283-3ffc-4762-8be7-69996d23c087"],
+
+Cell[BoxData["258"], "Output",
+ CellChangeTimes->{
+  3.885508076904015*^9, {3.885513133231202*^9, 3.885513134692822*^9}},
+ CellLabel->
+  "Out[169]=",ExpressionUUID->"ef4ca916-e9fa-495f-b0e7-df7d691f588d"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ImportRawMemory", "[", 
+  RowBox[{
+   RowBox[{"getSymbolStringC", "[", 
+    RowBox[{"context", ",", 
+     RowBox[{"getDeclNameSymbolC", "[", 
+      RowBox[{"context", ",", 
+       RowBox[{"getAppDeclC", "[", 
+        RowBox[{"context", ",", 
+         RowBox[{"getASTAppC", "[", 
+          RowBox[{"context", ",", "eq"}], "]"}]}], "]"}]}], "]"}]}], "]"}], 
+   ",", "\"\<String\>\""}], "]"}]], "Input",
+ CellChangeTimes->{3.885509876599832*^9},
+ CellLabel->"In[82]:=",ExpressionUUID->"b7d1a294-8e26-454f-907d-4e26a139770b"],
+
+Cell[BoxData["\<\"=\"\>"], "Output",
+ CellChangeTimes->{3.8855098777429657`*^9},
+ CellLabel->"Out[82]=",ExpressionUUID->"37be36cb-0cbc-45f2-85c0-bb85e8d94796"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"getAppNumArgsC", "[", 
+  RowBox[{"context", ",", 
+   RowBox[{"getASTAppC", "[", 
+    RowBox[{"context", ",", "var"}], "]"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.8855081840763407`*^9, 3.885508213669446*^9}},
+ CellLabel->"In[71]:=",ExpressionUUID->"9907ff5b-57ef-4a60-8998-273c6a20a331"],
+
+Cell[BoxData["0"], "Output",
+ CellChangeTimes->{{3.8855081853728857`*^9, 3.885508213905814*^9}},
+ CellLabel->"Out[71]=",ExpressionUUID->"fc89b68b-ed95-41fe-b7a7-032432437274"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"getAppNumArgsC", "[", 
+  RowBox[{"context", ",", 
+   RowBox[{"getASTAppC", "[", 
+    RowBox[{"context", ",", "eq"}], "]"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.885508174563204*^9, 3.885508178264255*^9}, 
+   3.885508215866866*^9},
+ CellLabel->"In[72]:=",ExpressionUUID->"ad6f28af-68f8-492d-9e21-9f28d8d964ec"],
+
+Cell[BoxData["2"], "Output",
+ CellChangeTimes->{{3.885508178519842*^9, 3.8855081801922626`*^9}, 
+   3.8855082160373363`*^9},
+ CellLabel->"Out[72]=",ExpressionUUID->"182b1dd9-9e66-4beb-9bde-427a16ce0f90"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"idDeclKind", "=", 
+   RowBox[{"GroupBy", "[", 
+    RowBox[{
+     RowBox[{"Normal", "@", "declKindIDs"}], ",", 
+     RowBox[{"Last", "->", "First"}], ",", "First"}], "]"}]}], ";"}]], "Input",\
+
+ CellChangeTimes->{{3.885513097151672*^9, 3.8855131176293983`*^9}},
+ CellLabel->
+  "In[165]:=",ExpressionUUID->"13750ca4-fee4-4fb1-b787-577182fe34a4"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"declKindIDs", "[", "\"\<Z3_OP_DIV\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.885513959817061*^9, 3.885513968232006*^9}},
+ CellLabel->
+  "In[172]:=",ExpressionUUID->"06de10c2-3a0c-4c4a-96c8-ec8b00a32dcd"],
+
+Cell[BoxData["522"], "Output",
+ CellChangeTimes->{{3.8855139663654346`*^9, 3.885513968449914*^9}},
+ CellLabel->
+  "Out[172]=",ExpressionUUID->"f2a8d491-f8ec-4c7d-b648-2a4eac04b2bd"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"declKindIDs", "[", "\"\<Z3_OP_IDIV\>\"", "]"}]], "Input",
+ CellChangeTimes->{3.8855139714739103`*^9},
+ CellLabel->
+  "In[173]:=",ExpressionUUID->"fe19e507-6437-4f6d-af96-40b9d5e38f64"],
+
+Cell[BoxData["523"], "Output",
+ CellChangeTimes->{3.885513971751903*^9},
+ CellLabel->
+  "Out[173]=",ExpressionUUID->"ba40d87d-58fa-4f2a-bb4b-30e4ef81c34e"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Getting declaration kind indices", "Subsection",
+ CellChangeTimes->{{3.885511256952565*^9, 
+  3.885511264318324*^9}},ExpressionUUID->"cd2259f7-2455-43e9-a0e8-\
+8c0b883d3d17"],
+
+Cell[CellGroupData[{
+
+Cell["Header parsing", "Subsubsection",
+ CellChangeTimes->{{3.885511268970923*^9, 
+  3.8855112720768957`*^9}},ExpressionUUID->"ceb3819f-aed2-40e9-9856-\
+beab1bf7b508"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"declKindEnumStr", "=", 
+   InterpretationBox[
+    DynamicModuleBox[{Typeset`open = False}, 
+     TemplateBox[{"String", "StringIcon", 
+       GridBox[{{
+          RowBox[{
+            TagBox["\"Head: \"", "IconizedLabel"], "\[InvisibleSpace]", 
+            TagBox["String", "IconizedItem"]}]}, {
+          RowBox[{
+            TagBox["\"String length: \"", "IconizedLabel"], 
+            "\[InvisibleSpace]", 
+            TagBox["6397", "IconizedItem"]}]}, {
+          RowBox[{
+            TagBox["\"Byte count: \"", "IconizedLabel"], "\[InvisibleSpace]", 
+            
+            TagBox["6656", "IconizedItem"]}]}}, 
+        GridBoxAlignment -> {"Columns" -> {{Left}}}, DefaultBaseStyle -> 
+        "Column", 
+        GridBoxItemSize -> {
+         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}], 
+       Dynamic[Typeset`open]},
+      "IconizedObject"]],
+    "typedef enum {\n    // Basic\n    Z3_OP_TRUE = 0x100,\n    Z3_OP_FALSE,\n\
+    Z3_OP_EQ,\n    Z3_OP_DISTINCT,\n    Z3_OP_ITE,\n    Z3_OP_AND,\n    \
+Z3_OP_OR,\n    Z3_OP_IFF,\n    Z3_OP_XOR,\n    Z3_OP_NOT,\n    Z3_OP_IMPLIES,\
+\n    Z3_OP_OEQ,\n\n    // Arithmetic\n    Z3_OP_ANUM = 0x200,\n    \
+Z3_OP_AGNUM,\n    Z3_OP_LE,\n    Z3_OP_GE,\n    Z3_OP_LT,\n    Z3_OP_GT,\n    \
+Z3_OP_ADD,\n    Z3_OP_SUB,\n    Z3_OP_UMINUS,\n    Z3_OP_MUL,\n    Z3_OP_DIV,\
+\n    Z3_OP_IDIV,\n    Z3_OP_REM,\n    Z3_OP_MOD,\n    Z3_OP_TO_REAL,\n    \
+Z3_OP_TO_INT,\n    Z3_OP_IS_INT,\n    Z3_OP_POWER,\n\n    // Arrays & Sets\n  \
+  Z3_OP_STORE = 0x300,\n    Z3_OP_SELECT,\n    Z3_OP_CONST_ARRAY,\n    \
+Z3_OP_ARRAY_MAP,\n    Z3_OP_ARRAY_DEFAULT,\n    Z3_OP_SET_UNION,\n    \
+Z3_OP_SET_INTERSECT,\n    Z3_OP_SET_DIFFERENCE,\n    Z3_OP_SET_COMPLEMENT,\n  \
+  Z3_OP_SET_SUBSET,\n    Z3_OP_AS_ARRAY,\n    Z3_OP_ARRAY_EXT,\n    \
+Z3_OP_SET_HAS_SIZE,\n    Z3_OP_SET_CARD,\n\n    // Bit-vectors\n    \
+Z3_OP_BNUM = 0x400,\n    Z3_OP_BIT1,\n    Z3_OP_BIT0,\n    Z3_OP_BNEG,\n    \
+Z3_OP_BADD,\n    Z3_OP_BSUB,\n    Z3_OP_BMUL,\n\n    Z3_OP_BSDIV,\n    \
+Z3_OP_BUDIV,\n    Z3_OP_BSREM,\n    Z3_OP_BUREM,\n    Z3_OP_BSMOD,\n\n    // \
+special functions to record the division by 0 cases\n    // these are \
+internal functions\n    Z3_OP_BSDIV0,\n    Z3_OP_BUDIV0,\n    Z3_OP_BSREM0,\n \
+   Z3_OP_BUREM0,\n    Z3_OP_BSMOD0,\n\n    Z3_OP_ULEQ,\n    Z3_OP_SLEQ,\n    \
+Z3_OP_UGEQ,\n    Z3_OP_SGEQ,\n    Z3_OP_ULT,\n    Z3_OP_SLT,\n    Z3_OP_UGT,\n\
+    Z3_OP_SGT,\n\n    Z3_OP_BAND,\n    Z3_OP_BOR,\n    Z3_OP_BNOT,\n    \
+Z3_OP_BXOR,\n    Z3_OP_BNAND,\n    Z3_OP_BNOR,\n    Z3_OP_BXNOR,\n\n    \
+Z3_OP_CONCAT,\n    Z3_OP_SIGN_EXT,\n    Z3_OP_ZERO_EXT,\n    Z3_OP_EXTRACT,\n \
+   Z3_OP_REPEAT,\n\n    Z3_OP_BREDOR,\n    Z3_OP_BREDAND,\n    Z3_OP_BCOMP,\n\
+\n    Z3_OP_BSHL,\n    Z3_OP_BLSHR,\n    Z3_OP_BASHR,\n    Z3_OP_ROTATE_LEFT,\
+\n    Z3_OP_ROTATE_RIGHT,\n    Z3_OP_EXT_ROTATE_LEFT,\n    \
+Z3_OP_EXT_ROTATE_RIGHT,\n\n    Z3_OP_BIT2BOOL,\n    Z3_OP_INT2BV,\n    \
+Z3_OP_BV2INT,\n    Z3_OP_CARRY,\n    Z3_OP_XOR3,\n\n    Z3_OP_BSMUL_NO_OVFL,\n\
+    Z3_OP_BUMUL_NO_OVFL,\n    Z3_OP_BSMUL_NO_UDFL,\n    Z3_OP_BSDIV_I,\n    \
+Z3_OP_BUDIV_I,\n    Z3_OP_BSREM_I,\n    Z3_OP_BUREM_I,\n    Z3_OP_BSMOD_I,\n\n\
+    // Proofs\n    Z3_OP_PR_UNDEF = 0x500,\n    Z3_OP_PR_TRUE,\n    \
+Z3_OP_PR_ASSERTED,\n    Z3_OP_PR_GOAL,\n    Z3_OP_PR_MODUS_PONENS,\n    \
+Z3_OP_PR_REFLEXIVITY,\n    Z3_OP_PR_SYMMETRY,\n    Z3_OP_PR_TRANSITIVITY,\n   \
+ Z3_OP_PR_TRANSITIVITY_STAR,\n    Z3_OP_PR_MONOTONICITY,\n    \
+Z3_OP_PR_QUANT_INTRO,\n    Z3_OP_PR_BIND,\n    Z3_OP_PR_DISTRIBUTIVITY,\n    \
+Z3_OP_PR_AND_ELIM,\n    Z3_OP_PR_NOT_OR_ELIM,\n    Z3_OP_PR_REWRITE,\n    \
+Z3_OP_PR_REWRITE_STAR,\n    Z3_OP_PR_PULL_QUANT,\n    Z3_OP_PR_PUSH_QUANT,\n  \
+  Z3_OP_PR_ELIM_UNUSED_VARS,\n    Z3_OP_PR_DER,\n    Z3_OP_PR_QUANT_INST,\n   \
+ Z3_OP_PR_HYPOTHESIS,\n    Z3_OP_PR_LEMMA,\n    Z3_OP_PR_UNIT_RESOLUTION,\n   \
+ Z3_OP_PR_IFF_TRUE,\n    Z3_OP_PR_IFF_FALSE,\n    Z3_OP_PR_COMMUTATIVITY,\n   \
+ Z3_OP_PR_DEF_AXIOM,\n    Z3_OP_PR_ASSUMPTION_ADD, \n    Z3_OP_PR_LEMMA_ADD, \
+\n    Z3_OP_PR_REDUNDANT_DEL, \n    Z3_OP_PR_CLAUSE_TRAIL,\n    \
+Z3_OP_PR_DEF_INTRO,\n    Z3_OP_PR_APPLY_DEF,\n    Z3_OP_PR_IFF_OEQ,\n    \
+Z3_OP_PR_NNF_POS,\n    Z3_OP_PR_NNF_NEG,\n    Z3_OP_PR_SKOLEMIZE,\n    \
+Z3_OP_PR_MODUS_PONENS_OEQ,\n    Z3_OP_PR_TH_LEMMA,\n    \
+Z3_OP_PR_HYPER_RESOLVE,\n\n    // Relational algebra\n    Z3_OP_RA_STORE = \
+0x600,\n    Z3_OP_RA_EMPTY,\n    Z3_OP_RA_IS_EMPTY,\n    Z3_OP_RA_JOIN,\n    \
+Z3_OP_RA_UNION,\n    Z3_OP_RA_WIDEN,\n    Z3_OP_RA_PROJECT,\n    \
+Z3_OP_RA_FILTER,\n    Z3_OP_RA_NEGATION_FILTER,\n    Z3_OP_RA_RENAME,\n    \
+Z3_OP_RA_COMPLEMENT,\n    Z3_OP_RA_SELECT,\n    Z3_OP_RA_CLONE,\n    \
+Z3_OP_FD_CONSTANT,\n    Z3_OP_FD_LT,\n\n    // Sequences\n    Z3_OP_SEQ_UNIT,\
+\n    Z3_OP_SEQ_EMPTY,\n    Z3_OP_SEQ_CONCAT,\n    Z3_OP_SEQ_PREFIX,\n    \
+Z3_OP_SEQ_SUFFIX,\n    Z3_OP_SEQ_CONTAINS,\n    Z3_OP_SEQ_EXTRACT,\n    \
+Z3_OP_SEQ_REPLACE,\n    Z3_OP_SEQ_REPLACE_RE,\n    Z3_OP_SEQ_REPLACE_RE_ALL,\n\
+    Z3_OP_SEQ_REPLACE_ALL,\n    Z3_OP_SEQ_AT,\n    Z3_OP_SEQ_NTH,\n    \
+Z3_OP_SEQ_LENGTH,\n    Z3_OP_SEQ_INDEX,\n    Z3_OP_SEQ_LAST_INDEX,\n    \
+Z3_OP_SEQ_TO_RE,\n    Z3_OP_SEQ_IN_RE,\n\n    // strings\n    \
+Z3_OP_STR_TO_INT,\n    Z3_OP_INT_TO_STR,\n    Z3_OP_UBV_TO_STR,\n    \
+Z3_OP_SBV_TO_STR,\n    Z3_OP_STR_TO_CODE,\n    Z3_OP_STR_FROM_CODE,\n    \
+Z3_OP_STRING_LT,\n    Z3_OP_STRING_LE,\n\n    // regular expressions\n    \
+Z3_OP_RE_PLUS,\n    Z3_OP_RE_STAR,\n    Z3_OP_RE_OPTION,\n    \
+Z3_OP_RE_CONCAT,\n    Z3_OP_RE_UNION,\n    Z3_OP_RE_RANGE,\n    \
+Z3_OP_RE_DIFF,\n    Z3_OP_RE_INTERSECT,\n    Z3_OP_RE_LOOP,\n    \
+Z3_OP_RE_POWER,\n    Z3_OP_RE_COMPLEMENT,\n    Z3_OP_RE_EMPTY_SET,\n    \
+Z3_OP_RE_FULL_SET,\n    Z3_OP_RE_FULL_CHAR_SET,\n    Z3_OP_RE_OF_PRED,\n    \
+Z3_OP_RE_REVERSE,\n    Z3_OP_RE_DERIVATIVE,\n\n    // char\n    \
+Z3_OP_CHAR_CONST,\n    Z3_OP_CHAR_LE,\n    Z3_OP_CHAR_TO_INT,\n    \
+Z3_OP_CHAR_TO_BV,\n    Z3_OP_CHAR_FROM_BV,\n    Z3_OP_CHAR_IS_DIGIT,\n\n    \
+// Auxiliary\n    Z3_OP_LABEL = 0x700,\n    Z3_OP_LABEL_LIT,\n\n    // \
+Datatypes\n    Z3_OP_DT_CONSTRUCTOR=0x800,\n    Z3_OP_DT_RECOGNISER,\n    \
+Z3_OP_DT_IS,\n    Z3_OP_DT_ACCESSOR,\n    Z3_OP_DT_UPDATE_FIELD,\n\n    // \
+Pseudo Booleans\n    Z3_OP_PB_AT_MOST=0x900,\n    Z3_OP_PB_AT_LEAST,\n    \
+Z3_OP_PB_LE,\n    Z3_OP_PB_GE,\n    Z3_OP_PB_EQ,\n\n    // Special relations\n\
+    Z3_OP_SPECIAL_RELATION_LO = 0xa000,\n    Z3_OP_SPECIAL_RELATION_PO,\n    \
+Z3_OP_SPECIAL_RELATION_PLO,\n    Z3_OP_SPECIAL_RELATION_TO,\n    \
+Z3_OP_SPECIAL_RELATION_TC,\n    Z3_OP_SPECIAL_RELATION_TRC,\n\n\n    // \
+Floating-Point Arithmetic\n    Z3_OP_FPA_RM_NEAREST_TIES_TO_EVEN = 0xb000,\n  \
+  Z3_OP_FPA_RM_NEAREST_TIES_TO_AWAY,\n    Z3_OP_FPA_RM_TOWARD_POSITIVE,\n    \
+Z3_OP_FPA_RM_TOWARD_NEGATIVE,\n    Z3_OP_FPA_RM_TOWARD_ZERO,\n\n    \
+Z3_OP_FPA_NUM,\n    Z3_OP_FPA_PLUS_INF,\n    Z3_OP_FPA_MINUS_INF,\n    \
+Z3_OP_FPA_NAN,\n    Z3_OP_FPA_PLUS_ZERO,\n    Z3_OP_FPA_MINUS_ZERO,\n\n    \
+Z3_OP_FPA_ADD,\n    Z3_OP_FPA_SUB,\n    Z3_OP_FPA_NEG,\n    Z3_OP_FPA_MUL,\n  \
+  Z3_OP_FPA_DIV,\n    Z3_OP_FPA_REM,\n    Z3_OP_FPA_ABS,\n    Z3_OP_FPA_MIN,\n\
+    Z3_OP_FPA_MAX,\n    Z3_OP_FPA_FMA,\n    Z3_OP_FPA_SQRT,\n    \
+Z3_OP_FPA_ROUND_TO_INTEGRAL,\n\n    Z3_OP_FPA_EQ,\n    Z3_OP_FPA_LT,\n    \
+Z3_OP_FPA_GT,\n    Z3_OP_FPA_LE,\n    Z3_OP_FPA_GE,\n    Z3_OP_FPA_IS_NAN,\n  \
+  Z3_OP_FPA_IS_INF,\n    Z3_OP_FPA_IS_ZERO,\n    Z3_OP_FPA_IS_NORMAL,\n    \
+Z3_OP_FPA_IS_SUBNORMAL,\n    Z3_OP_FPA_IS_NEGATIVE,\n    \
+Z3_OP_FPA_IS_POSITIVE,\n\n    Z3_OP_FPA_FP,\n    Z3_OP_FPA_TO_FP,\n    \
+Z3_OP_FPA_TO_FP_UNSIGNED,\n    Z3_OP_FPA_TO_UBV,\n    Z3_OP_FPA_TO_SBV,\n    \
+Z3_OP_FPA_TO_REAL,\n\n    Z3_OP_FPA_TO_IEEE_BV,\n\n    Z3_OP_FPA_BVWRAP,\n    \
+Z3_OP_FPA_BV2RM,\n\n    Z3_OP_INTERNAL,\n    Z3_OP_RECURSIVE,\n\n    \
+Z3_OP_UNINTERPRETED\n} Z3_decl_kind;",
+    SelectWithContents->True,
+    Selectable->False]}], ";"}]], "Input",
+ CellChangeTimes->{{3.8855101277399263`*^9, 3.885510137514299*^9}, 
+   3.885510356049281*^9},
+ CellLabel->"In[92]:=",ExpressionUUID->"83c3d613-5ea4-4e1b-801d-9a8edef12c4b"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"declKindNames", "=", 
+   RowBox[{"StringTrim", "@", 
+    RowBox[{"StringDelete", "[", 
+     RowBox[{
+      RowBox[{"StringDelete", "[", 
+       RowBox[{
+        RowBox[{"Select", "[", 
+         RowBox[{
+          RowBox[{"StringTrim", "@", 
+           RowBox[{"StringSplit", "[", 
+            RowBox[{"declKindEnumStr", ",", "\"\<\\n\>\""}], "]"}]}], ",", 
+          RowBox[{"StringStartsQ", "[", "\"\<Z3\>\"", "]"}]}], "]"}], ",", 
+        RowBox[{"\"\<,\>\"", "~~", "EndOfString"}]}], "]"}], ",", 
+      RowBox[{"\"\<=\>\"", "~~", "___", "~~", "EndOfString"}]}], "]"}]}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.885510357162025*^9, 3.885510405859453*^9}, {
+  3.885512779481512*^9, 3.885512819508617*^9}, {3.885512964486217*^9, 
+  3.885512969377673*^9}},
+ CellLabel->
+  "In[154]:=",ExpressionUUID->"f60f5ba5-21e3-4fbc-aff7-37f80e14e399"],
+
+Cell[BoxData[
+ RowBox[{"CopyToClipboard", "@", 
+  RowBox[{"StringRiffle", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"\"\<\\t\\\"\>\"", "<>", "#", "<>", "\"\<\\\"\>\""}], "&"}], "/@",
+      "declKindNames"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"\"\<{\\n\>\"", ",", "\"\<,\\n\>\"", ",", "\"\<}\>\""}], "}"}]}],
+    "]"}]}]], "Input",
+ CellChangeTimes->{{3.88551282425314*^9, 3.885512864362108*^9}},
+ CellLabel->
+  "In[155]:=",ExpressionUUID->"4fc54315-5699-4ace-81be-41a9a75efcab"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Compilation", "Subsubsection",
+ CellChangeTimes->{{3.8855112740661077`*^9, 
+  3.8855112813038*^9}},ExpressionUUID->"5a22c14b-85b8-4ae9-abf5-c6960d86eeec"],
+
+Cell[BoxData[
+ RowBox[{"Needs", "[", "\"\<CCompilerDriver`\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.885511291356436*^9, 3.885511294255951*^9}},
+ CellLabel->"In[42]:=",ExpressionUUID->"87306885-4d90-46ee-a408-c13e358407cb"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"declKindNames", " ", "=", " ", 
+   RowBox[{"{", "\n", "\t", 
+    RowBox[{
+    "\"\<Z3_OP_TRUE\>\"", ",", "\n", "\t", "\"\<Z3_OP_FALSE\>\"", ",", "\n", 
+     "\t", "\"\<Z3_OP_EQ\>\"", ",", "\n", "\t", "\"\<Z3_OP_DISTINCT\>\"", ",",
+      "\n", "\t", "\"\<Z3_OP_ITE\>\"", ",", "\n", "\t", "\"\<Z3_OP_AND\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_OR\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_IFF\>\"", ",", "\n", "\t", "\"\<Z3_OP_XOR\>\"", ",", "\n", 
+     "\t", "\"\<Z3_OP_NOT\>\"", ",", "\n", "\t", "\"\<Z3_OP_IMPLIES\>\"", ",",
+      "\n", "\t", "\"\<Z3_OP_OEQ\>\"", ",", "\n", "\t", "\"\<Z3_OP_ANUM\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_AGNUM\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_LE\>\"", ",", "\n", "\t", "\"\<Z3_OP_GE\>\"", ",", "\n", 
+     "\t", "\"\<Z3_OP_LT\>\"", ",", "\n", "\t", "\"\<Z3_OP_GT\>\"", ",", "\n",
+      "\t", "\"\<Z3_OP_ADD\>\"", ",", "\n", "\t", "\"\<Z3_OP_SUB\>\"", ",", 
+     "\n", "\t", "\"\<Z3_OP_UMINUS\>\"", ",", "\n", "\t", "\"\<Z3_OP_MUL\>\"",
+      ",", "\n", "\t", "\"\<Z3_OP_DIV\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_IDIV\>\"", ",", "\n", "\t", "\"\<Z3_OP_REM\>\"", ",", "\n", 
+     "\t", "\"\<Z3_OP_MOD\>\"", ",", "\n", "\t", "\"\<Z3_OP_TO_REAL\>\"", ",",
+      "\n", "\t", "\"\<Z3_OP_TO_INT\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_IS_INT\>\"", ",", "\n", "\t", "\"\<Z3_OP_POWER\>\"", ",", 
+     "\n", "\t", "\"\<Z3_OP_STORE\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_SELECT\>\"", ",", "\n", "\t", "\"\<Z3_OP_CONST_ARRAY\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_ARRAY_MAP\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_ARRAY_DEFAULT\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_SET_UNION\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_SET_INTERSECT\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_SET_DIFFERENCE\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_SET_COMPLEMENT\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_SET_SUBSET\>\"", ",", "\n", "\t", "\"\<Z3_OP_AS_ARRAY\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_ARRAY_EXT\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_SET_HAS_SIZE\>\"", ",", "\n", "\t", "\"\<Z3_OP_SET_CARD\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_BNUM\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_BIT1\>\"", ",", "\n", "\t", "\"\<Z3_OP_BIT0\>\"", ",", "\n", 
+     "\t", "\"\<Z3_OP_BNEG\>\"", ",", "\n", "\t", "\"\<Z3_OP_BADD\>\"", ",", 
+     "\n", "\t", "\"\<Z3_OP_BSUB\>\"", ",", "\n", "\t", "\"\<Z3_OP_BMUL\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_BSDIV\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_BUDIV\>\"", ",", "\n", "\t", "\"\<Z3_OP_BSREM\>\"", ",", "\n",
+      "\t", "\"\<Z3_OP_BUREM\>\"", ",", "\n", "\t", "\"\<Z3_OP_BSMOD\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_BSDIV0\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_BUDIV0\>\"", ",", "\n", "\t", "\"\<Z3_OP_BSREM0\>\"", ",", 
+     "\n", "\t", "\"\<Z3_OP_BUREM0\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_BSMOD0\>\"", ",", "\n", "\t", "\"\<Z3_OP_ULEQ\>\"", ",", "\n",
+      "\t", "\"\<Z3_OP_SLEQ\>\"", ",", "\n", "\t", "\"\<Z3_OP_UGEQ\>\"", ",", 
+     "\n", "\t", "\"\<Z3_OP_SGEQ\>\"", ",", "\n", "\t", "\"\<Z3_OP_ULT\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_SLT\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_UGT\>\"", ",", "\n", "\t", "\"\<Z3_OP_SGT\>\"", ",", "\n", 
+     "\t", "\"\<Z3_OP_BAND\>\"", ",", "\n", "\t", "\"\<Z3_OP_BOR\>\"", ",", 
+     "\n", "\t", "\"\<Z3_OP_BNOT\>\"", ",", "\n", "\t", "\"\<Z3_OP_BXOR\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_BNAND\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_BNOR\>\"", ",", "\n", "\t", "\"\<Z3_OP_BXNOR\>\"", ",", "\n", 
+     "\t", "\"\<Z3_OP_CONCAT\>\"", ",", "\n", "\t", "\"\<Z3_OP_SIGN_EXT\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_ZERO_EXT\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_EXTRACT\>\"", ",", "\n", "\t", "\"\<Z3_OP_REPEAT\>\"", ",", 
+     "\n", "\t", "\"\<Z3_OP_BREDOR\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_BREDAND\>\"", ",", "\n", "\t", "\"\<Z3_OP_BCOMP\>\"", ",", 
+     "\n", "\t", "\"\<Z3_OP_BSHL\>\"", ",", "\n", "\t", "\"\<Z3_OP_BLSHR\>\"",
+      ",", "\n", "\t", "\"\<Z3_OP_BASHR\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_ROTATE_LEFT\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_ROTATE_RIGHT\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_EXT_ROTATE_LEFT\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_EXT_ROTATE_RIGHT\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_BIT2BOOL\>\"", ",", "\n", "\t", "\"\<Z3_OP_INT2BV\>\"", ",", 
+     "\n", "\t", "\"\<Z3_OP_BV2INT\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_CARRY\>\"", ",", "\n", "\t", "\"\<Z3_OP_XOR3\>\"", ",", "\n", 
+     "\t", "\"\<Z3_OP_BSMUL_NO_OVFL\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_BUMUL_NO_OVFL\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_BSMUL_NO_UDFL\>\"", ",", "\n", "\t", "\"\<Z3_OP_BSDIV_I\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_BUDIV_I\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_BSREM_I\>\"", ",", "\n", "\t", "\"\<Z3_OP_BUREM_I\>\"", ",", 
+     "\n", "\t", "\"\<Z3_OP_BSMOD_I\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_UNDEF\>\"", ",", "\n", "\t", "\"\<Z3_OP_PR_TRUE\>\"", ",", 
+     "\n", "\t", "\"\<Z3_OP_PR_ASSERTED\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_GOAL\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_MODUS_PONENS\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_REFLEXIVITY\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_SYMMETRY\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_TRANSITIVITY\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_TRANSITIVITY_STAR\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_MONOTONICITY\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_QUANT_INTRO\>\"", ",", "\n", "\t", "\"\<Z3_OP_PR_BIND\>\"",
+      ",", "\n", "\t", "\"\<Z3_OP_PR_DISTRIBUTIVITY\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_AND_ELIM\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_NOT_OR_ELIM\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_REWRITE\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_REWRITE_STAR\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_PULL_QUANT\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_PUSH_QUANT\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_ELIM_UNUSED_VARS\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_DER\>\"", ",", "\n", "\t", "\"\<Z3_OP_PR_QUANT_INST\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_PR_HYPOTHESIS\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_LEMMA\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_UNIT_RESOLUTION\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_IFF_TRUE\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_IFF_FALSE\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_COMMUTATIVITY\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_DEF_AXIOM\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_ASSUMPTION_ADD\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_LEMMA_ADD\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_REDUNDANT_DEL\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_CLAUSE_TRAIL\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_DEF_INTRO\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_APPLY_DEF\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_IFF_OEQ\>\"", ",", "\n", "\t", "\"\<Z3_OP_PR_NNF_POS\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_PR_NNF_NEG\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_SKOLEMIZE\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_MODUS_PONENS_OEQ\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_TH_LEMMA\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PR_HYPER_RESOLVE\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_RA_STORE\>\"", ",", "\n", "\t", "\"\<Z3_OP_RA_EMPTY\>\"", ",",
+      "\n", "\t", "\"\<Z3_OP_RA_IS_EMPTY\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_RA_JOIN\>\"", ",", "\n", "\t", "\"\<Z3_OP_RA_UNION\>\"", ",", 
+     "\n", "\t", "\"\<Z3_OP_RA_WIDEN\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_RA_PROJECT\>\"", ",", "\n", "\t", "\"\<Z3_OP_RA_FILTER\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_RA_NEGATION_FILTER\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_RA_RENAME\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_RA_COMPLEMENT\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_RA_SELECT\>\"", ",", "\n", "\t", "\"\<Z3_OP_RA_CLONE\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_FD_CONSTANT\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_FD_LT\>\"", ",", "\n", "\t", "\"\<Z3_OP_SEQ_UNIT\>\"", ",", 
+     "\n", "\t", "\"\<Z3_OP_SEQ_EMPTY\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_SEQ_CONCAT\>\"", ",", "\n", "\t", "\"\<Z3_OP_SEQ_PREFIX\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_SEQ_SUFFIX\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_SEQ_CONTAINS\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_SEQ_EXTRACT\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_SEQ_REPLACE\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_SEQ_REPLACE_RE\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_SEQ_REPLACE_RE_ALL\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_SEQ_REPLACE_ALL\>\"", ",", "\n", "\t", "\"\<Z3_OP_SEQ_AT\>\"",
+      ",", "\n", "\t", "\"\<Z3_OP_SEQ_NTH\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_SEQ_LENGTH\>\"", ",", "\n", "\t", "\"\<Z3_OP_SEQ_INDEX\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_SEQ_LAST_INDEX\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_SEQ_TO_RE\>\"", ",", "\n", "\t", "\"\<Z3_OP_SEQ_IN_RE\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_STR_TO_INT\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_INT_TO_STR\>\"", ",", "\n", "\t", "\"\<Z3_OP_UBV_TO_STR\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_SBV_TO_STR\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_STR_TO_CODE\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_STR_FROM_CODE\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_STRING_LT\>\"", ",", "\n", "\t", "\"\<Z3_OP_STRING_LE\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_RE_PLUS\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_RE_STAR\>\"", ",", "\n", "\t", "\"\<Z3_OP_RE_OPTION\>\"", ",",
+      "\n", "\t", "\"\<Z3_OP_RE_CONCAT\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_RE_UNION\>\"", ",", "\n", "\t", "\"\<Z3_OP_RE_RANGE\>\"", ",",
+      "\n", "\t", "\"\<Z3_OP_RE_DIFF\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_RE_INTERSECT\>\"", ",", "\n", "\t", "\"\<Z3_OP_RE_LOOP\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_RE_POWER\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_RE_COMPLEMENT\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_RE_EMPTY_SET\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_RE_FULL_SET\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_RE_FULL_CHAR_SET\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_RE_OF_PRED\>\"", ",", "\n", "\t", "\"\<Z3_OP_RE_REVERSE\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_RE_DERIVATIVE\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_CHAR_CONST\>\"", ",", "\n", "\t", "\"\<Z3_OP_CHAR_LE\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_CHAR_TO_INT\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_CHAR_TO_BV\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_CHAR_FROM_BV\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_CHAR_IS_DIGIT\>\"", ",", "\n", "\t", "\"\<Z3_OP_LABEL\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_LABEL_LIT\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_DT_CONSTRUCTOR\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_DT_RECOGNISER\>\"", ",", "\n", "\t", "\"\<Z3_OP_DT_IS\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_DT_ACCESSOR\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_DT_UPDATE_FIELD\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PB_AT_MOST\>\"", ",", "\n", "\t", "\"\<Z3_OP_PB_AT_LEAST\>\"",
+      ",", "\n", "\t", "\"\<Z3_OP_PB_LE\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_PB_GE\>\"", ",", "\n", "\t", "\"\<Z3_OP_PB_EQ\>\"", ",", "\n",
+      "\t", "\"\<Z3_OP_SPECIAL_RELATION_LO\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_SPECIAL_RELATION_PO\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_SPECIAL_RELATION_PLO\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_SPECIAL_RELATION_TO\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_SPECIAL_RELATION_TC\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_SPECIAL_RELATION_TRC\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_FPA_RM_NEAREST_TIES_TO_EVEN\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_FPA_RM_NEAREST_TIES_TO_AWAY\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_FPA_RM_TOWARD_POSITIVE\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_FPA_RM_TOWARD_NEGATIVE\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_FPA_RM_TOWARD_ZERO\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_FPA_NUM\>\"", ",", "\n", "\t", "\"\<Z3_OP_FPA_PLUS_INF\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_FPA_MINUS_INF\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_FPA_NAN\>\"", ",", "\n", "\t", "\"\<Z3_OP_FPA_PLUS_ZERO\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_FPA_MINUS_ZERO\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_FPA_ADD\>\"", ",", "\n", "\t", "\"\<Z3_OP_FPA_SUB\>\"", ",", 
+     "\n", "\t", "\"\<Z3_OP_FPA_NEG\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_FPA_MUL\>\"", ",", "\n", "\t", "\"\<Z3_OP_FPA_DIV\>\"", ",", 
+     "\n", "\t", "\"\<Z3_OP_FPA_REM\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_FPA_ABS\>\"", ",", "\n", "\t", "\"\<Z3_OP_FPA_MIN\>\"", ",", 
+     "\n", "\t", "\"\<Z3_OP_FPA_MAX\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_FPA_FMA\>\"", ",", "\n", "\t", "\"\<Z3_OP_FPA_SQRT\>\"", ",", 
+     "\n", "\t", "\"\<Z3_OP_FPA_ROUND_TO_INTEGRAL\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_FPA_EQ\>\"", ",", "\n", "\t", "\"\<Z3_OP_FPA_LT\>\"", ",", 
+     "\n", "\t", "\"\<Z3_OP_FPA_GT\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_FPA_LE\>\"", ",", "\n", "\t", "\"\<Z3_OP_FPA_GE\>\"", ",", 
+     "\n", "\t", "\"\<Z3_OP_FPA_IS_NAN\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_FPA_IS_INF\>\"", ",", "\n", "\t", "\"\<Z3_OP_FPA_IS_ZERO\>\"",
+      ",", "\n", "\t", "\"\<Z3_OP_FPA_IS_NORMAL\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_FPA_IS_SUBNORMAL\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_FPA_IS_NEGATIVE\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_FPA_IS_POSITIVE\>\"", ",", "\n", "\t", "\"\<Z3_OP_FPA_FP\>\"",
+      ",", "\n", "\t", "\"\<Z3_OP_FPA_TO_FP\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_FPA_TO_FP_UNSIGNED\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_FPA_TO_UBV\>\"", ",", "\n", "\t", "\"\<Z3_OP_FPA_TO_SBV\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_FPA_TO_REAL\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_FPA_TO_IEEE_BV\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_FPA_BVWRAP\>\"", ",", "\n", "\t", "\"\<Z3_OP_FPA_BV2RM\>\"", 
+     ",", "\n", "\t", "\"\<Z3_OP_INTERNAL\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_RECURSIVE\>\"", ",", "\n", "\t", 
+     "\"\<Z3_OP_UNINTERPRETED\>\""}], "\n", "}"}]}], ";"}]], "Code",
+ CellChangeTimes->{{3.885511601890045*^9, 3.885511622196933*^9}, {
+  3.885512866991415*^9, 3.885512871812437*^9}, {3.885512972325605*^9, 
+  3.885512975103043*^9}},
+ CellLabel->"In[43]:=",ExpressionUUID->"31934a43-401e-48a8-b11b-50a30c68eae7"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"astKindNames", " ", "=", " ", 
+   RowBox[{"{", "\n", "\t", 
+    RowBox[{
+    "\"\<Z3_NUMERAL_AST\>\"", ",", "\n", "\t", "\"\<Z3_APP_AST\>\"", ",", 
+     "\n", "\t", "\"\<Z3_VAR_AST\>\"", ",", "\n", "\t", 
+     "\"\<Z3_QUANTIFIER_AST\>\"", ",", "\n", "\t", "\"\<Z3_SORT_AST\>\"", ",",
+      "\n", "\t", "\"\<Z3_FUNC_DECL_AST\>\"", ",", "\n", "\t", 
+     "\"\<Z3_UNKNOWN_AST\>\""}], "\n", "}"}]}], ";"}]], "Code",
+ CellChangeTimes->{{3.885556970795155*^9, 3.885556993688025*^9}},
+ CellLabel->"In[44]:=",ExpressionUUID->"b82b345c-5344-43e7-bd0d-ba4a104c049b"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"symbolKindNames", " ", "=", " ", 
+   RowBox[{"{", "\n", "\t", 
+    RowBox[{
+    "\"\<Z3_INT_SYMBOL\>\"", ",", "\n", "\t", "\"\<Z3_STRING_SYMBOL\>\""}], 
+    "\n", "}"}]}], ";"}]], "Code",
+ CellChangeTimes->{{3.885556970795155*^9, 3.885556993688025*^9}, {
+  3.8855630013794394`*^9, 3.885563015165173*^9}},
+ CellLabel->"In[79]:=",ExpressionUUID->"6d4362ce-7c89-41fc-84b5-5cd9ff469048"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"getMacroValues", "[", "declKindNames_", "]"}], " ", ":=", "\n", 
+  "\t", 
+  RowBox[{"Enclose", "@", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"lib", ",", " ", "out"}], "}"}], ",", "\n", "\t\t", 
+     RowBox[{
+      RowBox[{"lib", " ", "=", " ", 
+       RowBox[{"Confirm", "@", 
+        RowBox[{"CreateLibrary", "[", "\n", "\t\t\t", 
+         RowBox[{
+          RowBox[{
+          "\"\<#include <z3.h>\\n\\n\>\"", " ", "<>", "\n", "\t\t\t", 
+           RowBox[{"StringRiffle", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{
+              "StringTemplate", "[", "\"\<int get_`1`() {return `1`;}\>\"", 
+               "]"}], "/@", "declKindNames"}], ",", "\"\<\\n\\n\>\""}], 
+            "]"}]}], ",", "\n", "\t\t\t", 
+          RowBox[{"CreateUUID", "[", "]"}]}], "\n", "\t\t", "]"}]}]}], ";", 
+      "\n", "\t\t", 
+      RowBox[{"out", " ", "=", " ", 
+       RowBox[{"AssociationMap", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"ForeignFunctionLoad", "[", 
+            RowBox[{"lib", ",", 
+             RowBox[{"\"\<get_\>\"", "<>", "#"}], ",", 
+             RowBox[{
+              RowBox[{"{", "}"}], "->", "\"\<CInt\>\""}]}], "]"}], "[", "]"}],
+           "&"}], ",", "declKindNames"}], "]"}]}], ";", "\n", "\t\t", 
+      RowBox[{"DeleteFile", "[", "lib", "]"}], ";", "\n", "\t\t", "out"}]}], 
+    "\n", "\t", "]"}]}]}]], "Code",
+ CellChangeTimes->{{3.8855126811232853`*^9, 3.8855127442631397`*^9}, {
+  3.885512896849242*^9, 3.885512914258176*^9}, {3.8855569510408382`*^9, 
+  3.885556953635394*^9}},
+ CellLabel->"In[45]:=",ExpressionUUID->"31d8358a-9e2f-4a94-ba66-3aa49271a1b5"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"$DeclarationKindIDs", "=", 
+   RowBox[{"getMacroValues", "[", "declKindNames", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"$ASTKindIDs", "=", 
+   RowBox[{"getMacroValues", "[", "astKindNames", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"$SymbolKindIDs", "=", 
+   RowBox[{"getMacroValues", "[", "symbolKindNames", "]"}]}], ";"}]}], "Input",\
+
+ CellChangeTimes->{{3.885557052217868*^9, 3.885557063077961*^9}, 
+   3.885557094603074*^9, {3.885563022848988*^9, 3.885563036558773*^9}},
+ CellLabel->"In[80]:=",ExpressionUUID->"05ee85f3-0640-485e-b5c4-d798197a81f7"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"$DeclarationKindIDs", "=", 
+   InterpretationBox[
+    DynamicModuleBox[{Typeset`open = False}, 
+     TemplateBox[{"Association", "AssociationIcon", 
+       GridBox[{{
+          RowBox[{
+            TagBox["\"Head: \"", "IconizedLabel"], "\[InvisibleSpace]", 
+            TagBox["Association", "IconizedItem"]}]}, {
+          RowBox[{
+            TagBox["\"Length: \"", "IconizedLabel"], "\[InvisibleSpace]", 
+            TagBox["275", "IconizedItem"]}]}, {
+          RowBox[{
+            TagBox["\"Byte count: \"", "IconizedLabel"], "\[InvisibleSpace]", 
+            
+            TagBox["42144", "IconizedItem"]}]}}, 
+        GridBoxAlignment -> {"Columns" -> {{Left}}}, DefaultBaseStyle -> 
+        "Column", 
+        GridBoxItemSize -> {
+         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}], 
+       Dynamic[Typeset`open]},
+      "IconizedObject"]],
+    <|"Z3_OP_TRUE" -> 256, "Z3_OP_FALSE" -> 257, "Z3_OP_EQ" -> 258, 
+     "Z3_OP_DISTINCT" -> 259, "Z3_OP_ITE" -> 260, "Z3_OP_AND" -> 261, 
+     "Z3_OP_OR" -> 262, "Z3_OP_IFF" -> 263, "Z3_OP_XOR" -> 264, "Z3_OP_NOT" -> 
+     265, "Z3_OP_IMPLIES" -> 266, "Z3_OP_OEQ" -> 267, "Z3_OP_ANUM" -> 512, 
+     "Z3_OP_AGNUM" -> 513, "Z3_OP_LE" -> 514, "Z3_OP_GE" -> 515, "Z3_OP_LT" -> 
+     516, "Z3_OP_GT" -> 517, "Z3_OP_ADD" -> 518, "Z3_OP_SUB" -> 519, 
+     "Z3_OP_UMINUS" -> 520, "Z3_OP_MUL" -> 521, "Z3_OP_DIV" -> 522, 
+     "Z3_OP_IDIV" -> 523, "Z3_OP_REM" -> 524, "Z3_OP_MOD" -> 525, 
+     "Z3_OP_TO_REAL" -> 526, "Z3_OP_TO_INT" -> 527, "Z3_OP_IS_INT" -> 528, 
+     "Z3_OP_POWER" -> 529, "Z3_OP_STORE" -> 768, "Z3_OP_SELECT" -> 769, 
+     "Z3_OP_CONST_ARRAY" -> 770, "Z3_OP_ARRAY_MAP" -> 771, 
+     "Z3_OP_ARRAY_DEFAULT" -> 772, "Z3_OP_SET_UNION" -> 773, 
+     "Z3_OP_SET_INTERSECT" -> 774, "Z3_OP_SET_DIFFERENCE" -> 775, 
+     "Z3_OP_SET_COMPLEMENT" -> 776, "Z3_OP_SET_SUBSET" -> 777, 
+     "Z3_OP_AS_ARRAY" -> 778, "Z3_OP_ARRAY_EXT" -> 779, "Z3_OP_SET_HAS_SIZE" -> 
+     780, "Z3_OP_SET_CARD" -> 781, "Z3_OP_BNUM" -> 1024, "Z3_OP_BIT1" -> 1025,
+      "Z3_OP_BIT0" -> 1026, "Z3_OP_BNEG" -> 1027, "Z3_OP_BADD" -> 1028, 
+     "Z3_OP_BSUB" -> 1029, "Z3_OP_BMUL" -> 1030, "Z3_OP_BSDIV" -> 1031, 
+     "Z3_OP_BUDIV" -> 1032, "Z3_OP_BSREM" -> 1033, "Z3_OP_BUREM" -> 1034, 
+     "Z3_OP_BSMOD" -> 1035, "Z3_OP_BSDIV0" -> 1036, "Z3_OP_BUDIV0" -> 1037, 
+     "Z3_OP_BSREM0" -> 1038, "Z3_OP_BUREM0" -> 1039, "Z3_OP_BSMOD0" -> 1040, 
+     "Z3_OP_ULEQ" -> 1041, "Z3_OP_SLEQ" -> 1042, "Z3_OP_UGEQ" -> 1043, 
+     "Z3_OP_SGEQ" -> 1044, "Z3_OP_ULT" -> 1045, "Z3_OP_SLT" -> 1046, 
+     "Z3_OP_UGT" -> 1047, "Z3_OP_SGT" -> 1048, "Z3_OP_BAND" -> 1049, 
+     "Z3_OP_BOR" -> 1050, "Z3_OP_BNOT" -> 1051, "Z3_OP_BXOR" -> 1052, 
+     "Z3_OP_BNAND" -> 1053, "Z3_OP_BNOR" -> 1054, "Z3_OP_BXNOR" -> 1055, 
+     "Z3_OP_CONCAT" -> 1056, "Z3_OP_SIGN_EXT" -> 1057, "Z3_OP_ZERO_EXT" -> 
+     1058, "Z3_OP_EXTRACT" -> 1059, "Z3_OP_REPEAT" -> 1060, "Z3_OP_BREDOR" -> 
+     1061, "Z3_OP_BREDAND" -> 1062, "Z3_OP_BCOMP" -> 1063, "Z3_OP_BSHL" -> 
+     1064, "Z3_OP_BLSHR" -> 1065, "Z3_OP_BASHR" -> 1066, "Z3_OP_ROTATE_LEFT" -> 
+     1067, "Z3_OP_ROTATE_RIGHT" -> 1068, "Z3_OP_EXT_ROTATE_LEFT" -> 1069, 
+     "Z3_OP_EXT_ROTATE_RIGHT" -> 1070, "Z3_OP_BIT2BOOL" -> 1071, 
+     "Z3_OP_INT2BV" -> 1072, "Z3_OP_BV2INT" -> 1073, "Z3_OP_CARRY" -> 1074, 
+     "Z3_OP_XOR3" -> 1075, "Z3_OP_BSMUL_NO_OVFL" -> 1076, 
+     "Z3_OP_BUMUL_NO_OVFL" -> 1077, "Z3_OP_BSMUL_NO_UDFL" -> 1078, 
+     "Z3_OP_BSDIV_I" -> 1079, "Z3_OP_BUDIV_I" -> 1080, "Z3_OP_BSREM_I" -> 
+     1081, "Z3_OP_BUREM_I" -> 1082, "Z3_OP_BSMOD_I" -> 1083, "Z3_OP_PR_UNDEF" -> 
+     1280, "Z3_OP_PR_TRUE" -> 1281, "Z3_OP_PR_ASSERTED" -> 1282, 
+     "Z3_OP_PR_GOAL" -> 1283, "Z3_OP_PR_MODUS_PONENS" -> 1284, 
+     "Z3_OP_PR_REFLEXIVITY" -> 1285, "Z3_OP_PR_SYMMETRY" -> 1286, 
+     "Z3_OP_PR_TRANSITIVITY" -> 1287, "Z3_OP_PR_TRANSITIVITY_STAR" -> 1288, 
+     "Z3_OP_PR_MONOTONICITY" -> 1289, "Z3_OP_PR_QUANT_INTRO" -> 1290, 
+     "Z3_OP_PR_BIND" -> 1291, "Z3_OP_PR_DISTRIBUTIVITY" -> 1292, 
+     "Z3_OP_PR_AND_ELIM" -> 1293, "Z3_OP_PR_NOT_OR_ELIM" -> 1294, 
+     "Z3_OP_PR_REWRITE" -> 1295, "Z3_OP_PR_REWRITE_STAR" -> 1296, 
+     "Z3_OP_PR_PULL_QUANT" -> 1297, "Z3_OP_PR_PUSH_QUANT" -> 1298, 
+     "Z3_OP_PR_ELIM_UNUSED_VARS" -> 1299, "Z3_OP_PR_DER" -> 1300, 
+     "Z3_OP_PR_QUANT_INST" -> 1301, "Z3_OP_PR_HYPOTHESIS" -> 1302, 
+     "Z3_OP_PR_LEMMA" -> 1303, "Z3_OP_PR_UNIT_RESOLUTION" -> 1304, 
+     "Z3_OP_PR_IFF_TRUE" -> 1305, "Z3_OP_PR_IFF_FALSE" -> 1306, 
+     "Z3_OP_PR_COMMUTATIVITY" -> 1307, "Z3_OP_PR_DEF_AXIOM" -> 1308, 
+     "Z3_OP_PR_ASSUMPTION_ADD" -> 1309, "Z3_OP_PR_LEMMA_ADD" -> 1310, 
+     "Z3_OP_PR_REDUNDANT_DEL" -> 1311, "Z3_OP_PR_CLAUSE_TRAIL" -> 1312, 
+     "Z3_OP_PR_DEF_INTRO" -> 1313, "Z3_OP_PR_APPLY_DEF" -> 1314, 
+     "Z3_OP_PR_IFF_OEQ" -> 1315, "Z3_OP_PR_NNF_POS" -> 1316, 
+     "Z3_OP_PR_NNF_NEG" -> 1317, "Z3_OP_PR_SKOLEMIZE" -> 1318, 
+     "Z3_OP_PR_MODUS_PONENS_OEQ" -> 1319, "Z3_OP_PR_TH_LEMMA" -> 1320, 
+     "Z3_OP_PR_HYPER_RESOLVE" -> 1321, "Z3_OP_RA_STORE" -> 1536, 
+     "Z3_OP_RA_EMPTY" -> 1537, "Z3_OP_RA_IS_EMPTY" -> 1538, "Z3_OP_RA_JOIN" -> 
+     1539, "Z3_OP_RA_UNION" -> 1540, "Z3_OP_RA_WIDEN" -> 1541, 
+     "Z3_OP_RA_PROJECT" -> 1542, "Z3_OP_RA_FILTER" -> 1543, 
+     "Z3_OP_RA_NEGATION_FILTER" -> 1544, "Z3_OP_RA_RENAME" -> 1545, 
+     "Z3_OP_RA_COMPLEMENT" -> 1546, "Z3_OP_RA_SELECT" -> 1547, 
+     "Z3_OP_RA_CLONE" -> 1548, "Z3_OP_FD_CONSTANT" -> 1549, "Z3_OP_FD_LT" -> 
+     1550, "Z3_OP_SEQ_UNIT" -> 1551, "Z3_OP_SEQ_EMPTY" -> 1552, 
+     "Z3_OP_SEQ_CONCAT" -> 1553, "Z3_OP_SEQ_PREFIX" -> 1554, 
+     "Z3_OP_SEQ_SUFFIX" -> 1555, "Z3_OP_SEQ_CONTAINS" -> 1556, 
+     "Z3_OP_SEQ_EXTRACT" -> 1557, "Z3_OP_SEQ_REPLACE" -> 1558, 
+     "Z3_OP_SEQ_REPLACE_RE" -> 1559, "Z3_OP_SEQ_REPLACE_RE_ALL" -> 1560, 
+     "Z3_OP_SEQ_REPLACE_ALL" -> 1561, "Z3_OP_SEQ_AT" -> 1562, "Z3_OP_SEQ_NTH" -> 
+     1563, "Z3_OP_SEQ_LENGTH" -> 1564, "Z3_OP_SEQ_INDEX" -> 1565, 
+     "Z3_OP_SEQ_LAST_INDEX" -> 1566, "Z3_OP_SEQ_TO_RE" -> 1567, 
+     "Z3_OP_SEQ_IN_RE" -> 1568, "Z3_OP_STR_TO_INT" -> 1569, 
+     "Z3_OP_INT_TO_STR" -> 1570, "Z3_OP_UBV_TO_STR" -> 1571, 
+     "Z3_OP_SBV_TO_STR" -> 1572, "Z3_OP_STR_TO_CODE" -> 1573, 
+     "Z3_OP_STR_FROM_CODE" -> 1574, "Z3_OP_STRING_LT" -> 1575, 
+     "Z3_OP_STRING_LE" -> 1576, "Z3_OP_RE_PLUS" -> 1577, "Z3_OP_RE_STAR" -> 
+     1578, "Z3_OP_RE_OPTION" -> 1579, "Z3_OP_RE_CONCAT" -> 1580, 
+     "Z3_OP_RE_UNION" -> 1581, "Z3_OP_RE_RANGE" -> 1582, "Z3_OP_RE_DIFF" -> 
+     1583, "Z3_OP_RE_INTERSECT" -> 1584, "Z3_OP_RE_LOOP" -> 1585, 
+     "Z3_OP_RE_POWER" -> 1586, "Z3_OP_RE_COMPLEMENT" -> 1587, 
+     "Z3_OP_RE_EMPTY_SET" -> 1588, "Z3_OP_RE_FULL_SET" -> 1589, 
+     "Z3_OP_RE_FULL_CHAR_SET" -> 1590, "Z3_OP_RE_OF_PRED" -> 1591, 
+     "Z3_OP_RE_REVERSE" -> 1592, "Z3_OP_RE_DERIVATIVE" -> 1593, 
+     "Z3_OP_CHAR_CONST" -> 1594, "Z3_OP_CHAR_LE" -> 1595, "Z3_OP_CHAR_TO_INT" -> 
+     1596, "Z3_OP_CHAR_TO_BV" -> 1597, "Z3_OP_CHAR_FROM_BV" -> 1598, 
+     "Z3_OP_CHAR_IS_DIGIT" -> 1599, "Z3_OP_LABEL" -> 1792, "Z3_OP_LABEL_LIT" -> 
+     1793, "Z3_OP_DT_CONSTRUCTOR" -> 2048, "Z3_OP_DT_RECOGNISER" -> 2049, 
+     "Z3_OP_DT_IS" -> 2050, "Z3_OP_DT_ACCESSOR" -> 2051, 
+     "Z3_OP_DT_UPDATE_FIELD" -> 2052, "Z3_OP_PB_AT_MOST" -> 2304, 
+     "Z3_OP_PB_AT_LEAST" -> 2305, "Z3_OP_PB_LE" -> 2306, "Z3_OP_PB_GE" -> 
+     2307, "Z3_OP_PB_EQ" -> 2308, "Z3_OP_SPECIAL_RELATION_LO" -> 40960, 
+     "Z3_OP_SPECIAL_RELATION_PO" -> 40961, "Z3_OP_SPECIAL_RELATION_PLO" -> 
+     40962, "Z3_OP_SPECIAL_RELATION_TO" -> 40963, "Z3_OP_SPECIAL_RELATION_TC" -> 
+     40964, "Z3_OP_SPECIAL_RELATION_TRC" -> 40965, 
+     "Z3_OP_FPA_RM_NEAREST_TIES_TO_EVEN" -> 45056, 
+     "Z3_OP_FPA_RM_NEAREST_TIES_TO_AWAY" -> 45057, 
+     "Z3_OP_FPA_RM_TOWARD_POSITIVE" -> 45058, "Z3_OP_FPA_RM_TOWARD_NEGATIVE" -> 
+     45059, "Z3_OP_FPA_RM_TOWARD_ZERO" -> 45060, "Z3_OP_FPA_NUM" -> 45061, 
+     "Z3_OP_FPA_PLUS_INF" -> 45062, "Z3_OP_FPA_MINUS_INF" -> 45063, 
+     "Z3_OP_FPA_NAN" -> 45064, "Z3_OP_FPA_PLUS_ZERO" -> 45065, 
+     "Z3_OP_FPA_MINUS_ZERO" -> 45066, "Z3_OP_FPA_ADD" -> 45067, 
+     "Z3_OP_FPA_SUB" -> 45068, "Z3_OP_FPA_NEG" -> 45069, "Z3_OP_FPA_MUL" -> 
+     45070, "Z3_OP_FPA_DIV" -> 45071, "Z3_OP_FPA_REM" -> 45072, 
+     "Z3_OP_FPA_ABS" -> 45073, "Z3_OP_FPA_MIN" -> 45074, "Z3_OP_FPA_MAX" -> 
+     45075, "Z3_OP_FPA_FMA" -> 45076, "Z3_OP_FPA_SQRT" -> 45077, 
+     "Z3_OP_FPA_ROUND_TO_INTEGRAL" -> 45078, "Z3_OP_FPA_EQ" -> 45079, 
+     "Z3_OP_FPA_LT" -> 45080, "Z3_OP_FPA_GT" -> 45081, "Z3_OP_FPA_LE" -> 
+     45082, "Z3_OP_FPA_GE" -> 45083, "Z3_OP_FPA_IS_NAN" -> 45084, 
+     "Z3_OP_FPA_IS_INF" -> 45085, "Z3_OP_FPA_IS_ZERO" -> 45086, 
+     "Z3_OP_FPA_IS_NORMAL" -> 45087, "Z3_OP_FPA_IS_SUBNORMAL" -> 45088, 
+     "Z3_OP_FPA_IS_NEGATIVE" -> 45089, "Z3_OP_FPA_IS_POSITIVE" -> 45090, 
+     "Z3_OP_FPA_FP" -> 45091, "Z3_OP_FPA_TO_FP" -> 45092, 
+     "Z3_OP_FPA_TO_FP_UNSIGNED" -> 45093, "Z3_OP_FPA_TO_UBV" -> 45094, 
+     "Z3_OP_FPA_TO_SBV" -> 45095, "Z3_OP_FPA_TO_REAL" -> 45096, 
+     "Z3_OP_FPA_TO_IEEE_BV" -> 45097, "Z3_OP_FPA_BVWRAP" -> 45098, 
+     "Z3_OP_FPA_BV2RM" -> 45099, "Z3_OP_INTERNAL" -> 45100, "Z3_OP_RECURSIVE" -> 
+     45101, "Z3_OP_UNINTERPRETED" -> 45102|>,
+    SelectWithContents->True,
+    Selectable->False]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"$ASTKindIDs", "=", 
+   InterpretationBox[
+    DynamicModuleBox[{Typeset`open = False}, 
+     TemplateBox[{"Association", "AssociationIcon", 
+       GridBox[{{
+          RowBox[{
+            TagBox["\"Head: \"", "IconizedLabel"], "\[InvisibleSpace]", 
+            TagBox["Association", "IconizedItem"]}]}, {
+          RowBox[{
+            TagBox["\"Length: \"", "IconizedLabel"], "\[InvisibleSpace]", 
+            TagBox["7", "IconizedItem"]}]}, {
+          RowBox[{
+            TagBox["\"Byte count: \"", "IconizedLabel"], "\[InvisibleSpace]", 
+            
+            TagBox["1184", "IconizedItem"]}]}}, 
+        GridBoxAlignment -> {"Columns" -> {{Left}}}, DefaultBaseStyle -> 
+        "Column", 
+        GridBoxItemSize -> {
+         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}], 
+       Dynamic[Typeset`open]},
+      "IconizedObject"]],
+    <|"Z3_NUMERAL_AST" -> 0, "Z3_APP_AST" -> 1, "Z3_VAR_AST" -> 2, 
+     "Z3_QUANTIFIER_AST" -> 3, "Z3_SORT_AST" -> 4, "Z3_FUNC_DECL_AST" -> 5, 
+     "Z3_UNKNOWN_AST" -> 1000|>,
+    SelectWithContents->True,
+    Selectable->False]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"$SymbolKindIDs", "=", 
+   InterpretationBox[
+    DynamicModuleBox[{Typeset`open = False}, 
+     TemplateBox[{"Association", "AssociationIcon", 
+       GridBox[{{
+          RowBox[{
+            TagBox["\"Head: \"", "IconizedLabel"], "\[InvisibleSpace]", 
+            TagBox["Association", "IconizedItem"]}]}, {
+          RowBox[{
+            TagBox["\"Length: \"", "IconizedLabel"], "\[InvisibleSpace]", 
+            TagBox["2", "IconizedItem"]}]}, {
+          RowBox[{
+            TagBox["\"Byte count: \"", "IconizedLabel"], "\[InvisibleSpace]", 
+            
+            TagBox["448", "IconizedItem"]}]}}, 
+        GridBoxAlignment -> {"Columns" -> {{Left}}}, DefaultBaseStyle -> 
+        "Column", 
+        GridBoxItemSize -> {
+         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}], 
+       Dynamic[Typeset`open]},
+      "IconizedObject"]],
+    <|"Z3_INT_SYMBOL" -> 0, "Z3_STRING_SYMBOL" -> 1|>,
+    SelectWithContents->True,
+    Selectable->False]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.8855570656767607`*^9, 3.885557106944619*^9}, {
+  3.885563040568321*^9, 
+  3.885563045286731*^9}},ExpressionUUID->"f0343c8c-28f0-41f5-acf6-\
+ff2020e49e2a"]
+}, Closed]]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Design", "Section",
+ CellChangeTimes->{{3.885518444164837*^9, 
+  3.885518444773532*^9}},ExpressionUUID->"ada0f566-750f-417c-8cda-\
+5c5f29763b87"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"FromAST", "[", 
+   RowBox[{"ctx", ",", "ast"}], "]"}], "->", 
+  RowBox[{
+   RowBox[{"Z3Operator", "[", "12", "]"}], "[", 
+   RowBox[{"arg1", ",", "arg2"}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.8855188098186913`*^9, 3.885518836770361*^9}, {
+  3.8855188735502977`*^9, 
+  3.8855188745713453`*^9}},ExpressionUUID->"9b9a6e84-afe3-43e5-a67a-\
+a8fc36557ba8"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Z3Operator", "[", "\"\<Z3_OP_DIV\>\"", "]"}], "[", 
+  RowBox[{"arg1", ",", "arg2"}], "]"}]], "Input",
+ CellChangeTimes->{{3.885518445961413*^9, 
+  3.885518458680831*^9}},ExpressionUUID->"05d50aed-63a2-4892-960a-\
+68c7e51132cf"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Z3Operator", "[", "12", "]"}], "[", 
+  RowBox[{"arg1", ",", "arg2"}], "]"}]], "Input",
+ CellChangeTimes->{{3.88551877685955*^9, 
+  3.885518776959291*^9}},ExpressionUUID->"8342bb92-744a-4a5f-8ceb-\
+6508896d9353"],
+
+Cell[BoxData[
+ RowBox[{"Z3Divide", "[", 
+  RowBox[{"arg1", ",", "arg2"}], "]"}]], "Input",
+ CellChangeTimes->{{3.885518460854992*^9, 
+  3.885518465907514*^9}},ExpressionUUID->"ebbebb79-97d3-4470-8cd8-\
+bdab5a034a03"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"ToAST", "[", 
+   RowBox[{"ctx", ",", 
+    RowBox[{"Z3Divide", "[", 
+     RowBox[{"arg1", ",", 
+      RowBox[{
+       RowBox[{"Z3Operator", "[", "\"\<Z3_OP_DIV\>\"", "]"}], "[", 
+       RowBox[{"arg2", ",", "arg3"}], "]"}]}], "]"}]}], "]"}], "->", 
+  "ast"}]], "Input",
+ CellChangeTimes->{{3.885518852433547*^9, 3.885518871712487*^9}, {
+  3.88555121198175*^9, 
+  3.8855512189263277`*^9}},ExpressionUUID->"70ba0fe4-452d-46c4-a81b-\
+a6e9f00bc5d2"],
+
+Cell[BoxData[
+ RowBox[{"FromZ3Operator", "[", "...", "]"}]], "Input",
+ CellChangeTimes->{{3.8855188448679123`*^9, 3.885518850762712*^9}, {
+  3.8855511907615337`*^9, 
+  3.885551191604397*^9}},ExpressionUUID->"847b8d82-c68e-40ee-bcad-\
+f1153d2ebf16"],
+
+Cell[CellGroupData[{
+
+Cell["Alternative", "Subsection",
+ CellChangeTimes->{{3.8855190878652687`*^9, 
+  3.885519089193408*^9}},ExpressionUUID->"b0796499-f722-4c7b-a8a8-\
+d3c82d34863e"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Z3Divide", "[", 
+   RowBox[{"ast1", ",", "ast2"}], "]"}], "->", "ast"}]], "Input",
+ CellChangeTimes->{{3.885519092672923*^9, 
+  3.885519101935464*^9}},ExpressionUUID->"61eb9b61-8a24-4af2-b39e-\
+4de7ef4e2811"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"Z3Operator", "[", "\"\<Z3_OP_DIV\>\"", "]"}], "[", 
+   RowBox[{"ast1", ",", "ast2"}], "]"}], "->", "ast"}]], "Input",
+ CellChangeTimes->{{3.885519120794696*^9, 
+  3.885519124215733*^9}},ExpressionUUID->"610abc5f-70d0-4547-97b9-\
+3e093cbf6b3f"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Z3ASTNode", "[", "\"\<Z3_OP_DIV\>\"", "]"}], "[", 
+  RowBox[{"ast1", ",", "ast2"}], "]"}]], "Input",
+ CellChangeTimes->{{3.885519132588049*^9, 
+  3.8855191390561943`*^9}},ExpressionUUID->"38f02371-88c4-4d5c-b9a9-\
+98f32d60ffaa"],
+
+Cell["Where is the context?", "Text",
+ CellChangeTimes->{{3.8855511641576014`*^9, 
+  3.885551167097176*^9}},ExpressionUUID->"ac8c0254-79bf-4d4d-9a13-\
+35ec86328b63"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["With a single context", "Subsection",
+ CellChangeTimes->{{3.885652238881568*^9, 
+  3.885652243940586*^9}},ExpressionUUID->"c4aed769-15cb-41af-90b5-\
+3d3c94fd3132"],
+
+Cell[BoxData[
+ RowBox[{"$Z3Context", "=", 
+  RowBox[{"Z3ContextObject", "[", "...", "]"}]}]], "Input",
+ CellChangeTimes->{{3.8856522449513617`*^9, 3.885652256620075*^9}, {
+  3.885652323677801*^9, 
+  3.8856523250491*^9}},ExpressionUUID->"59dc05f3-a4fe-4458-838a-a716638d9a1b"],
+
+Cell[BoxData[
+ RowBox[{"Z3Divide", "[", 
+  RowBox[{"ast1", ",", "ast2"}], "]"}]], "Input",
+ CellChangeTimes->{{3.885652258442492*^9, 
+  3.88565226962115*^9}},ExpressionUUID->"17d1b191-e4c3-4370-ab6d-\
+469a01abdf97"],
+
+Cell[BoxData[
+ RowBox[{"Z3Divide", "[", 
+  RowBox[{"ast1", ",", "ast2", ",", 
+   RowBox[{"Z3Context", "->", "ctx"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.885652318653893*^9, 
+  3.885652342760322*^9}},ExpressionUUID->"29389b91-2a27-4493-8807-\
+3d28ad8ff9a2"],
+
+Cell[BoxData[
+ RowBox[{"Z3ASTObject", "[", "...", "]"}]], "Input",
+ CellChangeTimes->{{3.8856525231291113`*^9, 
+  3.8856525279780197`*^9}},ExpressionUUID->"d7f2db3b-76c2-483e-99bd-\
+85cea548435e"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{783, 852},
+WindowMargins->{{Automatic, 407}, {71, Automatic}},
+TaggingRules->{
+ "DocuToolsSettingsInternal" -> {
+   "$PacletVersion" -> "0.10.2323", "$ApplicationName" -> "Mathematica", 
+    "$LinkBase" -> "Mathematica", "$ApplicationDirectory" -> 
+    "/Users/christopher/cvs/Mathematica/", "$DocumentationDirectory" -> 
+    "/Users/christopher/cvs/Mathematica/Documentation/English/", 
+    "$UseNewPageDialog" -> ""}, 
+  "WelcomeScreenSettings" -> {"FEStarting" -> False}, "TryRealOnly" -> 
+  False},
+FrontEndVersion->"13.2 for Mac OS X x86 (64-bit) (November 18, 2022)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"1543c835-4391-4566-9e3b-2b6cf1cad7a7"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 173, 2, 30, "Input",ExpressionUUID->"6efa40d2-ef9a-45a0-9b3f-ba5476097842"],
+Cell[CellGroupData[{
+Cell[756, 26, 149, 3, 67, "Section",ExpressionUUID->"802255ed-e927-4cfd-a9e6-080caa6a83a7"],
+Cell[908, 31, 381, 8, 30, "Input",ExpressionUUID->"894f7af0-9712-48c3-bd96-46865a8ae166"],
+Cell[1292, 41, 305, 5, 30, "Input",ExpressionUUID->"55384678-3c68-4d3e-9556-72943012d291"],
+Cell[1600, 48, 627, 12, 115, "Input",ExpressionUUID->"5645a96a-c4c8-4c59-a5ae-80d20e0d5b1f"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2264, 65, 157, 3, 67, "Section",ExpressionUUID->"3d29069a-0985-4916-9bcc-aa3350d26720"],
+Cell[2424, 70, 453, 10, 52, "Input",ExpressionUUID->"69a1ebe6-3af9-420e-ae71-86b0c1f5960b"],
+Cell[2880, 82, 479, 11, 52, "Input",ExpressionUUID->"dee8bdeb-eac2-4222-b41c-0772c202b1a7"],
+Cell[CellGroupData[{
+Cell[3384, 97, 418, 9, 30, "Input",ExpressionUUID->"d38b0a34-ec26-44eb-911b-1a8afe86d51b"],
+Cell[3805, 108, 22965, 433, 116, "Output",ExpressionUUID->"6c3f0d52-ee96-4459-b3eb-e1364bd1edba"]
+}, Open  ]],
+Cell[26785, 544, 562, 12, 52, "Input",ExpressionUUID->"88e7f79d-83e9-4db6-a32f-84d828dfc2e9"],
+Cell[27350, 558, 457, 10, 52, "Input",ExpressionUUID->"04953843-03b7-4f4d-bb19-c0b55d8f4fa2"],
+Cell[CellGroupData[{
+Cell[27832, 572, 384, 8, 30, "Input",ExpressionUUID->"ef447ead-fe49-4de2-a1cd-ac3c535fd4a9"],
+Cell[28219, 582, 22924, 432, 116, "Output",ExpressionUUID->"7995dc89-b1d0-4754-9293-398775aa5954"]
+}, Open  ]],
+Cell[51158, 1017, 457, 10, 52, "Input",ExpressionUUID->"b4580e14-9a2c-45d6-a0aa-607b43b71ae4"],
+Cell[51618, 1029, 435, 9, 52, "Input",ExpressionUUID->"26aea444-a74a-4757-b9bb-c98a080ead2c"],
+Cell[52056, 1040, 483, 10, 52, "Input",ExpressionUUID->"54128786-d1aa-403a-b462-748bee6da6d6"],
+Cell[52542, 1052, 532, 12, 52, "Input",ExpressionUUID->"a824d6c5-e252-4b94-abb1-e0a38f4d9c08"],
+Cell[53077, 1066, 489, 10, 52, "Input",ExpressionUUID->"08f2c64e-c74d-49ab-ab71-768e6ea1a9b9"],
+Cell[53569, 1078, 541, 12, 52, "Input",ExpressionUUID->"7ce2860f-207f-48e7-952c-9d7ba97ee7e7"],
+Cell[54113, 1092, 443, 9, 52, "Input",ExpressionUUID->"91ffcb4d-3a39-420e-9ffe-46a46a8b1586"],
+Cell[54559, 1103, 484, 10, 52, "Input",ExpressionUUID->"b4b30be7-fbec-4417-80d0-79f3ae426e8a"],
+Cell[55046, 1115, 478, 10, 52, "Input",ExpressionUUID->"4292865a-4ce0-4017-b77d-fe10ca265be2"],
+Cell[55527, 1127, 483, 10, 52, "Input",ExpressionUUID->"680388f7-9faa-4985-9970-32ed1604f6b4"],
+Cell[56013, 1139, 490, 10, 52, "Input",ExpressionUUID->"37277874-53ef-4b99-9041-65887c798565"],
+Cell[56506, 1151, 482, 10, 52, "Input",ExpressionUUID->"e7b930a0-0e56-4b62-999f-d0be266b8479"],
+Cell[56991, 1163, 493, 10, 52, "Input",ExpressionUUID->"6b8fb21d-a3f8-494c-9273-4e797b800fcc"],
+Cell[57487, 1175, 502, 10, 52, "Input",ExpressionUUID->"48dd509b-f1c3-4c29-bd74-f62bd5ed69a8"],
+Cell[57992, 1187, 553, 12, 52, "Input",ExpressionUUID->"b0c1f9a2-3c61-4cc8-957c-a316eefa868b"],
+Cell[58548, 1201, 545, 12, 52, "Input",ExpressionUUID->"fbc8b288-4810-4150-bd3c-e84c79879d50"],
+Cell[59096, 1215, 425, 10, 30, "Input",ExpressionUUID->"11e01d1c-1e34-4636-b996-acb30fa644cf"],
+Cell[CellGroupData[{
+Cell[59546, 1229, 334, 6, 30, "Input",ExpressionUUID->"8cdd521c-9546-4f1f-93ad-21fbeec405b0"],
+Cell[59883, 1237, 257, 3, 34, "Output",ExpressionUUID->"5d4c5d01-13fa-456f-8546-6c5e8b447634"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[60177, 1245, 379, 8, 30, "Input",ExpressionUUID->"d1be47e8-9086-4b2b-b433-306e389e1748"],
+Cell[60559, 1255, 266, 3, 34, "Output",ExpressionUUID->"c2f907d8-45b1-4556-a1a0-6c658de5a4c0"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[60862, 1263, 478, 11, 30, "Input",ExpressionUUID->"1eb25e81-19a5-48e6-ab2d-7ab6183e078c"],
+Cell[61343, 1276, 210, 3, 34, "Output",ExpressionUUID->"f2f21a04-d5b6-4052-a369-974cae642fab"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[61590, 1284, 560, 13, 52, "Input",ExpressionUUID->"6cb72ce1-496e-444e-b6e7-5406c6cc86c0"],
+Cell[62153, 1299, 238, 3, 34, "Output",ExpressionUUID->"a6b01463-7bcb-4875-bafa-071d809fd9c5"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[62428, 1307, 644, 15, 73, "Input",ExpressionUUID->"ee40c9de-f145-4b3c-b90a-f77a97c11127"],
+Cell[63075, 1324, 185, 2, 34, "Output",ExpressionUUID->"163b296d-ff3e-435e-9c35-c417198634b1"]
+}, Open  ]],
+Cell[63275, 1329, 433, 10, 52, "Input",ExpressionUUID->"431ce040-19fa-43ac-bbc6-1d3a42fee0f8"],
+Cell[63711, 1341, 484, 11, 52, "Input",ExpressionUUID->"14313518-3c9f-41f3-a495-e24cf0a8f255"],
+Cell[CellGroupData[{
+Cell[64220, 1356, 239, 4, 30, "Input",ExpressionUUID->"ef0a5a8a-6aeb-42a6-baca-e0f1b72158db"],
+Cell[64462, 1362, 232, 3, 34, "Output",ExpressionUUID->"415a4cd5-feea-4761-a76f-ab1265b7baa9"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[64731, 1370, 309, 6, 30, "Input",ExpressionUUID->"12cfafc8-84db-47ff-8012-5b436ad0d471"],
+Cell[65043, 1378, 162, 2, 34, "Output",ExpressionUUID->"e5a0db08-6912-42a7-aad5-a7efb97faa81"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[65242, 1385, 327, 8, 30, "Input",ExpressionUUID->"fc799cf2-ed97-4910-b809-94c743e9fc79"],
+Cell[65572, 1395, 226, 4, 34, "Output",ExpressionUUID->"d579d244-b19d-427a-a588-82e3cffde771"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[65835, 1404, 242, 4, 30, "Input",ExpressionUUID->"4ae3a97b-cdce-4e2c-9c0d-2221937cab74"],
+Cell[66080, 1410, 149, 2, 34, "Output",ExpressionUUID->"cbe759a7-3622-405f-bb64-4912bdb7db13"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[66266, 1417, 239, 4, 30, "Input",ExpressionUUID->"d7045b11-7126-4203-b307-d2d5b4aaa7b2"],
+Cell[66508, 1423, 148, 2, 34, "Output",ExpressionUUID->"f0ef8e10-6661-4451-99e5-746e2b187502"]
+}, Open  ]],
+Cell[66671, 1428, 1349, 32, 186, "Code",ExpressionUUID->"e1a8453c-e707-468e-99af-8d56ee30e2ca"],
+Cell[68023, 1462, 4563, 101, 623, "Code",ExpressionUUID->"df487084-f03d-4a67-be16-45e5bf7c97f7"],
+Cell[72589, 1565, 2155, 51, 281, "Code",ExpressionUUID->"6a821b7f-9d95-4de3-912b-a531121aa22b"],
+Cell[74747, 1618, 2749, 68, 338, "Code",ExpressionUUID->"817bbef6-e5b7-4b31-aefa-a76ea5ec7188"],
+Cell[77499, 1688, 487, 12, 72, "Code",ExpressionUUID->"397d200f-5437-4c0e-a7f5-fbd078d95f82"],
+Cell[77989, 1702, 3248, 76, 509, "Code",ExpressionUUID->"b50f45a1-7378-4418-8060-2d7eb00bb78a"],
+Cell[CellGroupData[{
+Cell[81262, 1782, 290, 6, 30, "Input",ExpressionUUID->"04395f95-5a9d-4624-a45b-d6df447cf5d9"],
+Cell[81555, 1790, 1283, 31, 98, "Output",ExpressionUUID->"f978880c-09bf-4967-ba4c-d962020e520c"]
+}, Open  ]],
+Cell[82853, 1824, 409, 11, 152, "Program",ExpressionUUID->"81dc2f07-ae7b-45b7-89cc-f8702785d042"],
+Cell[CellGroupData[{
+Cell[83287, 1839, 243, 4, 30, "Input",ExpressionUUID->"9575d397-09cb-4b2e-8661-eae0b51a5ff4"],
+Cell[83533, 1845, 2944, 63, 61, "Output",ExpressionUUID->"00f8bd26-0b2a-4c78-8a2c-1cab32b59653"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[86514, 1913, 437, 10, 30, "Input",ExpressionUUID->"6df73d25-c033-4339-9309-a26644fac1e0"],
+Cell[86954, 1925, 234, 4, 34, "Output",ExpressionUUID->"34b7678b-9891-407d-822d-9ab04ab6d6b0"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[87225, 1934, 570, 13, 73, "Input",ExpressionUUID->"f41c58d5-a262-45d3-b8a1-ff508723515a"],
+Cell[87798, 1949, 181, 2, 34, "Output",ExpressionUUID->"ce90830c-59fc-4f82-b1f7-f4a54943eaa9"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[88016, 1956, 436, 10, 30, "Input",ExpressionUUID->"5d8d8283-3ffc-4762-8be7-69996d23c087"],
+Cell[88455, 1968, 204, 4, 34, "Output",ExpressionUUID->"ef4ca916-e9fa-495f-b0e7-df7d691f588d"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[88696, 1977, 545, 13, 73, "Input",ExpressionUUID->"b7d1a294-8e26-454f-907d-4e26a139770b"],
+Cell[89244, 1992, 159, 2, 34, "Output",ExpressionUUID->"37be36cb-0cbc-45f2-85c0-bb85e8d94796"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[89440, 1999, 314, 6, 30, "Input",ExpressionUUID->"9907ff5b-57ef-4a60-8998-273c6a20a331"],
+Cell[89757, 2007, 175, 2, 34, "Output",ExpressionUUID->"fc89b68b-ed95-41fe-b7a7-032432437274"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[89969, 2014, 337, 7, 30, "Input",ExpressionUUID->"ad6f28af-68f8-492d-9e21-9f28d8d964ec"],
+Cell[90309, 2023, 203, 3, 34, "Output",ExpressionUUID->"182b1dd9-9e66-4beb-9bde-427a16ce0f90"]
+}, Open  ]],
+Cell[90527, 2029, 378, 10, 30, "Input",ExpressionUUID->"13750ca4-fee4-4fb1-b787-577182fe34a4"],
+Cell[CellGroupData[{
+Cell[90930, 2043, 229, 4, 30, "Input",ExpressionUUID->"06de10c2-3a0c-4c4a-96c8-ec8b00a32dcd"],
+Cell[91162, 2049, 181, 3, 34, "Output",ExpressionUUID->"f2a8d491-f8ec-4c7d-b648-2a4eac04b2bd"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[91380, 2057, 208, 4, 30, "Input",ExpressionUUID->"fe19e507-6437-4f6d-af96-40b9d5e38f64"],
+Cell[91591, 2063, 155, 3, 34, "Output",ExpressionUUID->"ba40d87d-58fa-4f2a-bb4b-30e4ef81c34e"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[91783, 2071, 180, 3, 54, "Subsection",ExpressionUUID->"cd2259f7-2455-43e9-a0e8-8c0b883d3d17"],
+Cell[CellGroupData[{
+Cell[91988, 2078, 167, 3, 45, "Subsubsection",ExpressionUUID->"ceb3819f-aed2-40e9-9856-beab1bf7b508"],
+Cell[92158, 2083, 8057, 121, 35, "Input",ExpressionUUID->"83c3d613-5ea4-4e1b-801d-9a8edef12c4b"],
+Cell[100218, 2206, 877, 21, 115, "Input",ExpressionUUID->"f60f5ba5-21e3-4fbc-aff7-37f80e14e399"],
+Cell[101098, 2229, 498, 13, 52, "Input",ExpressionUUID->"4fc54315-5699-4ace-81be-41a9a75efcab"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[101633, 2247, 160, 2, 45, "Subsubsection",ExpressionUUID->"5a22c14b-85b8-4ae9-abf5-c6960d86eeec"],
+Cell[101796, 2251, 226, 3, 30, "Input",ExpressionUUID->"87306885-4d90-46ee-a408-c13e358407cb"],
+Cell[102025, 2256, 13757, 210, 5297, "Code",ExpressionUUID->"31934a43-401e-48a8-b11b-50a30c68eae7"],
+Cell[115785, 2468, 591, 11, 205, "Code",ExpressionUUID->"b82b345c-5344-43e7-bd0d-ba4a104c049b"],
+Cell[116379, 2481, 418, 9, 110, "Code",ExpressionUUID->"6d4362ce-7c89-41fc-84b5-5cd9ff469048"],
+Cell[116800, 2492, 1707, 41, 243, "Code",ExpressionUUID->"31d8358a-9e2f-4a94-ba66-3aa49271a1b5"],
+Cell[118510, 2535, 614, 14, 73, "Input",ExpressionUUID->"05ee85f3-0640-485e-b5c4-d798197a81f7"],
+Cell[119127, 2551, 11525, 198, 85, "Input",ExpressionUUID->"f0343c8c-28f0-41f5-acf6-ff2020e49e2a"]
+}, Closed]]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[130713, 2756, 151, 3, 67, "Section",ExpressionUUID->"ada0f566-750f-417c-8cda-5c5f29763b87"],
+Cell[130867, 2761, 390, 10, 30, "Input",ExpressionUUID->"9b9a6e84-afe3-43e5-a67a-a8fc36557ba8"],
+Cell[131260, 2773, 262, 6, 30, "Input",ExpressionUUID->"05d50aed-63a2-4892-960a-68c7e51132cf"],
+Cell[131525, 2781, 246, 6, 30, "Input",ExpressionUUID->"8342bb92-744a-4a5f-8ceb-6508896d9353"],
+Cell[131774, 2789, 216, 5, 30, "Input",ExpressionUUID->"ebbebb79-97d3-4470-8cd8-bdab5a034a03"],
+Cell[131993, 2796, 479, 13, 30, "Input",ExpressionUUID->"70ba0fe4-452d-46c4-a81b-a6e9f00bc5d2"],
+Cell[132475, 2811, 248, 5, 30, "Input",ExpressionUUID->"847b8d82-c68e-40ee-bcad-f1153d2ebf16"],
+Cell[CellGroupData[{
+Cell[132748, 2820, 161, 3, 54, "Subsection",ExpressionUUID->"b0796499-f722-4c7b-a8a8-d3c82d34863e"],
+Cell[132912, 2825, 243, 6, 30, "Input",ExpressionUUID->"61eb9b61-8a24-4af2-b39e-4de7ef4e2811"],
+Cell[133158, 2833, 290, 7, 30, "Input",ExpressionUUID->"610abc5f-70d0-4547-97b9-3e093cbf6b3f"],
+Cell[133451, 2842, 263, 6, 30, "Input",ExpressionUUID->"38f02371-88c4-4d5c-b9a9-98f32d60ffaa"],
+Cell[133717, 2850, 165, 3, 35, "Text",ExpressionUUID->"ac8c0254-79bf-4d4d-9a13-35ec86328b63"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[133919, 2858, 169, 3, 54, "Subsection",ExpressionUUID->"c4aed769-15cb-41af-90b5-3d3c94fd3132"],
+Cell[134091, 2863, 275, 5, 30, "Input",ExpressionUUID->"59dc05f3-a4fe-4458-838a-a716638d9a1b"],
+Cell[134369, 2870, 215, 5, 30, "Input",ExpressionUUID->"17d1b191-e4c3-4370-ab6d-469a01abdf97"],
+Cell[134587, 2877, 261, 6, 30, "Input",ExpressionUUID->"29389b91-2a27-4493-8807-3d28ad8ff9a2"],
+Cell[134851, 2885, 196, 4, 30, "Input",ExpressionUUID->"d7f2db3b-76c2-483e-99bd-85cea548435e"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
