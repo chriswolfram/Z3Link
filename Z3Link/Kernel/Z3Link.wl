@@ -39,6 +39,7 @@ Begin["`Private`"];
 
 
 Needs["ChristopherWolfram`Z3Link`LibZ3`"]
+Needs["ChristopherWolfram`Z3Link`ConstantsMap`"]
 Needs["ChristopherWolfram`Z3Link`Context`"]
 Needs["ChristopherWolfram`Z3Link`Simplify`"]
 Needs["ChristopherWolfram`Z3Link`Symbol`"]
