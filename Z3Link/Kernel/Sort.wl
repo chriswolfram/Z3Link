@@ -3,13 +3,19 @@ BeginPackage["ChristopherWolfram`Z3Link`Sort`"];
 Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
-Needs["ChristopherWolfram`Z3Link`LibZ3`"]
 
 Needs["ChristopherWolfram`ForeignFunctionInterface`"]
 
 
 makeBooleanSortC := makeBooleanSortC =
 	ForeignFunctionLoad[$LibZ3, "Z3_mk_bool_sort", {"OpaqueRawPointer"} -> "OpaqueRawPointer"];
+
+makeIntegerSortC := makeIntegerSortC =
+	ForeignFunctionLoad[$LibZ3, "Z3_mk_int_sort", {"OpaqueRawPointer"} -> "OpaqueRawPointer"];
+
+makeRealSortC := makeRealSortC =
+	ForeignFunctionLoad[$LibZ3, "Z3_mk_real_sort", {"OpaqueRawPointer"} -> "OpaqueRawPointer"];
+
 
 (*
 	CreateZ3Sort
@@ -21,6 +27,8 @@ CreateZ3Sort[sortName_, opts:OptionsPattern[]] := iCreateZ3Sort[OptionValue[Z3Co
 
 (* TODO: Add fallthrough *)
 iCreateZ3Sort[ctx_, "Boolean"] := Z3SortObject[makeBooleanSortC[ctx]]
+iCreateZ3Sort[ctx_, "Integer"] := Z3SortObject[makeIntegerSortC[ctx]]
+iCreateZ3Sort[ctx_, "Real"] := Z3SortObject[makeRealSortC[ctx]]
 
 
 (*

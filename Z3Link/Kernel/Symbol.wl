@@ -3,7 +3,6 @@ BeginPackage["ChristopherWolfram`Z3Link`Symbol`"];
 Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
-Needs["ChristopherWolfram`Z3Link`LibZ3`"]
 
 Needs["ChristopherWolfram`ForeignFunctionInterface`"]
 

@@ -1,7 +1,5 @@
 BeginPackage["ChristopherWolfram`Z3Link`LibZ3`"];
 
-$LibZ3
-
 Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]

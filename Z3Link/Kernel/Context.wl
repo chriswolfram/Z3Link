@@ -3,7 +3,6 @@ BeginPackage["ChristopherWolfram`Z3Link`Context`"];
 Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
-Needs["ChristopherWolfram`Z3Link`LibZ3`"]
 
 Needs["ChristopherWolfram`ForeignFunctionInterface`"]
 
@@ -12,8 +11,11 @@ Needs["ChristopherWolfram`ForeignFunctionInterface`"]
 	Z3 configuration
 *)
 
-makeConfigC := makeConfigC = ForeignFunctionLoad[$LibZ3, "Z3_mk_config", {} -> "OpaqueRawPointer"];
-deleteConfigC := deleteConfigC = ForeignFunctionLoad[$LibZ3, "Z3_del_config", {"OpaqueRawPointer"} -> "Void"];
+makeConfigC := makeConfigC =
+	ForeignFunctionLoad[$LibZ3, "Z3_mk_config", {} -> "OpaqueRawPointer"];
+
+deleteConfigC := deleteConfigC =
+	ForeignFunctionLoad[$LibZ3, "Z3_del_config", {"OpaqueRawPointer"} -> "Void"];
 
 makeConfig[] := CreateManagedObject[makeConfigC[], deleteConfigC]
 
@@ -22,8 +24,11 @@ makeConfig[] := CreateManagedObject[makeConfigC[], deleteConfigC]
 	Z3 context
 *)
 
-makeContextC := makeContextC = ForeignFunctionLoad[$LibZ3, "Z3_mk_context", {"OpaqueRawPointer"} -> "OpaqueRawPointer"];
-deleteContextC := deleteContextC = ForeignFunctionLoad[$LibZ3, "Z3_del_context", {"OpaqueRawPointer"} -> "Void"];
+makeContextC := makeContextC =
+	ForeignFunctionLoad[$LibZ3, "Z3_mk_context", {"OpaqueRawPointer"} -> "OpaqueRawPointer"];
+
+deleteContextC := deleteContextC =
+	ForeignFunctionLoad[$LibZ3, "Z3_del_context", {"OpaqueRawPointer"} -> "Void"];
 
 makeRawContext[config_] := CreateManagedObject[makeContextC[config], deleteConfigC]
 

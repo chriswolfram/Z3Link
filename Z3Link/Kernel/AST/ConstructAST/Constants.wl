@@ -1,9 +1,8 @@
-BeginPackage["ChristopherWolfram`Z3Link`AST`ConstructAST`Z3Constant`"];
+BeginPackage["ChristopherWolfram`Z3Link`AST`ConstructAST`Constants`"];
 
 Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
-Needs["ChristopherWolfram`Z3Link`LibZ3`"]
 
 Needs["ChristopherWolfram`ForeignFunctionInterface`"]
 
