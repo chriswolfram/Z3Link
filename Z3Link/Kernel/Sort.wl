@@ -23,19 +23,20 @@ makeRealSortC := makeRealSortC =
 
 Options[CreateZ3Sort] = {Z3Context :> $Z3Context};
 
-CreateZ3Sort[sortName_, opts:OptionsPattern[]] := iCreateZ3Sort[OptionValue[Z3Context]["RawContext"], sortName]
+CreateZ3Sort[sortName_, opts:OptionsPattern[]] := iCreateZ3Sort[OptionValue[Z3Context], sortName]
 
 (* TODO: Add fallthrough *)
-iCreateZ3Sort[ctx_, "Boolean"] := Z3SortObject[makeBooleanSortC[ctx]]
-iCreateZ3Sort[ctx_, "Integer"] := Z3SortObject[makeIntegerSortC[ctx]]
-iCreateZ3Sort[ctx_, "Real"] := Z3SortObject[makeRealSortC[ctx]]
+iCreateZ3Sort[ctx_, "Boolean"] := Z3SortObject[ctx, makeBooleanSortC[ctx["RawContext"]]]
+iCreateZ3Sort[ctx_, "Integer"] := Z3SortObject[ctx, makeIntegerSortC[ctx["RawContext"]]]
+iCreateZ3Sort[ctx_, "Real"] := Z3SortObject[ctx, makeRealSortC[ctx["RawContext"]]]
 
 
 (*
 	Z3SortObject
 *)
 
-Z3SortObject[rawSort_]["RawSort"] := rawSort
+Z3SortObject[ctx_Z3ContextObject, rawSort_]["RawSort"] := rawSort
+Z3SortObject[ctx_Z3ContextObject, rawSort_]["Context"] := ctx
 
 Z3SortObject /: MakeBoxes[sort_Z3SortObject, form:StandardForm]:=
 	BoxForm`ArrangeSummaryBox[

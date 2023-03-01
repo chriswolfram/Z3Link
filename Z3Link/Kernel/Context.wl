@@ -1,5 +1,7 @@
 BeginPackage["ChristopherWolfram`Z3Link`Context`"];
 
+GetCommonContext
+
 Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
@@ -40,6 +42,15 @@ makeRawContext[config_] := CreateManagedObject[makeContextC[config], deleteConfi
 (* TODO: Check that the context pointer is valid *)
 
 CreateZ3Context[] := Z3ContextObject[makeRawContext[makeConfig[]]]
+
+
+(*
+	GetCommonContext[arg1, arg2, ...]
+		gets the common context used by all of the arguments. Returns a Failure if they use different contexts.
+*)
+
+(* GetCommonContext[args__] := *)
+	
 
 
 (*

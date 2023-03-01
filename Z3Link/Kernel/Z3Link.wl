@@ -15,6 +15,12 @@ Z3SymbolObject
 CreateZ3Sort
 Z3SortObject
 
+CreateZ3FunctionDeclaration
+Z3FunctionDeclarationObject
+
+CreateZ3Application
+Z3ApplicationObject
+
 Z3Simplify
 
 
@@ -44,7 +50,10 @@ Needs["ChristopherWolfram`Z3Link`Context`"]
 Needs["ChristopherWolfram`Z3Link`Simplify`"]
 Needs["ChristopherWolfram`Z3Link`Symbol`"]
 Needs["ChristopherWolfram`Z3Link`Sort`"]
+Needs["ChristopherWolfram`Z3Link`Application`"]
+Needs["ChristopherWolfram`Z3Link`FunctionDeclaration`"]
 Needs["ChristopherWolfram`Z3Link`AST`"]
+Needs["ChristopherWolfram`Z3Link`Messages`"]
 
 
 End[];
