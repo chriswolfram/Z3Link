@@ -1,6 +1,6 @@
 BeginPackage["ChristopherWolfram`Z3Link`Context`"];
 
-GetCommonContext
+GetZ3Context
 
 Begin["`Private`"];
 
@@ -45,11 +45,16 @@ CreateZ3Context[] := Z3ContextObject[makeRawContext[makeConfig[]]]
 
 
 (*
-	GetCommonContext[arg1, arg2, ...]
-		gets the common context used by all of the arguments. Returns a Failure if they use different contexts.
+	GetZ3Context[obj]
+		gets the context used by a Z3 object.
+
+	GetZ3Context[{obj1, obj2, ...}]
+		gets the common context used by all of the objects. Returns a Failure if they use different contexts.
+
+		Arguments can be 
 *)
 
-(* GetCommonContext[args__] := *)
+GetZ3Context[obj_] :=
 	
 
 
