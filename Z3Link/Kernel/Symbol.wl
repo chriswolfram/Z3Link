@@ -5,8 +5,6 @@ Begin["`Private`"];
 Needs["ChristopherWolfram`Z3Link`"]
 Needs["ChristopherWolfram`Z3Link`ConstantsMap`"]
 
-Needs["ChristopherWolfram`ForeignFunctionInterface`"]
-
 
 makeIntegerSymbolC := makeIntegerSymbolC =
 	ForeignFunctionLoad[$LibZ3, "Z3_mk_int_symbol", {"OpaqueRawPointer", "CInt"} -> "OpaqueRawPointer"];
@@ -46,7 +44,7 @@ getSymbolName[ctx_, sym_] :=
 				getSymbolIntC[ctx, sym],
 				
 			$Z3ConstantsMap["SymbolKinds"]["Z3_STRING_SYMBOL"],
-				ImportRawMemory[getSymbolStringC[ctx, sym], "String"],
+				RawMemoryImport[getSymbolStringC[ctx, sym], "String"],
 			
 			_,
 				With[{kindName = Replace[kind, $IDSymbolKinds]},
@@ -71,7 +69,7 @@ Z3SymbolObject /: MakeBoxes[sym_Z3SymbolObject, form:StandardForm]:=
 		Z3SymbolObject,
 		sym,
 		None,
-		{"raw symbol: ", sym["RawSymbol"]},
+		{BoxForm`SummaryItem@{"raw symbol: ", sym["RawSymbol"]}},
 		{},
 		form
 	]

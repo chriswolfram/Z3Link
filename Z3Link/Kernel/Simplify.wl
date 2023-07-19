@@ -4,8 +4,6 @@ Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
 
-Needs["ChristopherWolfram`ForeignFunctionInterface`"]
-
 
 (*
 	Z3Simplify

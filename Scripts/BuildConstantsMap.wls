@@ -3,9 +3,6 @@
 
 Needs["CCompilerDriver`"]
 
-PacletDirectoryLoad["~/git/ForeignFunctionInterface"];
-Needs["ChristopherWolfram`ForeignFunctionInterface`"]
-
 
 constantNames = <|
 

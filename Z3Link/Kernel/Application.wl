@@ -4,8 +4,6 @@ Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
 
-Needs["ChristopherWolfram`ForeignFunctionInterface`"]
-
 
 getAppArgC := getAppArgC =
 	ForeignFunctionLoad[$LibZ3, "Z3_get_app_arg", {"OpaqueRawPointer", "OpaqueRawPointer", "CUnsignedInt"} -> "OpaqueRawPointer"];
@@ -42,7 +40,7 @@ Z3SortObject /: MakeBoxes[sort_Z3SortObject, form:StandardForm]:=
 		Z3SortObject,
 		sort,
 		None,
-		{"raw sort: ", sort["RawSort"]},
+		{BoxForm`SummaryItem@{"raw sort: ", sort["RawSort"]}},
 		{},
 		form
 	] *)

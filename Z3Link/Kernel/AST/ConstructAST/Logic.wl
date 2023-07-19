@@ -3,8 +3,7 @@ BeginPackage["ChristopherWolfram`Z3Link`AST`ConstructAST`Logic`"];
 Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
-
-Needs["ChristopherWolfram`ForeignFunctionInterface`"]
+Needs["ChristopherWolfram`Z3Link`Context`"]
 
 
 makeTrueC := makeTrueC =
@@ -48,10 +47,8 @@ Z3False[opts:OptionsPattern[]] :=
 	Z3Not
 *)
 
-Options[Z3Not] = {Z3Context :> $Z3Context};
-
 Z3Not[ast_Z3ASTObject, opts:OptionsPattern[]] :=
-	With[{ctx = OptionValue[Z3Context]},
+	Enclose@With[{ctx = Confirm@Z3GetContext[ast]},
 		Z3ASTObject[ctx, makeNotC[ctx["RawContext"], ast["RawAST"]]]
 	]
 
@@ -60,10 +57,8 @@ Z3Not[ast_Z3ASTObject, opts:OptionsPattern[]] :=
 	Z3Equal
 *)
 
-Options[Z3Equal] = {Z3Context :> $Z3Context};
-
 Z3Equal[lhs_Z3ASTObject, rhs_Z3ASTObject, opts:OptionsPattern[]] :=
-	With[{ctx = OptionValue[Z3Context]},
+	Enclose@With[{ctx = Confirm@Z3GetContext[lhs, rhs]},
 		Z3ASTObject[ctx, makeEqualC[ctx["RawContext"], lhs["RawAST"], rhs["RawAST"]]]
 	]
 

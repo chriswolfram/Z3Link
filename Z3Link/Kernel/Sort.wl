@@ -4,8 +4,6 @@ Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
 
-Needs["ChristopherWolfram`ForeignFunctionInterface`"]
-
 
 makeBooleanSortC := makeBooleanSortC =
 	ForeignFunctionLoad[$LibZ3, "Z3_mk_bool_sort", {"OpaqueRawPointer"} -> "OpaqueRawPointer"];
@@ -43,7 +41,7 @@ Z3SortObject /: MakeBoxes[sort_Z3SortObject, form:StandardForm]:=
 		Z3SortObject,
 		sort,
 		None,
-		{"raw sort: ", sort["RawSort"]},
+		{BoxForm`SummaryItem@{"raw sort: ", sort["RawSort"]}},
 		{},
 		form
 	]

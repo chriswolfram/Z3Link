@@ -3,8 +3,7 @@ BeginPackage["ChristopherWolfram`Z3Link`AST`ConstructAST`Constants`"];
 Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
-
-Needs["ChristopherWolfram`ForeignFunctionInterface`"]
+Needs["ChristopherWolfram`Z3Link`Context`"]
 
 
 makeConstantC := makeConstantC =
@@ -14,10 +13,8 @@ makeConstantC := makeConstantC =
 	Z3Constant
 *)
 
-Options[Z3Constant] = {Z3Context :> $Z3Context};
-
 Z3Constant[symSpec_Z3SymbolObject, sortSpec_Z3SortObject, opts:OptionsPattern[]] :=
-	With[{ctx = OptionValue[Z3Context]},
+	Enclose@With[{ctx = Confirm@Z3GetContext[symSpec, sortSpec]},
 		Z3ASTObject[ctx, makeConstantC[ctx["RawContext"], symSpec["RawSymbol"], sortSpec["RawSort"]]]
 	]
 

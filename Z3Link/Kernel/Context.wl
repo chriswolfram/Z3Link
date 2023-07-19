@@ -1,12 +1,10 @@
 BeginPackage["ChristopherWolfram`Z3Link`Context`"];
 
-GetZ3Context
+Z3GetContext
 
 Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
-
-Needs["ChristopherWolfram`ForeignFunctionInterface`"]
 
 
 (*
@@ -45,17 +43,33 @@ CreateZ3Context[] := Z3ContextObject[makeRawContext[makeConfig[]]]
 
 
 (*
-	GetZ3Context[obj]
+	Z3GetContext[obj]
 		gets the context used by a Z3 object.
 
-	GetZ3Context[{obj1, obj2, ...}]
+	Z3GetContext[obj1, obj2, ...]
 		gets the common context used by all of the objects. Returns a Failure if they use different contexts.
-
-		Arguments can be 
 *)
 
-GetZ3Context[obj_] :=
-	
+Z3GetContext[ast_Z3ASTObject] := ast["Context"]
+Z3GetContext[sym_Z3SymbolObject] := sym["Context"]
+Z3GetContext[sort_Z3SortObject] := sort["Context"]
+Z3GetContext[decl_Z3FunctionDeclarationObject] := decl["Context"]
+
+(* TODO: Should this return a Failure instead? *)
+Z3GetContext[obj_] := $Z3Context
+
+Z3GetContext[objs__] :=
+	With[{ctxs = DeleteDuplicates[Z3GetContext /@ {objs}]},
+		If[Length[ctxs] === 1,
+			First[ctxs],
+			Failure["IncompatibleContexts", <|
+				"MessageTemplate" -> "Incompatible Z3 contexts `1` encountered among objects `2`.",
+				"MessageParameters" -> {ctxs, {objs}},
+				"Contexts" -> ctxs,
+				"Objects" -> {objs}
+			|>]
+		]
+	]
 
 
 (*
@@ -69,7 +83,7 @@ Z3ContextObject /: MakeBoxes[ctx_Z3ContextObject, form:StandardForm]:=
 		Z3ContextObject,
 		ctx,
 		None,
-		{"raw context: ", ctx["RawContext"]},
+		{BoxForm`SummaryItem@{"raw context: ", ctx["RawContext"]}},
 		{},
 		form
 	]

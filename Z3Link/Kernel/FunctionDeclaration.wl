@@ -4,8 +4,6 @@ Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
 
-Needs["ChristopherWolfram`ForeignFunctionInterface`"]
-
 
 makeFuncDecl := makeFuncDecl =
 	ForeignFunctionLoad[$LibZ3, "Z3_mk_func_decl",
@@ -28,7 +26,7 @@ Options[CreateZ3FunctionDeclaration] = {Z3Context :> $Z3Context};
 CreateZ3FunctionDeclaration[declName_Z3SymbolObject, domain:{___Z3SortObject}, range_Z3SortObject, opts:OptionsPattern[]] :=
 	With[{
 			ctx = OptionValue[Z3Context],
-			domainArr = ExportRawMemory[#["RawSort"]&/@domain, "RawPointer"::["OpaqueRawPointer"]]
+			domainArr = RawMemoryExport[#["RawSort"]&/@domain, "OpaqueRawPointer"]
 		},
 		Z3FunctionDeclarationObject[ctx, makeFuncDecl[ctx, declName["RawSymbol"], Length[domain], range["RawSort"]]]
 	]
@@ -46,7 +44,7 @@ Z3FunctionDeclarationObject /: MakeBoxes[decl_Z3FunctionDeclarationObject, form:
 		Z3FunctionDeclarationObject,
 		decl,
 		None,
-		{"raw function declaration: ", decl["RawFunctionDeclaration"]},
+		{BoxForm`SummaryItem@{"raw function declaration: ", decl["RawFunctionDeclaration"]}},
 		{},
 		form
 	]

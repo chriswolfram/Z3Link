@@ -3,8 +3,7 @@ BeginPackage["ChristopherWolfram`Z3Link`AST`ConstructAST`Arithmetic`"];
 Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
-
-Needs["ChristopherWolfram`ForeignFunctionInterface`"]
+Needs["ChristopherWolfram`Z3Link`Context`"]
 
 
 makeAddC := makeAddC =
@@ -17,26 +16,24 @@ makeMultiplyC := makeMultiplyC =
 	Z3Plus
 *)
 
-Options[Z3Plus] = {Z3Context :> $Z3Context};
-
 Z3Plus[args___Z3ASTObject, opts:OptionsPattern[]] :=
-	With[{ctx = OptionValue[Z3Context]},
-	Module[{argArray = ExportRawMemory[#["RawAST"] &/@ {args}, "RawPointer"::["OpaqueRawPointer"]]},
+	Enclose@Module[{ctx, argArray},
+		ctx = Confirm@Z3GetContext[args];
+		argArray = RawMemoryExport[#["RawAST"] &/@ {args}, "OpaqueRawPointer"];
 		Z3ASTObject[ctx, makeAddC[ctx["RawContext"], Length[{args}], argArray]]
-	]]
+	]
 
 
 (*
 	Z3Times
 *)
 
-Options[Z3Times] = {Z3Context :> $Z3Context};
-
 Z3Times[args___Z3ASTObject, opts:OptionsPattern[]] :=
-	With[{ctx = OptionValue[Z3Context]},
-	Module[{argArray = ExportRawMemory[#["RawAST"] &/@ {args}, "RawPointer"::["OpaqueRawPointer"]]},
+	Enclose@Module[{ctx, argArray},
+		ctx = Confirm@Z3GetContext[args];
+		argArray = RawMemoryExport[#["RawAST"] &/@ {args}, "OpaqueRawPointer"];
 		Z3ASTObject[ctx, makeMultiplyC[ctx["RawContext"], Length[{args}], argArray]]
-	]]
+	]
 
 
 End[];

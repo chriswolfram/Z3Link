@@ -5,14 +5,12 @@ Begin["`Private`"];
 Needs["ChristopherWolfram`Z3Link`"]
 Needs["ChristopherWolfram`Z3Link`ConstantsMap`"]
 
-Needs["ChristopherWolfram`ForeignFunctionInterface`"]
-
 
 astToStringC := astToStringC =
 	ForeignFunctionLoad[$LibZ3, "Z3_ast_to_string", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "RawPointer"::["CUnsignedChar"]];
 
 astToString[ctx_, ast_] :=
-	ImportRawMemory[astToStringC[ctx, ast], "String"]
+	RawMemoryImport[astToStringC[ctx, ast], "String"]
 
 
 (*
@@ -58,10 +56,10 @@ Z3ASTObject /: MakeBoxes[ast_Z3ASTObject, form:StandardForm]:=
 		Z3ASTObject,
 		ast,
 		None,
-		{"", ast["String"]},
+		{BoxForm`SummaryItem@{"", ast["String"]}},
 		{
-			{"raw AST: ", ast["RawAST"]},
-			{"context: ", ast["Context"]}
+			BoxForm`SummaryItem@{"raw AST: ", ast["RawAST"]},
+			BoxForm`SummaryItem@{"context: ", ast["Context"]}
 		},
 		form
 	]
