@@ -53,7 +53,7 @@ Z3ContextCreate[] := Z3ContextObject[makeRawContext[makeConfig[]]]
 Z3GetContext[ast_Z3ASTObject] := ast["Context"]
 Z3GetContext[sym_Z3SymbolObject] := sym["Context"]
 Z3GetContext[sort_Z3SortObject] := sort["Context"]
-Z3GetContext[decl_Z3FunctionDeclarationObject] := decl["Context"]
+Z3GetContext[decl_Z3FunctionDeclarationObject] := Information[decl, "Context"]
 
 (* TODO: Should this return a Failure instead? *)
 Z3GetContext[obj_] := $Z3Context
