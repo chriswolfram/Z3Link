@@ -16,17 +16,17 @@ makeRealSortC := makeRealSortC =
 
 
 (*
-	CreateZ3Sort
+	Z3SortCreate
 *)
 
-Options[CreateZ3Sort] = {Z3Context :> $Z3Context};
+Options[Z3SortCreate] = {Z3Context :> $Z3Context};
 
-CreateZ3Sort[sortName_, opts:OptionsPattern[]] := iCreateZ3Sort[OptionValue[Z3Context], sortName]
+Z3SortCreate[sortName_, opts:OptionsPattern[]] := iZ3SortCreate[OptionValue[Z3Context], sortName]
 
 (* TODO: Add fallthrough *)
-iCreateZ3Sort[ctx_, "Boolean"] := Z3SortObject[ctx, makeBooleanSortC[ctx["RawContext"]]]
-iCreateZ3Sort[ctx_, "Integer"] := Z3SortObject[ctx, makeIntegerSortC[ctx["RawContext"]]]
-iCreateZ3Sort[ctx_, "Real"] := Z3SortObject[ctx, makeRealSortC[ctx["RawContext"]]]
+iZ3SortCreate[ctx_, "Boolean"] := Z3SortObject[ctx, makeBooleanSortC[ctx["RawContext"]]]
+iZ3SortCreate[ctx_, "Integer"] := Z3SortObject[ctx, makeIntegerSortC[ctx["RawContext"]]]
+iZ3SortCreate[ctx_, "Real"] := Z3SortObject[ctx, makeRealSortC[ctx["RawContext"]]]
 
 
 (*

@@ -3,22 +3,22 @@ BeginPackage["ChristopherWolfram`Z3Link`"];
 $LibZ3
 
 Z3ContextObject
-CreateZ3Context
+Z3ContextCreate
 Z3Context
 $Z3Context
 
 Z3ASTObject
 
-CreateZ3Symbol
+Z3SymbolCreate
 Z3SymbolObject
 
-CreateZ3Sort
+Z3SortCreate
 Z3SortObject
 
-CreateZ3FunctionDeclaration
+Z3FunctionDeclarationCreate
 Z3FunctionDeclarationObject
 
-CreateZ3Application
+Z3ApplicationCreate
 Z3ApplicationObject
 
 Z3Simplify

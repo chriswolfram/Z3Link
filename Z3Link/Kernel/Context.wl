@@ -34,12 +34,12 @@ makeRawContext[config_] := CreateManagedObject[makeContextC[config], deleteConfi
 
 
 (*
-	CreateZ3Context
+	Z3ContextCreate
 *)
 
 (* TODO: Check that the context pointer is valid *)
 
-CreateZ3Context[] := Z3ContextObject[makeRawContext[makeConfig[]]]
+Z3ContextCreate[] := Z3ContextObject[makeRawContext[makeConfig[]]]
 
 
 (*
@@ -89,7 +89,7 @@ Z3ContextObject /: MakeBoxes[ctx_Z3ContextObject, form:StandardForm]:=
 	]
 
 
-$Z3Context := $Z3Context = CreateZ3Context[]
+$Z3Context := $Z3Context = Z3ContextCreate[]
 
 
 

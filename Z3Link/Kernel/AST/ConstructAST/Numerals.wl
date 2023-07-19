@@ -19,7 +19,7 @@ Z3Numeral[n_Integer, sortSpec_Z3SortObject, opts:OptionsPattern[]] :=
 	]
 
 Z3Numeral[n_Integer, opts:OptionsPattern[]] :=
-	Z3Numeral[n, CreateZ3Sort["Integer"], opts]
+	Z3Numeral[n, Z3SortCreate["Integer"], opts]
 
 
 End[];

@@ -10,12 +10,12 @@ makeIntegerSymbolC := makeIntegerSymbolC =
 	ForeignFunctionLoad[$LibZ3, "Z3_mk_int_symbol", {"OpaqueRawPointer", "CInt"} -> "OpaqueRawPointer"];
 
 (*
-	CreateZ3Symbol
+	Z3SymbolCreate
 *)
 
-Options[CreateZ3Symbol] = {Z3Context :> $Z3Context};
+Options[Z3SymbolCreate] = {Z3Context :> $Z3Context};
 
-CreateZ3Symbol[n_Integer, opts:OptionsPattern[]] :=
+Z3SymbolCreate[n_Integer, opts:OptionsPattern[]] :=
 	With[{ctx = OptionValue[Z3Context]},
 		Z3SymbolObject[ctx, makeIntegerSymbolC[ctx["RawContext"], n]]
 	]

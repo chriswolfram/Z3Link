@@ -18,12 +18,12 @@ makeFuncDecl := makeFuncDecl =
 
 
 (*
-	CreateZ3FunctionDeclaration
+	Z3FunctionDeclarationCreate
 *)
 
-Options[CreateZ3FunctionDeclaration] = {Z3Context :> $Z3Context};
+Options[Z3FunctionDeclarationCreate] = {Z3Context :> $Z3Context};
 
-CreateZ3FunctionDeclaration[declName_Z3SymbolObject, domain:{___Z3SortObject}, range_Z3SortObject, opts:OptionsPattern[]] :=
+Z3FunctionDeclarationCreate[declName_Z3SymbolObject, domain:{___Z3SortObject}, range_Z3SortObject, opts:OptionsPattern[]] :=
 	With[{
 			ctx = OptionValue[Z3Context],
 			domainArr = RawMemoryExport[#["RawSort"]&/@domain, "OpaqueRawPointer"]
