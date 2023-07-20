@@ -76,9 +76,31 @@ Z3GetContext[objs__] :=
 	Z3ContextObject
 *)
 
-Z3ContextObject[rawCtx_]["RawContext"] := rawCtx
 
-Z3ContextObject /: MakeBoxes[ctx_Z3ContextObject, form:StandardForm]:=
+Z3ContextObject[args___] /; !argumentsZ3ContextObject[args] :=
+	With[{res = ArgumentsOptions[Z3ContextObject[args], 1]},
+		If[FailureQ[res],
+			res,
+			Message[Z3ContextObject::inv, {args}];
+			Failure["InvalidZ3ContextObject", <|
+				"MessageTemplate" :> Z3ContextObject::inv,
+				"MessageParameters" -> {{args}},
+				"Arguments" -> {args}
+			|>]
+		]
+	]
+
+argumentsZ3ContextObject[man_ManagedObject /; MatchQ[man["Value"], _OpaqueRawPointer]] := True
+argumentsZ3ContextObject[___] := False
+
+
+(*
+	Accessors
+*)
+
+HoldPattern[Z3ContextObject][rawCtx_]["RawContext"] := rawCtx
+
+Z3ContextObject /: MakeBoxes[ctx:Z3ContextObject[args___] /; argumentsZ3ContextObject[args], form:StandardForm]:=
 	BoxForm`ArrangeSummaryBox[
 		Z3ContextObject,
 		ctx,

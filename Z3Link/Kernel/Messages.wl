@@ -2,9 +2,16 @@ BeginPackage["ChristopherWolfram`Z3Link`Messages`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
 
+Z3ContextObject::inv = "Invalid arguments for Z3ContextObject `1`.";
 
+Z3ASTObject::inv = "Invalid arguments for Z3ASTObject `1`.";
 Z3ASTObject::unsupportedASTkind = "Unsupported AST kind `1`.";
 
+Z3FunctionDeclarationObject::inv = "Invalid arguments for Z3FunctionDeclarationObject `1`.";
+
+Z3SortObject::inv = "Invalid arguments for Z3SortObject `1`.";
+
+Z3SymbolObject::inv = "Invalid arguments for Z3SymbolObject `1`.";
 Z3SymbolObject::unsupportedSymbolkind = "Unsupported symbol kind `1`.";
 
 (* TODO: Use ArgumentsOptions? *)

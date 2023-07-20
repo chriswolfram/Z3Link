@@ -33,6 +33,27 @@ Z3SymbolCreate[str_?StringQ, opts:OptionsPattern[]] :=
 	Z3SymbolObject
 *)
 
+Z3SymbolObject[args___] /; !argumentsZ3SymbolObject[args] :=
+	With[{res = ArgumentsOptions[Z3SymbolObject[args], 2]},
+		If[FailureQ[res],
+			res,
+			Message[Z3SymbolObject::inv, {args}];
+			Failure["InvalidZ3SymbolObject", <|
+				"MessageTemplate" :> Z3SymbolObject::inv,
+				"MessageParameters" -> {{args}},
+				"Arguments" -> {args}
+			|>]
+		]
+	]
+
+argumentsZ3SymbolObject[_Z3ContextObject, _OpaqueRawPointer] := True
+argumentsZ3SymbolObject[___] := False
+
+
+(*
+	Accessors
+*)
+
 getSymbolKindC := getSymbolKindC =
 	ForeignFunctionLoad[$LibZ3, "Z3_get_symbol_kind", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "CInt"];
 	
@@ -68,11 +89,11 @@ getSymbolName[ctx_, sym_] :=
 	]
 
 
-Z3SymbolObject[ctx_, rawSym_]["RawSymbol"] := rawSym
-Z3SymbolObject[ctx_, rawSym_]["Context"] := ctx
+HoldPattern[Z3SymbolObject][ctx_, rawSym_]["RawSymbol"] := rawSym
+HoldPattern[Z3SymbolObject][ctx_, rawSym_]["Context"] := ctx
 sym_Z3SymbolObject["Name"] := getSymbolName[sym["Context"]["RawContext"], sym["RawSymbol"]]
 
-Z3SymbolObject /: MakeBoxes[sym_Z3SymbolObject, form:StandardForm]:=
+Z3SymbolObject /: MakeBoxes[sym:Z3SymbolObject[args___] /; argumentsZ3SymbolObject[args], form:StandardForm]:=
 	BoxForm`ArrangeSummaryBox[
 		Z3SymbolObject,
 		sym,

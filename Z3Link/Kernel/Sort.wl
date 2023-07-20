@@ -33,8 +33,29 @@ iZ3SortCreate[ctx_, "Real"] := Z3SortObject[ctx, makeRealSortC[ctx["RawContext"]
 	Z3SortObject
 *)
 
-Z3SortObject[ctx_Z3ContextObject, rawSort_]["RawSort"] := rawSort
-Z3SortObject[ctx_Z3ContextObject, rawSort_]["Context"] := ctx
+Z3SortObject[args___] /; !argumentsZ3SortObject[args] :=
+	With[{res = ArgumentsOptions[Z3SortObject[args], 2]},
+		If[FailureQ[res],
+			res,
+			Message[Z3SortObject::inv, {args}];
+			Failure["InvalidZ3SortObject", <|
+				"MessageTemplate" :> Z3SortObject::inv,
+				"MessageParameters" -> {{args}},
+				"Arguments" -> {args}
+			|>]
+		]
+	]
+
+argumentsZ3SortObject[_Z3ContextObject, _OpaqueRawPointer] := True
+argumentsZ3SortObject[___] := False
+
+
+(*
+	Accessors
+*)
+
+HoldPattern[Z3SortObject][ctx_Z3ContextObject, rawSort_]["RawSort"] := rawSort
+HoldPattern[Z3SortObject][ctx_Z3ContextObject, rawSort_]["Context"] := ctx
 
 
 sortToASTC := sortToASTC =
@@ -45,7 +66,7 @@ sort_Z3SortObject["AST"] := Z3ASTObject[sort["Context"], sortToASTC[sort["Contex
 sort_Z3SortObject["Hash"] := sort["AST"]["Hash"]
 
 
-Z3SortObject /: MakeBoxes[sort_Z3SortObject, form:StandardForm]:=
+Z3SortObject /: MakeBoxes[sort:Z3SortObject[args___] /; argumentsZ3SortObject[args], form:StandardForm]:=
 	BoxForm`ArrangeSummaryBox[
 		Z3SortObject,
 		sort,

@@ -6,6 +6,10 @@ Needs["ChristopherWolfram`Z3Link`"]
 Needs["ChristopherWolfram`Z3Link`Context`"]
 
 
+(*
+	Constructors
+*)
+
 makeFuncDecl := makeFuncDecl =
 	ForeignFunctionLoad[$LibZ3, "Z3_mk_func_decl",
 		{
@@ -16,11 +20,7 @@ makeFuncDecl := makeFuncDecl =
 			"OpaqueRawPointer"
 		} -> "OpaqueRawPointer"
 	];
-
-
-(*
-	Z3FunctionDeclarationCreate
-*)
+	
 
 Z3FunctionDeclarationCreate[declName_Z3SymbolObject, domain:{___Z3SortObject}, range_Z3SortObject, opts:OptionsPattern[]] :=
 	Enclose@With[{
@@ -29,6 +29,28 @@ Z3FunctionDeclarationCreate[declName_Z3SymbolObject, domain:{___Z3SortObject}, r
 		},
 		Z3FunctionDeclarationObject[ctx, makeFuncDecl[ctx["RawContext"], declName["RawSymbol"], Length[domain], domainArr, range["RawSort"]]]
 	]
+
+
+(*
+	Verifiers
+*)
+
+
+Z3FunctionDeclarationObject[args___] /; !argumentsZ3FunctionDeclarationObject[args] :=
+	With[{res = ArgumentsOptions[Z3FunctionDeclarationObject[args], 2]},
+		If[FailureQ[res],
+			res,
+			Message[Z3FunctionDeclarationObject::inv, {args}];
+			Failure["InvalidZ3FunctionDeclarationObject", <|
+				"MessageTemplate" :> Z3FunctionDeclarationObject::inv,
+				"MessageParameters" -> {{args}},
+				"Arguments" -> {args}
+			|>]
+		]
+	]
+
+argumentsZ3FunctionDeclarationObject[_Z3ContextObject, _OpaqueRawPointer] := True
+argumentsZ3FunctionDeclarationObject[___] := False
 
 
 (*
@@ -76,15 +98,13 @@ decl_Z3FunctionDeclarationObject[args___Z3ASTObject] :=
 		Z3ASTObject[ctx, makeAppC[ctx["RawContext"], Information[decl, "RawFunctionDeclaration"], Length[{args}], argArr]]
 	]
 
-Z3FunctionDeclarationObject::appargcount = "Expected `1` arguments for function declaration `2`, but found `3` arguments instead: `4`."
-
 
 (*
 	Accessors
 *)
 
-getContext[Z3FunctionDeclarationObject[ctx_Z3ContextObject, rawDecl_]] := ctx
-getRawDeclaration[Z3FunctionDeclarationObject[ctx_Z3ContextObject, rawDecl_]] := rawDecl
+getContext[HoldPattern[Z3FunctionDeclarationObject][ctx_Z3ContextObject, rawDecl_]] := ctx
+getRawDeclaration[HoldPattern[Z3FunctionDeclarationObject][ctx_Z3ContextObject, rawDecl_]] := rawDecl
 
 
 getFuncDeclDomainSizeC := getFuncDeclDomainSizeC =
@@ -119,17 +139,17 @@ getRange[decl_] :=
 
 Information`AddRegistry[Z3FunctionDeclarationObject, Z3FunctionDeclarationObjectInformation];
 
-Z3FunctionDeclarationObjectInformation[decl: Z3FunctionDeclarationObject[ctx_Z3ContextObject, rawDecl_]] :=
+Z3FunctionDeclarationObjectInformation[decl_Z3FunctionDeclarationObject] :=
 	<|
 		"ObjectType" -> "Z3FunctionDeclarationObject",
-		"RawFunctionDeclaration" -> rawDecl,
-		"Context" -> ctx,
+		"RawFunctionDeclaration" -> getRawDeclaration[decl],
+		"Context" -> getContext[decl],
 		"ArgumentCount" :> getDomainSize[decl],
 		"Domain" :> getDomain[decl],
 		"Range" :> getRange[decl]
 	|>
 
-Z3FunctionDeclarationObject /: MakeBoxes[decl_Z3FunctionDeclarationObject, form:StandardForm]:=
+Z3FunctionDeclarationObject /: MakeBoxes[decl:Z3FunctionDeclarationObject[args___] /; argumentsZ3FunctionDeclarationObject[args], form:StandardForm]:=
 	BoxForm`ArrangeSummaryBox[
 		Z3FunctionDeclarationObject,
 		decl,

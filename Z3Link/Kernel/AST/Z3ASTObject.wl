@@ -6,16 +6,37 @@ Needs["ChristopherWolfram`Z3Link`"]
 Needs["ChristopherWolfram`Z3Link`ConstantsMap`"]
 
 
+(*
+	Verifiers
+*)
+
+Z3ASTObject[args___] /; !argumentsZ3ASTObject[args] :=
+	With[{res = ArgumentsOptions[Z3ASTObject[args], 2]},
+		If[FailureQ[res],
+			res,
+			Message[Z3ASTObject::inv, {args}];
+			Failure["InvalidZ3ASTObject", <|
+				"MessageTemplate" :> Z3ASTObject::inv,
+				"MessageParameters" -> {{args}},
+				"Arguments" -> {args}
+			|>]
+		]
+	]
+
+argumentsZ3ASTObject[_Z3ContextObject, _OpaqueRawPointer] := True
+argumentsZ3ASTObject[___] := False
+
+
+(*
+	Accessors
+*)
+
 astToStringC := astToStringC =
 	ForeignFunctionLoad[$LibZ3, "Z3_ast_to_string", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "RawPointer"::["CUnsignedChar"]];
 
 astToString[ctx_, ast_] :=
 	RawMemoryImport[astToStringC[ctx, ast], "String"]
 
-
-(*
-	Z3ASTObject
-*)
 
 getASTKindC := getASTKindC =
 	ForeignFunctionLoad[$LibZ3, "Z3_get_ast_kind", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "CInt"];
@@ -44,8 +65,8 @@ unwrapAST[ctx_, ast_]:=
 		]
 	]
 
-Z3ASTObject[ctx_Z3ContextObject, rawAST_]["Context"] := ctx
-Z3ASTObject[ctx_Z3ContextObject, rawAST_]["RawAST"] := rawAST
+HoldPattern[Z3ASTObject][ctx_Z3ContextObject, rawAST_]["Context"] := ctx
+HoldPattern[Z3ASTObject][ctx_Z3ContextObject, rawAST_]["RawAST"] := rawAST
 
 ast_Z3ASTObject["Unwrap"] := unwrapAST[ast["Context"]["RawContext"], ast["RawAST"]]
 ast_Z3ASTObject["String"] := astToString[ast["Context"]["RawContext"], ast["RawAST"]]
@@ -63,7 +84,11 @@ getASTHashC := getASTHashC =
 ast_Z3ASTObject["Hash"] := getASTHashC[ast["Context"]["RawContext"], ast["RawAST"]]
 
 
-Z3ASTObject /: MakeBoxes[ast_Z3ASTObject, form:StandardForm]:=
+(*
+	Summary box
+*)
+
+Z3ASTObject /: MakeBoxes[ast:Z3ASTObject[args___] /; argumentsZ3ASTObject[args], form:StandardForm]:=
 	BoxForm`ArrangeSummaryBox[
 		Z3ASTObject,
 		ast,
