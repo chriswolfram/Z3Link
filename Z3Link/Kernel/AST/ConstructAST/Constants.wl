@@ -13,7 +13,7 @@ makeConstantC := makeConstantC =
 	Z3Constant
 *)
 
-Z3Constant[symSpec_Z3SymbolObject, sortSpec_Z3SortObject, opts:OptionsPattern[]] :=
+Z3Constant[symSpec_Z3SymbolObject, sortSpec_Z3SortObject] :=
 	Enclose@With[{ctx = Confirm@Z3GetContext[symSpec, sortSpec]},
 		Z3ASTObject[ctx, makeConstantC[ctx["RawContext"], symSpec["RawSymbol"], sortSpec["RawSort"]]]
 	]

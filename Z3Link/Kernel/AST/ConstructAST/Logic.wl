@@ -47,7 +47,7 @@ Z3False[opts:OptionsPattern[]] :=
 	Z3Not
 *)
 
-Z3Not[ast_Z3ASTObject, opts:OptionsPattern[]] :=
+Z3Not[ast_Z3ASTObject] :=
 	Enclose@With[{ctx = Confirm@Z3GetContext[ast]},
 		Z3ASTObject[ctx, makeNotC[ctx["RawContext"], ast["RawAST"]]]
 	]
@@ -57,7 +57,7 @@ Z3Not[ast_Z3ASTObject, opts:OptionsPattern[]] :=
 	Z3Equal
 *)
 
-Z3Equal[lhs_Z3ASTObject, rhs_Z3ASTObject, opts:OptionsPattern[]] :=
+Z3Equal[lhs_Z3ASTObject, rhs_Z3ASTObject] :=
 	Enclose@With[{ctx = Confirm@Z3GetContext[lhs, rhs]},
 		Z3ASTObject[ctx, makeEqualC[ctx["RawContext"], lhs["RawAST"], rhs["RawAST"]]]
 	]

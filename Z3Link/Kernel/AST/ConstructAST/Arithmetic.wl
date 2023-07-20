@@ -16,7 +16,7 @@ makeMultiplyC := makeMultiplyC =
 	Z3Plus
 *)
 
-Z3Plus[args___Z3ASTObject, opts:OptionsPattern[]] :=
+Z3Plus[args___Z3ASTObject] :=
 	Enclose@Module[{ctx, argArray},
 		ctx = Confirm@Z3GetContext[args];
 		argArray = RawMemoryExport[#["RawAST"] &/@ {args}, "OpaqueRawPointer"];
@@ -28,7 +28,7 @@ Z3Plus[args___Z3ASTObject, opts:OptionsPattern[]] :=
 	Z3Times
 *)
 
-Z3Times[args___Z3ASTObject, opts:OptionsPattern[]] :=
+Z3Times[args___Z3ASTObject] :=
 	Enclose@Module[{ctx, argArray},
 		ctx = Confirm@Z3GetContext[args];
 		argArray = RawMemoryExport[#["RawAST"] &/@ {args}, "OpaqueRawPointer"];
