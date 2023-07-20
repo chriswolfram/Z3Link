@@ -53,6 +53,7 @@ Needs["ChristopherWolfram`Z3Link`Sort`"]
 Needs["ChristopherWolfram`Z3Link`Application`"]
 Needs["ChristopherWolfram`Z3Link`FunctionDeclaration`"]
 Needs["ChristopherWolfram`Z3Link`AST`"]
+Needs["ChristopherWolfram`Z3Link`Solve`"]
 Needs["ChristopherWolfram`Z3Link`Messages`"]
 
 
