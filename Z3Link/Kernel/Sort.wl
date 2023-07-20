@@ -36,6 +36,15 @@ iZ3SortCreate[ctx_, "Real"] := Z3SortObject[ctx, makeRealSortC[ctx["RawContext"]
 Z3SortObject[ctx_Z3ContextObject, rawSort_]["RawSort"] := rawSort
 Z3SortObject[ctx_Z3ContextObject, rawSort_]["Context"] := ctx
 
+
+sortToASTC := sortToASTC =
+	ForeignFunctionLoad[$LibZ3, "Z3_sort_to_ast", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "OpaqueRawPointer"];
+
+sort_Z3SortObject["AST"] := Z3ASTObject[sort["Context"], sortToASTC[sort["Context"]["RawContext"], sort["RawSort"]]]
+
+sort_Z3SortObject["Hash"] := sort["AST"]["Hash"]
+
+
 Z3SortObject /: MakeBoxes[sort_Z3SortObject, form:StandardForm]:=
 	BoxForm`ArrangeSummaryBox[
 		Z3SortObject,

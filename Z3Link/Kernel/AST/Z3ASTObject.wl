@@ -44,12 +44,24 @@ unwrapAST[ctx_, ast_]:=
 		]
 	]
 
-
 Z3ASTObject[ctx_Z3ContextObject, rawAST_]["Context"] := ctx
 Z3ASTObject[ctx_Z3ContextObject, rawAST_]["RawAST"] := rawAST
 
 ast_Z3ASTObject["Unwrap"] := unwrapAST[ast["Context"]["RawContext"], ast["RawAST"]]
 ast_Z3ASTObject["String"] := astToString[ast["Context"]["RawContext"], ast["RawAST"]]
+
+
+getASTSortC := getASTSortC =
+	ForeignFunctionLoad[$LibZ3, "Z3_get_sort", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "OpaqueRawPointer"];
+
+ast_Z3ASTObject["Sort"] := Z3SortObject[ast["Context"], getASTSortC[ast["Context"]["RawContext"], ast["RawAST"]]]
+
+
+getASTHashC := getASTHashC =
+	ForeignFunctionLoad[$LibZ3, "Z3_get_ast_hash", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "CUnsignedInt"];
+
+ast_Z3ASTObject["Hash"] := getASTHashC[ast["Context"]["RawContext"], ast["RawAST"]]
+
 
 Z3ASTObject /: MakeBoxes[ast_Z3ASTObject, form:StandardForm]:=
 	BoxForm`ArrangeSummaryBox[
