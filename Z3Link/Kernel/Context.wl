@@ -17,7 +17,17 @@ makeConfigC := makeConfigC =
 deleteConfigC := deleteConfigC =
 	ForeignFunctionLoad[$LibZ3, "Z3_del_config", {"OpaqueRawPointer"} -> "Void"];
 
-makeConfig[] := CreateManagedObject[makeConfigC[], deleteConfigC]
+setConfigParamC := setConfigParamC =
+	ForeignFunctionLoad[$LibZ3, "Z3_set_param_value", {"OpaqueRawPointer", "RawPointer"::["UnsignedInteger8"], "RawPointer"::["UnsignedInteger8"]} -> "Void"];
+
+makeConfig[opts_?AssociationQ] :=
+	With[{config = CreateManagedObject[makeConfigC[], deleteConfigC]},
+		KeyValueMap[
+			setConfigParamC[config, RawMemoryExport[#1], RawMemoryExport[#2]]&,
+			opts
+		];
+		config
+	]
 
 
 (*
@@ -39,7 +49,8 @@ makeRawContext[config_] := CreateManagedObject[makeContextC[config], deleteConfi
 
 (* TODO: Check that the context pointer is valid *)
 
-Z3ContextCreate[] := Z3ContextObject[makeRawContext[makeConfig[]]]
+(* Enable proof generation by default *)
+Z3ContextCreate[] := Z3ContextObject[makeRawContext[makeConfig[<|"proof" -> "true"|>]]]
 
 
 (*
@@ -54,6 +65,7 @@ Z3GetContext[ast_Z3ASTObject] := ast["Context"]
 Z3GetContext[sym_Z3SymbolObject] := sym["Context"]
 Z3GetContext[sort_Z3SortObject] := sort["Context"]
 Z3GetContext[decl_Z3FunctionDeclarationObject] := Information[decl, "Context"]
+Z3GetContext[solver_Z3SolverObject] := solver["Context"]
 
 (* TODO: Should this return a Failure instead? *)
 Z3GetContext[obj_] := $Z3Context

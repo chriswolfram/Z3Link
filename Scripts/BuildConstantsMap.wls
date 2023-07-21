@@ -300,6 +300,13 @@ constantNames = <|
 	"SymbolKinds" -> {
 		"Z3_INT_SYMBOL",
 		"Z3_STRING_SYMBOL"
+	},
+
+	(* Lifted booleans *)
+	"LiftedBooleans" -> {
+		"Z3_L_FALSE",
+		"Z3_L_UNDEF",
+		"Z3_L_TRUE"
 	}
 
 |>;
@@ -310,7 +317,8 @@ getConstantValues[declKindNames_] :=
 		lib = Confirm@CreateLibrary[
 			"#include <z3.h>\n\n" <>
 			StringRiffle[StringTemplate["int get_`1`() {return `1`;}"]/@declKindNames,"\n\n"],
-			CreateUUID[]
+			CreateUUID[](* ,
+			"IncludeDirectories" -> {"/opt/homebrew/include"} *)
 		];
 		out = AssociationMap[ForeignFunctionLoad[lib,"get_"<>#,{}->"CInt"][]&,declKindNames];
 		DeleteFile[lib];
@@ -318,12 +326,14 @@ getConstantValues[declKindNames_] :=
 	]
 
 
-constantValues = getConstantValues/@constantNames;
+Enclose[
+	constantValues = Confirm@*getConstantValues/@constantNames;
 
 
-path = Export[
-	FileNameJoin[{FileNameDrop[$InputFileName,-2], "Z3Link", "Assets", "ConstantsMap.wxf"}],
-	constantValues
-];
+	path = Export[
+		FileNameJoin[{FileNameDrop[$InputFileName,-2], "Z3Link", "Assets", "ConstantsMap.wxf"}],
+		constantValues
+	];
 
-Echo["Built constants map at path: " <> path];
+	Echo["Built constants map at path: " <> path];
+]

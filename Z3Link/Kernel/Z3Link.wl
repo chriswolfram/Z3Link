@@ -18,10 +18,10 @@ Z3SortObject
 Z3FunctionDeclarationCreate
 Z3FunctionDeclarationObject
 
-Z3ApplicationCreate
-Z3ApplicationObject
-
 Z3Simplify
+
+Z3SolverCreate
+Z3SolverObject
 
 
 (* Specific AST constructors *)
