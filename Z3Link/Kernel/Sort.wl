@@ -14,6 +14,9 @@ makeIntegerSortC := makeIntegerSortC =
 makeRealSortC := makeRealSortC =
 	ForeignFunctionLoad[$LibZ3, "Z3_mk_real_sort", {"OpaqueRawPointer"} -> "OpaqueRawPointer"];
 
+makeUninterpretedSortC := makeUninterpretedSortC =
+	ForeignFunctionLoad[$LibZ3, "Z3_mk_uninterpreted_sort", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "OpaqueRawPointer"];
+
 
 (*
 	Z3SortCreate
@@ -27,6 +30,9 @@ Z3SortCreate[sortName_, opts:OptionsPattern[]] := iZ3SortCreate[OptionValue[Z3Co
 iZ3SortCreate[ctx_, "Boolean"] := Z3SortObject[ctx, makeBooleanSortC[ctx["RawContext"]]]
 iZ3SortCreate[ctx_, "Integer"] := Z3SortObject[ctx, makeIntegerSortC[ctx["RawContext"]]]
 iZ3SortCreate[ctx_, "Real"] := Z3SortObject[ctx, makeRealSortC[ctx["RawContext"]]]
+
+iZ3SortCreate[ctx_, sym_Z3SymbolObject] :=
+	Z3SortObject[ctx, makeUninterpretedSortC[ctx["RawContext"], sym["RawSymbol"]]]
 
 
 (*
