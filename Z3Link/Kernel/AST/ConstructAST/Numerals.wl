@@ -10,7 +10,7 @@ makeNumeralC := makeNumeralC =
 	ForeignFunctionLoad[$LibZ3, "Z3_mk_numeral", {"OpaqueRawPointer", "RawPointer"::["CUnsignedChar"], "OpaqueRawPointer"} -> "OpaqueRawPointer"];
 
 (*
-	Z3Constant
+	Z3Numeral
 *)
 
 Z3Numeral[n_Integer, sortSpec_Z3SortObject] :=

@@ -30,6 +30,11 @@ Z3Simplify
 Z3Constant
 Z3Numeral
 
+(* Quantifiers *)
+Z3ForAll
+Z3Exists
+Z3DeBruijnIndex
+
 (* Logic *)
 Z3True
 Z3False
