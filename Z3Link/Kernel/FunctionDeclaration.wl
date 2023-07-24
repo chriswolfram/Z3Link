@@ -4,6 +4,7 @@ Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
 Needs["ChristopherWolfram`Z3Link`Context`"]
+Needs["ChristopherWolfram`Z3Link`ConstantsMap`"]
 
 
 (*
@@ -133,6 +134,26 @@ getRange[decl_] :=
 	]
 
 
+getDeclNameC := getDeclNameC =
+	ForeignFunctionLoad[$LibZ3, "Z3_get_decl_name", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "OpaqueRawPointer"]
+
+getName[decl_] :=
+	With[{ctx = getContext[decl]},
+		Z3SymbolObject[ctx, getDeclNameC[ctx["RawContext"], getRawDeclaration[decl]]]
+	]
+
+
+getDeclKindC := getDeclKindC =
+	ForeignFunctionLoad[$LibZ3, "Z3_get_decl_kind", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "CInt"];
+
+$kindIDDeclarations := $kindIDDeclarations = AssociationMap[Reverse, $Z3ConstantsMap["DeclarationKinds"]];
+
+getRawKind[decl_] :=
+	With[{ctx = getContext[decl]},
+		$kindIDDeclarations[getDeclKindC[ctx["RawContext"], getRawDeclaration[decl]]]
+	]
+
+
 (*
 	Z3FunctionDeclarationObject
 *)
@@ -144,9 +165,11 @@ Z3FunctionDeclarationObjectInformation[decl_Z3FunctionDeclarationObject] :=
 		"ObjectType" -> "Z3FunctionDeclarationObject",
 		"RawFunctionDeclaration" -> getRawDeclaration[decl],
 		"Context" -> getContext[decl],
+		"Name" :> getName[decl],
 		"ArgumentCount" :> getDomainSize[decl],
 		"Domain" :> getDomain[decl],
-		"Range" :> getRange[decl]
+		"Range" :> getRange[decl],
+		"RawKind" :> getRawKind[decl]
 	|>
 
 Z3FunctionDeclarationObject /: MakeBoxes[decl:Z3FunctionDeclarationObject[args___] /; argumentsZ3FunctionDeclarationObject[args], form:StandardForm]:=
@@ -154,8 +177,12 @@ Z3FunctionDeclarationObject /: MakeBoxes[decl:Z3FunctionDeclarationObject[args__
 		Z3FunctionDeclarationObject,
 		decl,
 		None,
-		{BoxForm`SummaryItem@{"raw function declaration: ", Information[decl, "RawFunctionDeclaration"]}},
-		{},
+		{
+			BoxForm`SummaryItem@{"name: ", Information[decl, "Name"]}
+		},
+		{
+			BoxForm`SummaryItem@{"raw function declaration: ", Information[decl, "RawFunctionDeclaration"]}
+		},
 		form
 	]
 

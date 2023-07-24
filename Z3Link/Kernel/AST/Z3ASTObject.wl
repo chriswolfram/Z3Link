@@ -31,46 +31,21 @@ argumentsZ3ASTObject[___] := False
 	Accessors
 *)
 
+HoldPattern[Z3ASTObject][ctx_Z3ContextObject, rawAST_]["Context"] := ctx
+HoldPattern[Z3ASTObject][ctx_Z3ContextObject, rawAST_]["RawAST"] := rawAST
+
+(* String *)
+
 astToStringC := astToStringC =
 	ForeignFunctionLoad[$LibZ3, "Z3_ast_to_string", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "RawPointer"::["CUnsignedChar"]];
 
 astToString[ctx_, ast_] :=
 	RawMemoryImport[astToStringC[ctx, ast], "String"]
 
-
-getASTKindC := getASTKindC =
-	ForeignFunctionLoad[$LibZ3, "Z3_get_ast_kind", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "CInt"];
-	
-getASTAppC := getASTAppC =
-	ForeignFunctionLoad[$LibZ3, "Z3_to_app", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "OpaqueRawPointer"];
-
-unwrapAST[ctx_, ast_]:=
-	With[{kind = getASTKindC[ctx,ast]},
-		Switch[kind,
-		
-			$Z3ConstantsMap["ASTKinds"]["Z3_APP_AST"],
-				(* TODO HERE *)
-				fromApp[ctx, getASTAppC[ctx, ast]],
-		
-			_,
-				With[{kindName = Replace[kind, AssociationMap[Reverse,$ASTKindIDs]]},
-					Message[Z3ASTObject::unsupportedASTkind, kindName];
-					Failure["UnsupportedKind", <|
-						"MessageTemplate" :> Z3ASTObject::unsupportedASTkind,
-						"MessageParameters" -> {kindName},
-						"ASTKindName" -> kindName,
-						"ASTKindID" -> kind
-					|>]
-				]
-		]
-	]
-
-HoldPattern[Z3ASTObject][ctx_Z3ContextObject, rawAST_]["Context"] := ctx
-HoldPattern[Z3ASTObject][ctx_Z3ContextObject, rawAST_]["RawAST"] := rawAST
-
-ast_Z3ASTObject["Unwrap"] := unwrapAST[ast["Context"]["RawContext"], ast["RawAST"]]
 ast_Z3ASTObject["String"] := astToString[ast["Context"]["RawContext"], ast["RawAST"]]
 
+
+(* Sort *)
 
 getASTSortC := getASTSortC =
 	ForeignFunctionLoad[$LibZ3, "Z3_get_sort", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "OpaqueRawPointer"];
@@ -78,10 +53,110 @@ getASTSortC := getASTSortC =
 ast_Z3ASTObject["Sort"] := Z3SortObject[ast["Context"], getASTSortC[ast["Context"]["RawContext"], ast["RawAST"]]]
 
 
+(* Hash *)
+
 getASTHashC := getASTHashC =
 	ForeignFunctionLoad[$LibZ3, "Z3_get_ast_hash", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "CUnsignedInt"];
 
 ast_Z3ASTObject["Hash"] := getASTHashC[ast["Context"]["RawContext"], ast["RawAST"]]
+
+
+(* RawKind *)
+
+getASTKindC := getASTKindC =
+	ForeignFunctionLoad[$LibZ3, "Z3_get_ast_kind", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "CInt"];
+
+ast_Z3ASTObject["RawKind"] :=
+	getASTKindC[ast["Context"]["RawContext"], ast["RawAST"]]
+
+
+(* Kind *)
+
+$astKindRawNames := $astKindRawNames = AssociationMap[Reverse, $Z3ConstantsMap["ASTKinds"]];
+
+$astKindCookedNames = <|
+	"Z3_NUMERAL_AST" ->    "Numeral",
+	"Z3_APP_AST" ->        "Application",
+	"Z3_VAR_AST" ->        "BoundVariable",
+	"Z3_QUANTIFIER_AST" -> "Quantifier",
+	"Z3_SORT_AST" ->       "Sort",
+	"Z3_FUNC_DECL_AST" ->  "FunctionDeclaration",
+	"Z3_UNKNOWN_AST" ->    "Internal"
+|>;
+
+ast_Z3ASTObject["Kind"] :=
+	Replace[$astKindRawNames[ast["RawKind"]], $astKindCookedNames]
+
+
+(* ArgumentCount *)
+
+getAppNumArgsC := getAppNumArgsC =
+	ForeignFunctionLoad[$LibZ3, "Z3_get_app_num_args", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "CUnsignedInt"];
+
+ast_Z3ASTObject["ArgumentCount"] := 
+	Enclose@Module[{app},
+		app = Confirm@getRawApplication[ast];
+		getAppNumArgsC[ast["Context"]["RawContext"], app]
+	]
+
+
+(* Arguments *)
+
+getAppArgC := getAppArgC =
+	ForeignFunctionLoad[$LibZ3, "Z3_get_app_arg", {"OpaqueRawPointer", "OpaqueRawPointer", "CUnsignedInt"} -> "OpaqueRawPointer"];
+
+ast_Z3ASTObject["Arguments"] := 
+	Enclose@Module[{app, argCount},
+		app = Confirm@getRawApplication[ast];
+		argCount = getAppNumArgsC[ast["Context"]["RawContext"], app];
+		Z3ASTObject[ast["Context"], getAppArgC[ast["Context"]["RawContext"], app, #-1]]&/@Range[argCount]
+	]
+
+ast_Z3ASTObject["Arguments", i_Integer?Positive] := 
+	Enclose@Module[{app, argCount},
+		app = Confirm@getRawApplication[ast];
+		argCount = getAppNumArgsC[ast["Context"]["RawContext"], app];
+		If[i > argCount,
+			Message[Z3ASTObject::arg, i, ast];
+			Confirm@Failure["InvalidArgumentIndex", <|
+				"MessageTemplate" :> Z3ASTObject::arg,
+				"MessageParameters" -> {i, ast},
+				"AST" -> ast,
+				"ArgumentCount" -> argCount,
+				"Index" -> i
+			|>]
+		];
+		Z3ASTObject[ast["Context"], getAppArgC[ast["Context"]["RawContext"], app, i-1]]
+	]
+
+
+(* Head *)
+
+getAppDeclC := getAppDeclC =
+	ForeignFunctionLoad[$LibZ3, "Z3_get_app_decl", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "OpaqueRawPointer"];
+
+ast_Z3ASTObject["Head"] := 
+	Enclose@Module[{app},
+		app = Confirm@getRawApplication[ast];
+		Z3FunctionDeclarationObject[ast["Context"], getAppDeclC[ast["Context"]["RawContext"], app]]
+	]
+
+
+(* Errors *)
+
+getASTAppC := getASTAppC =
+	ForeignFunctionLoad[$LibZ3, "Z3_to_app", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "OpaqueRawPointer"];
+
+getRawApplication[ast_] :=
+	If[ast["RawKind"] === $Z3ConstantsMap["ASTKinds"]["Z3_APP_AST"],
+		getASTAppC[ast["Context"]["RawContext"], ast["RawAST"]],
+		Message[Z3ASTObject::app, ast["Kind"], ast];
+		Failure["InvalidApplicationAST", <|
+			"MessageTemplate" :> Z3ASTObject::app,
+			"MessageParameters" -> {ast["Kind"], ast},
+			"AST" -> ast
+		|>]
+	]
 
 
 (*
