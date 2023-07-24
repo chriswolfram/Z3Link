@@ -6,7 +6,7 @@ Z3ContextObject::inv = "Invalid arguments for Z3ContextObject `1`.";
 
 Z3ASTObject::inv = "Invalid arguments for Z3ASTObject `1`.";
 Z3ASTObject::unsupportedASTkind = "Unsupported AST kind `1`.";
-Z3ASTObject::app = "Expected a Z3ASTObject with kind Application, but found one with kind `1` instead: `2`.";
+Z3ASTObject::kind = "Expected a Z3ASTObject with kind `1`, but found one with kind `2` instead: `3`.";
 Z3ASTObject::arg = "Argument `1` of `2` does not exist.";
 
 Z3FunctionDeclarationObject::inv = "Invalid arguments for Z3FunctionDeclarationObject `1`.";

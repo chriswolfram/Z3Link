@@ -154,6 +154,15 @@ getRawKind[decl_] :=
 	]
 
 
+declToASTC := declToASTC =
+	ForeignFunctionLoad[$LibZ3, "Z3_func_decl_to_ast", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "OpaqueRawPointer"]
+
+declToAST[decl_] :=
+	With[{ctx = getContext[decl]},
+		Z3ASTObject[ctx, declToASTC[ctx["RawContext"], getRawDeclaration[decl]]]
+	]
+
+
 (*
 	Z3FunctionDeclarationObject
 *)
@@ -169,7 +178,8 @@ Z3FunctionDeclarationObjectInformation[decl_Z3FunctionDeclarationObject] :=
 		"ArgumentCount" :> getDomainSize[decl],
 		"Domain" :> getDomain[decl],
 		"Range" :> getRange[decl],
-		"RawKind" :> getRawKind[decl]
+		"RawKind" :> getRawKind[decl],
+		"AST" :> declToAST[decl]
 	|>
 
 Z3FunctionDeclarationObject /: MakeBoxes[decl:Z3FunctionDeclarationObject[args___] /; argumentsZ3FunctionDeclarationObject[args], form:StandardForm]:=
