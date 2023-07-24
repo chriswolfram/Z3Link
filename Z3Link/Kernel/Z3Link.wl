@@ -23,6 +23,8 @@ Z3Simplify
 Z3SolverCreate
 Z3SolverObject
 
+Z3ModelObject
+
 
 (* Specific AST constructors *)
 

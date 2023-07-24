@@ -50,5 +50,18 @@ solver_Z3SolverObject["Proof"] :=
 	Z3ASTObject[solver["Context"], solverProofC[solver["Context"]["RawContext"], solver["RawSolver"]]]
 
 
+(*
+	Model
+*)
+
+(* TODO: This can throw exceptions if there is no model available. The best solution would be to start catching exceptions everywhere. *)
+solverModelC := solverModelC =
+	ForeignFunctionLoad[$LibZ3, "Z3_solver_get_model", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "OpaqueRawPointer"];
+
+solver_Z3SolverObject["Model"] :=
+	Z3ModelObject[solver["Context"], solverModelC[solver["Context"]["RawContext"], solver["RawSolver"]]]
+
+
+
 End[];
 EndPackage[];
