@@ -3,6 +3,7 @@ BeginPackage["ChristopherWolfram`Z3Link`Solve`Model`"];
 Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
+Needs["ChristopherWolfram`Z3Link`Context`"]
 
 
 (*
@@ -59,6 +60,63 @@ modelNumFuncsC := modelNumFuncsC =
 
 model_Z3ModelObject["FunctionCount"] :=
 	modelNumFuncsC[model["Context"]["RawContext"], model["RawModel"]]
+
+
+(* Constant *)
+
+modelConstC := modelConstC =
+	ForeignFunctionLoad[$LibZ3, "Z3_model_get_const_decl", {"OpaqueRawPointer", "OpaqueRawPointer", "CUnsignedInt"} -> "OpaqueRawPointer"];
+
+model_Z3ModelObject["Constant", i_Integer?Positive] :=
+	Enclose@Module[{numConsts, ctx},
+		numConsts = model["ConstantCount"];
+		ctx = model["Context"];
+		ConfirmAssert[i <= numConsts];
+		Z3FunctionDeclarationObject[ctx, modelConstC[ctx["RawContext"], model["RawModel"], i-1]]
+	]
+
+model_Z3ModelObject["Constant"] :=
+	Enclose@Module[{numConsts, ctx},
+		numConsts = model["ConstantCount"];
+		ctx = model["Context"];
+		Z3FunctionDeclarationObject[ctx, modelConstC[ctx["RawContext"], model["RawModel"], #-1]] &/@ Range[numConsts]
+	]
+
+
+(* Function *)
+
+modelFuncC := modelFuncC =
+	ForeignFunctionLoad[$LibZ3, "Z3_model_get_func_decl", {"OpaqueRawPointer", "OpaqueRawPointer", "CUnsignedInt"} -> "OpaqueRawPointer"];
+
+model_Z3ModelObject["Function", i_Integer?Positive] :=
+	Enclose@Module[{numFuncs, ctx},
+		numFuncs = model["FunctionCount"];
+		ctx = model["Context"];
+		ConfirmAssert[i <= numFuncs];
+		Z3FunctionDeclarationObject[ctx, modelFuncC[ctx["RawContext"], model["RawModel"], i-1]]
+	]
+
+model_Z3ModelObject["Function"] :=
+	Enclose@Module[{numFuncs, ctx},
+		numFuncs = model["FunctionCount"];
+		ctx = model["Context"];
+		Z3FunctionDeclarationObject[ctx, modelFuncC[ctx["RawContext"], model["RawModel"], #-1]] &/@ Range[numFuncs]
+	]
+
+
+(* ConstantInterpretation *)
+
+modelConstInterpC := modelConstInterpC =
+	ForeignFunctionLoad[$LibZ3, "Z3_model_get_const_interp", {"OpaqueRawPointer", "OpaqueRawPointer", "OpaqueRawPointer"} -> "OpaqueRawPointer"];
+
+model_Z3ModelObject["ConstantInterpretation", const_Z3FunctionDeclarationObject] :=
+	Enclose@Module[{ctx},
+		ctx = Confirm@Z3GetContext[model, const];
+		Z3ASTObject[ctx, modelConstInterpC[ctx["RawContext"], model["RawModel"], Information[const, "RawFunctionDeclaration"]]]
+	]
+
+model_Z3ModelObject["ConstantInterpretation"] :=
+	AssociationMap[model["ConstantInterpretation", #]&, model["Constant"]]
 
 
 (*

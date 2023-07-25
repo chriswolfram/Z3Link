@@ -66,7 +66,7 @@ Z3GetContext[sym_Z3SymbolObject] := sym["Context"]
 Z3GetContext[sort_Z3SortObject] := sort["Context"]
 Z3GetContext[decl_Z3FunctionDeclarationObject] := Information[decl, "Context"]
 Z3GetContext[solver_Z3SolverObject] := solver["Context"]
-Z3GetContext[model_Z3ModelObject] := solver["Context"]
+Z3GetContext[model_Z3ModelObject] := model["Context"]
 
 (* TODO: Should this return a Failure instead? *)
 Z3GetContext[obj_] := $Z3Context
