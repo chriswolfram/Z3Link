@@ -40,12 +40,30 @@ Z3DeBruijnIndex
 (* Logic *)
 Z3True
 Z3False
-Z3Not
 Z3Equal
+Z3Distinct
+Z3Not
+Z3If
+Z3Equivalent
+Z3Implies
+Z3Xor
+Z3And
+Z3Or
 
 (* Arithmetic *)
 Z3Plus
 Z3Times
+Z3Subtract
+Z3Minus
+Z3Divide
+Z3Mod
+Z3Remainder
+Z3Power
+Z3Less
+Z3LessEqual
+Z3Greater
+Z3GreaterEqual
+Z3Divisible
 
 
 Begin["`Private`"];

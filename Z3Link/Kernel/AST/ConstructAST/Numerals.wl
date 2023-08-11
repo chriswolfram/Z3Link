@@ -4,6 +4,7 @@ Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
 Needs["ChristopherWolfram`Z3Link`Context`"]
+Needs["ChristopherWolfram`Z3Link`AST`ConstructAST`Utilities`"]
 
 
 makeNumeralC := makeNumeralC =
