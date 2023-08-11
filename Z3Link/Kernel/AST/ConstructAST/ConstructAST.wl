@@ -9,6 +9,7 @@ Needs["ChristopherWolfram`Z3Link`AST`ConstructAST`Constants`"]
 Needs["ChristopherWolfram`Z3Link`AST`ConstructAST`Numerals`"]
 Needs["ChristopherWolfram`Z3Link`AST`ConstructAST`Quantifiers`"]
 Needs["ChristopherWolfram`Z3Link`AST`ConstructAST`Basic`"]
+Needs["ChristopherWolfram`Z3Link`AST`ConstructAST`Sets`"]
 
 End[];
 EndPackage[];

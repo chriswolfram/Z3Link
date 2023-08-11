@@ -65,6 +65,20 @@ Z3Greater
 Z3GreaterEqual
 Z3Divisible
 
+(* Sets *)
+Z3EmptySet
+Z3FullSet
+
+Z3SetInsert
+Z3SetDelete
+Z3Union
+Z3Intersection
+(* TODO: Complement vs ComplementSet is unclear. The problem is that the WL symbol is Complement, but there is no other good word for the operation. *)
+Z3Complement
+Z3ComplementSet
+Z3Element
+Z3Subset
+
 
 Begin["`Private`"];
 
