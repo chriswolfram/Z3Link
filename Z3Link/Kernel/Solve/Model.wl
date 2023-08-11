@@ -4,6 +4,7 @@ Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
 Needs["ChristopherWolfram`Z3Link`Context`"]
+Needs["ChristopherWolfram`Z3Link`ASTVector`"]
 
 
 (*
@@ -117,6 +118,51 @@ model_Z3ModelObject["ConstantInterpretation", const_Z3FunctionDeclarationObject]
 
 model_Z3ModelObject["ConstantInterpretation"] :=
 	AssociationMap[model["ConstantInterpretation", #]&, model["Constant"]]
+
+
+(* UninterpretedSortCount *)
+
+modelGetNumSortsC := modelGetNumSortsC =
+	ForeignFunctionLoad[$LibZ3, "Z3_model_get_num_sorts", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "CUnsignedInt"];
+
+model_Z3ModelObject["UninterpretedSortCount"] :=
+	modelGetNumSortsC[model["Context"]["RawContext"], model["RawModel"]]
+
+
+(* UninterpretedSort *)
+
+modelGetSortC := modelGetSortC =
+	ForeignFunctionLoad[$LibZ3, "Z3_model_get_sort", {"OpaqueRawPointer", "OpaqueRawPointer", "CUnsignedInt"} -> "OpaqueRawPointer"];
+
+model_Z3ModelObject["UninterpretedSort", i_Integer?Positive] :=
+	Enclose@Module[{numSorts, ctx},
+		numSorts = model["UninterpretedSortCount"];
+		ctx = model["Context"];
+		ConfirmAssert[i <= numSorts];
+		Z3SortObject[ctx, modelGetSortC[ctx["RawContext"], model["RawModel"], i-1]]
+	]
+
+model_Z3ModelObject["UninterpretedSort"] :=
+	Enclose@Module[{numSorts, ctx},
+		numSorts = model["UninterpretedSortCount"];
+		ctx = model["Context"];
+		Z3SortObject[ctx, modelGetSortC[ctx["RawContext"], model["RawModel"], #-1]] &/@ Range[numSorts]
+	]
+
+
+(* UninterpretedSortUniverseVector *)
+
+modelGetSortUniverseC := modelGetSortUniverseC =
+	ForeignFunctionLoad[$LibZ3, "Z3_model_get_sort_universe", {"OpaqueRawPointer", "OpaqueRawPointer", "OpaqueRawPointer"} -> "OpaqueRawPointer"];
+
+model_Z3ModelObject["UninterpretedSortUniverseVector", sort_Z3SortObject] :=
+	Z3ASTVectorCreate[sort["Context"], modelGetSortUniverseC[sort["Context"]["RawContext"], model["RawModel"], sort["RawSort"]]]
+
+
+(* UninterpretedSortUniverse *)
+
+model_Z3ModelObject["UninterpretedSortUniverse", sort_Z3SortObject] :=
+	model["UninterpretedSortUniverseVector", sort]["Elements"]
 
 
 (*

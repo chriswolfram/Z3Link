@@ -23,4 +23,9 @@ Z3FunctionDeclarationObject::appargsort = "Expected arguments sorts `1` for func
 Z3SolverObject::inv = "Invalid arguments for Z3SolverObject `1`.";
 
 
+Needs["ChristopherWolfram`Z3Link`ASTVector`"]
+
+Z3ASTVectorObject::inv = "Invalid arguments for Z3ASTVectorObject `1`.";
+
+
 EndPackage[];
