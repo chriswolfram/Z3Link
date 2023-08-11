@@ -2,6 +2,9 @@ BeginPackage["ChristopherWolfram`Z3Link`Context`"];
 
 Z3GetContext
 
+Z3ErrorCodeString
+$DefaultExceptionHandler
+
 Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
@@ -50,7 +53,11 @@ makeRawContext[config_] := CreateManagedObject[makeContextC[config], deleteConfi
 (* TODO: Check that the context pointer is valid *)
 
 (* Enable proof generation by default *)
-Z3ContextCreate[] := Z3ContextObject[makeRawContext[makeConfig[<|"proof" -> "true"|>]]]
+Z3ContextCreate[opts_?AssociationQ, exceptionHandler_:($DefaultExceptionHandler[##]&)] :=
+	Z3ContextObject[
+		makeRawContext[makeConfig[opts]],
+		CreateForeignCallback[exceptionHandler, {"OpaqueRawPointer", "CInt"} -> "Void"]
+	]
 
 
 (*
@@ -91,7 +98,7 @@ Z3GetContext[objs__] :=
 
 
 Z3ContextObject[args___] /; !argumentsZ3ContextObject[args] :=
-	With[{res = ArgumentsOptions[Z3ContextObject[args], 1]},
+	With[{res = ArgumentsOptions[Z3ContextObject[args], 2]},
 		If[FailureQ[res],
 			res,
 			Message[Z3ContextObject::inv, {args}];
@@ -103,7 +110,10 @@ Z3ContextObject[args___] /; !argumentsZ3ContextObject[args] :=
 		]
 	]
 
-argumentsZ3ContextObject[man_ManagedObject /; MatchQ[man["Value"], _OpaqueRawPointer]] := True
+argumentsZ3ContextObject[
+	man_ManagedObject /; MatchQ[man["Value"], _OpaqueRawPointer],
+	errorHandler_ManagedObject /; MatchQ[errorHandler["Value"], _ForeignCallback]
+] := True
 argumentsZ3ContextObject[___] := False
 
 
@@ -111,7 +121,13 @@ argumentsZ3ContextObject[___] := False
 	Accessors
 *)
 
-HoldPattern[Z3ContextObject][rawCtx_]["RawContext"] := rawCtx
+HoldPattern[Z3ContextObject][rawCtx_, exceptionHandler_]["RawContext"] := rawCtx
+HoldPattern[Z3ContextObject][rawCtx_, exceptionHandler_]["ExceptionHandler"] := exceptionHandler
+
+
+(*
+	Summary boxes
+*)
 
 Z3ContextObject /: MakeBoxes[ctx:Z3ContextObject[args___] /; argumentsZ3ContextObject[args], form:StandardForm]:=
 	BoxForm`ArrangeSummaryBox[
@@ -119,12 +135,30 @@ Z3ContextObject /: MakeBoxes[ctx:Z3ContextObject[args___] /; argumentsZ3ContextO
 		ctx,
 		None,
 		{BoxForm`SummaryItem@{"raw context: ", ctx["RawContext"]}},
-		{},
+		{BoxForm`SummaryItem@{"exception handler: ", ctx["ExceptionHandler"]}},
 		form
 	]
 
 
-$Z3Context := $Z3Context = Z3ContextCreate[]
+(*
+	Exception handling
+*)
+
+(* Z3ErrorCodeString *)
+
+getErrorMessageC := getErrorMessageC =
+	ForeignFunctionLoad[$LibZ3, "Z3_get_error_msg", {"OpaqueRawPointer", "CInt"} -> "RawPointer"::["UnsignedInteger8"]];
+
+Z3ErrorCodeString[rawCtx_OpaqueRawPointer, code_] :=
+	RawMemoryImport[getErrorMessageC[rawCtx, code], "String"]
+
+
+(* $DefaultExceptionHandler *)
+
+$DefaultExceptionHandler = Message[Z3ContextObject::err, Z3ErrorCodeString[#1,#2]]&;
+
+
+$Z3Context := $Z3Context = Z3ContextCreate[<|"proof" -> "true"|>]
 
 
 

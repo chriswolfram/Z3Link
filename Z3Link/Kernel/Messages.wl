@@ -3,6 +3,7 @@ BeginPackage["ChristopherWolfram`Z3Link`Messages`"];
 Needs["ChristopherWolfram`Z3Link`"]
 
 Z3ContextObject::inv = "Invalid arguments for Z3ContextObject `1`.";
+Z3ContextObject::err = "Z3 error encountered: `1`";
 
 Z3ASTObject::inv = "Invalid arguments for Z3ASTObject `1`.";
 Z3ASTObject::unsupportedASTkind = "Unsupported AST kind `1`.";
