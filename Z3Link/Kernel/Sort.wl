@@ -3,6 +3,7 @@ BeginPackage["ChristopherWolfram`Z3Link`Sort`"];
 Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
+Needs["ChristopherWolfram`Z3Link`ConstantsMap`"]
 
 
 makeBooleanSortC := makeBooleanSortC =
@@ -29,7 +30,6 @@ Options[Z3SortCreate] = {Z3Context :> $Z3Context};
 
 Z3SortCreate[sortName_, opts:OptionsPattern[]] := iZ3SortCreate[OptionValue[Z3Context], sortName]
 
-(* TODO: Add fallthroughs for both arguments*)
 iZ3SortCreate[ctx_, "Boolean"] := Z3SortObject[ctx, makeBooleanSortC[ctx["RawContext"]]]
 iZ3SortCreate[ctx_, "Integer"] := Z3SortObject[ctx, makeIntegerSortC[ctx["RawContext"]]]
 iZ3SortCreate[ctx_, "Real"] := Z3SortObject[ctx, makeRealSortC[ctx["RawContext"]]]
@@ -39,6 +39,21 @@ iZ3SortCreate[ctx_, elem_Z3SortObject] :=
 
 iZ3SortCreate[ctx_, sym_Z3SymbolObject] :=
 	Z3SortObject[ctx, makeUninterpretedSortC[ctx["RawContext"], sym["RawSymbol"]]]
+
+iZ3SortCreate[ctx_, sortSpec_] :=
+	If[MatchQ[ctx, _Z3ContextObject],
+		Failure["InvalidSortSpecification", <|
+			"MessageTemplate" :> "Invalid sort specification `1` encountered.",
+			"MessageParameters" -> {sortSpec},
+			"SortSpecification" -> sortSpec,
+			"Context" -> ctx
+		|>],
+		Failure["InvalidZ3Context", <|
+			"MessageTemplate" :> "Invalid Z3ContextObject `1` encountered.",
+			"MessageParameters" -> {ctx},
+			"Context" -> ctx
+		|>]
+	]
 
 
 (*
@@ -82,6 +97,39 @@ getSortNameC := getSortNameC =
 	ForeignFunctionLoad[$LibZ3, "Z3_get_sort_name", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "OpaqueRawPointer"];
 
 sort_Z3SortObject["Name"] := Z3SymbolObject[sort["Context"], getSortNameC[sort["Context"]["RawContext"], sort["RawSort"]]]
+
+
+getSortKindC := getSortKindC =
+	ForeignFunctionLoad[$LibZ3, "Z3_get_sort_kind", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "CInt"];
+
+sort_Z3SortObject["KindID"] := getSortKindC[sort["Context"]["RawContext"], sort["RawSort"]]
+
+$sortKindRawNames := $sortKindRawNames = AssociationMap[Reverse, $Z3ConstantsMap["SortKinds"]];
+
+$sortKindCookedNames = <|
+		"Z3_UNINTERPRETED_SORT" ->  "Uninterpreted",
+		"Z3_BOOL_SORT" ->           "Boolean",
+		"Z3_INT_SORT" ->            "Integer",
+		"Z3_REAL_SORT" ->           "Real",
+		"Z3_BV_SORT" ->             "BitVector",
+		"Z3_ARRAY_SORT" ->          "Array",
+		"Z3_DATATYPE_SORT" ->       "DataType",
+		"Z3_RELATION_SORT" ->       "Relation",
+		"Z3_FINITE_DOMAIN_SORT" ->  "FiniteDomain",
+		"Z3_FLOATING_POINT_SORT" -> "FloatingPoint",
+		"Z3_ROUNDING_MODE_SORT" ->  "RoundingMode",
+		"Z3_SEQ_SORT" ->            "Sequence",
+		"Z3_RE_SORT" ->             "RegularExpression",
+		"Z3_CHAR_SORT" ->           "Character",
+		"Z3_UNKNOWN_SORT" ->        "Unknown"
+	|>;
+
+sort_Z3SortObject["RawKind"] :=
+	$sortKindRawNames[sort["KindID"]]
+
+sort_Z3SortObject["Kind"] :=
+	Replace[sort["RawKind"], $sortKindCookedNames]
+
 
 
 Z3SortObject /: MakeBoxes[sort:Z3SortObject[args___] /; argumentsZ3SortObject[args], form:StandardForm]:=

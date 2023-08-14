@@ -25,6 +25,8 @@ Z3SolverObject
 
 Z3ModelObject
 
+ToZ3
+
 
 (* Specific AST constructors *)
 
@@ -91,6 +93,7 @@ Needs["ChristopherWolfram`Z3Link`Symbol`"]
 Needs["ChristopherWolfram`Z3Link`Sort`"]
 Needs["ChristopherWolfram`Z3Link`FunctionDeclaration`"]
 Needs["ChristopherWolfram`Z3Link`ASTVector`"]
+Needs["ChristopherWolfram`Z3Link`Cast`"]
 Needs["ChristopherWolfram`Z3Link`AST`"]
 Needs["ChristopherWolfram`Z3Link`Solve`"]
 Needs["ChristopherWolfram`Z3Link`Messages`"]

@@ -63,7 +63,7 @@ getSymbolIntC := getSymbolIntC =
 getSymbolStringC := getSymbolStringC =
 	ForeignFunctionLoad[$LibZ3, "Z3_get_symbol_string", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "RawPointer"::["CUnsignedChar"]];
 
-$IDSymbolKinds := $IDSymbolKinds = AssociationMap[Reverse,$Z3ConstantsMap["SymbolKinds"]];
+$IDSymbolKinds := $IDSymbolKinds = AssociationMap[Reverse, $Z3ConstantsMap["SymbolKinds"]];
 
 getSymbolName[ctx_, sym_] :=
 	With[{kind = getSymbolKindC[ctx, sym]},

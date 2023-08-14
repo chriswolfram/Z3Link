@@ -302,6 +302,25 @@ constantNames = <|
 		"Z3_STRING_SYMBOL"
 	},
 
+	(* Sort Kinds *)
+	"SortKinds" -> {
+		"Z3_UNINTERPRETED_SORT",
+		"Z3_BOOL_SORT",
+		"Z3_INT_SORT",
+		"Z3_REAL_SORT",
+		"Z3_BV_SORT",
+		"Z3_ARRAY_SORT",
+		"Z3_DATATYPE_SORT",
+		"Z3_RELATION_SORT",
+		"Z3_FINITE_DOMAIN_SORT",
+		"Z3_FLOATING_POINT_SORT",
+		"Z3_ROUNDING_MODE_SORT",
+		"Z3_SEQ_SORT",
+		"Z3_RE_SORT",
+		"Z3_CHAR_SORT",
+		"Z3_UNKNOWN_SORT"
+	},
+
 	(* Lifted booleans *)
 	"LiftedBooleans" -> {
 		"Z3_L_FALSE",

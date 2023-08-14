@@ -30,11 +30,11 @@ DefineASTConstructor[Z3True, "Z3_mk_true", 0];
 DefineASTConstructor[Z3False, "Z3_mk_false", 0];
 DefineASTConstructor[Z3Equal, "Z3_mk_eq", 2];
 DefineASTConstructor[Z3Distinct, "Z3_mk_distinct", {1,Infinity}];
-DefineASTConstructor[Z3Not, "Z3_mk_not", 1];
-DefineASTConstructor[Z3If, "Z3_mk_ite", 3];
+DefineASTConstructor[Z3Not, "Z3_mk_not", {"Boolean"}];
+DefineASTConstructor[Z3If, "Z3_mk_ite", {"Boolean", Automatic, Automatic}, #2["Sort"]["Hash"] === #3["Sort"]["Hash"]&];
 DefineASTConstructor[Z3Equivalent, "Z3_mk_iff", 2];
-DefineASTConstructor[Z3Implies, "Z3_mk_implies", 2];
-DefineASTConstructor[Z3Xor, "Z3_mk_xor", 2];
+DefineASTConstructor[Z3Implies, "Z3_mk_implies", {"Boolean", "Boolean"}];
+DefineASTConstructor[Z3Xor, "Z3_mk_xor", {"Boolean", "Boolean"}];
 DefineASTConstructor[Z3And, "Z3_mk_and", {1,Infinity}];
 DefineASTConstructor[Z3Or, "Z3_mk_or", {1,Infinity}];
 

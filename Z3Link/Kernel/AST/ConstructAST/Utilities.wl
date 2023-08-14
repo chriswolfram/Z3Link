@@ -18,20 +18,14 @@ DefineASTConstructor[sym_, name_, argCount_Integer, argCheck_:(True&)] :=
 				If[FailureQ[res], res, isym@@res]
 			];
 
-		isym[Hold[args___Z3ASTObject], opts_] :=
+		isym[Hold[args___], opts_] :=
 			Enclose@Module[{ctx},
 				ctx = Confirm@Z3GetContext[args];
+				z3Args = Confirm@ToZ3[#, Z3Context -> ctx] &/@ {args};
 				(* TODO: Add better message *)
-				ConfirmAssert[TrueQ[argCheck[args]]];
-				Z3ASTObject[ctx, ff[ctx["RawContext"], Sequence@@(#["RawAST"]&/@{args})]]
+				ConfirmAssert[TrueQ[argCheck@@z3Args]];
+				Z3ASTObject[ctx, ff[ctx["RawContext"], Sequence@@(#["RawAST"]&/@z3Args)]]
 			];
-
-		isym[Hold[args___], opts_] :=
-			Failure["InvalidArguments", <|
-				"MessageTemplate" :> "Expected a sequence of Z3ASTObjects but found `1` instead.",
-				"MessageParameters" -> {{args}},
-				"Arguments" -> {args}
-			|>];
 
 	]
 
@@ -66,21 +60,40 @@ DefineASTConstructor[sym_, name_, argCount_, argCheck_:(True&)] :=
 				If[FailureQ[res], res, isym@@res]
 			];
 
-		isym[Hold[args___Z3ASTObject], opts_] :=
-			Enclose@Module[{ctx, argArray},
+		isym[Hold[args___], opts_] :=
+			Enclose@Module[{ctx, z3Args, argArray},
 				ctx = Confirm@Z3GetContext[args];
+				z3Args = Confirm@ToZ3[#, Z3Context -> ctx] &/@ {args};
 				(* TODO: Add better message *)
-				ConfirmAssert[TrueQ[argCheck[args]]];
-				argArray = RawMemoryExport[#["RawAST"] &/@ {args}, "OpaqueRawPointer"];
-				Z3ASTObject[ctx, ff[ctx["RawContext"], Length[{args}], argArray]]
+				ConfirmAssert[TrueQ[argCheck@@z3Args]];
+				argArray = RawMemoryExport[#["RawAST"] &/@ z3Args, "OpaqueRawPointer"];
+				Z3ASTObject[ctx, ff[ctx["RawContext"], Length[z3Args], argArray]]
+			];
+
+	]
+
+
+DefineASTConstructor[sym_, name_, argSorts: {(_?StringQ | _Z3SortObject | Automatic)..}, argCheck_:(True&)] :=
+	Module[{ff, isym, argCount},
+
+		argCount = Length[argSorts];
+
+		ff := ff = ForeignFunctionLoad[$LibZ3, name, ConstantArray["OpaqueRawPointer", argCount+1] -> "OpaqueRawPointer"];
+
+		sym[args___] :=
+			With[{res = ArgumentsOptions[sym[args], argCount, <|"Head" -> Hold|>]},
+				If[FailureQ[res], res, isym@@res]
 			];
 
 		isym[Hold[args___], opts_] :=
-			Failure["InvalidArguments", <|
-				"MessageTemplate" :> "Expected a sequence of Z3ASTObjects but found `1` instead.",
-				"MessageParameters" -> {{args}},
-				"Arguments" -> {args}
-			|>];
+			Enclose@Module[{ctx, z3Args},
+				(* This relies on the fact that Z3GetContext returns $Z3Context when given a non-Z3 object. *)
+				ctx = Confirm@Z3GetContext[z3Args];
+				z3Args = MapThread[Confirm@ToZ3[#1, #2, Z3Context -> ctx]&, {{args}, argSorts}];
+				(* TODO: Add better message *)
+				ConfirmAssert[TrueQ[argCheck@@z3Args]];
+				Z3ASTObject[ctx, ff[ctx["RawContext"], Sequence@@(#["RawAST"]&/@z3Args)]]
+			];
 
 	]
 
