@@ -78,13 +78,19 @@ sort_Z3SortObject["AST"] := Z3ASTObject[sort["Context"], sortToASTC[sort["Contex
 sort_Z3SortObject["Hash"] := sort["AST"]["Hash"]
 
 
+getSortNameC := getSortNameC =
+	ForeignFunctionLoad[$LibZ3, "Z3_get_sort_name", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "OpaqueRawPointer"];
+
+sort_Z3SortObject["Name"] := Z3SymbolObject[sort["Context"], getSortNameC[sort["Context"]["RawContext"], sort["RawSort"]]]
+
+
 Z3SortObject /: MakeBoxes[sort:Z3SortObject[args___] /; argumentsZ3SortObject[args], form:StandardForm]:=
 	BoxForm`ArrangeSummaryBox[
 		Z3SortObject,
 		sort,
 		None,
+		{BoxForm`SummaryItem@{"name: ", sort["Name"]}},
 		{BoxForm`SummaryItem@{"raw sort: ", sort["RawSort"]}},
-		{},
 		form
 	]
 
