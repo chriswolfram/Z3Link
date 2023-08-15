@@ -28,7 +28,7 @@ DefineASTConstructor[Z3Divisible, "Z3_mk_divides", 2];
 
 DefineASTConstructor[Z3True, "Z3_mk_true", 0];
 DefineASTConstructor[Z3False, "Z3_mk_false", 0];
-DefineASTConstructor[Z3Equal, "Z3_mk_eq", 2];
+DefineASTConstructor[Z3Equal, "Z3_mk_eq", 2, #1["Sort"]["Hash"] === #2["Sort"]["Hash"]&];
 DefineASTConstructor[Z3Distinct, "Z3_mk_distinct", {1,Infinity}];
 DefineASTConstructor[Z3Not, "Z3_mk_not", {"Boolean"}];
 DefineASTConstructor[Z3If, "Z3_mk_ite", {"Boolean", Automatic, Automatic}, #2["Sort"]["Hash"] === #3["Sort"]["Hash"]&];

@@ -16,11 +16,15 @@ makeNumeralC := makeNumeralC =
 
 Z3Numeral[n_Integer, sortSpec_Z3SortObject] :=
 	Enclose@With[{ctx = Confirm@Z3GetContext[sortSpec]},
-		Z3ASTObject[ctx, makeNumeralC[ctx["RawContext"], StringJoin[ToString/@IntegerDigits[n]], sortSpec["RawSort"]]]
+		Z3ASTObject[ctx, makeNumeralC[ctx["RawContext"], integerString[n], sortSpec["RawSort"]]]
 	]
 
 Z3Numeral[n_Integer] :=
 	Z3Numeral[n, Z3SortCreate["Integer"]]
+
+
+integerString[n_] :=
+	If[Negative[n],"-",""]<>StringJoin[ToString/@IntegerDigits[n]]
 
 
 End[];
