@@ -22,6 +22,14 @@ Z3Numeral[n_Integer, sortSpec_Z3SortObject] :=
 Z3Numeral[n_Integer] :=
 	Z3Numeral[n, Z3SortCreate["Integer"]]
 
+Z3Numeral[n_Rational] :=
+	With[{intSort = Z3SortCreate["Integer"]},
+		Z3Divide[
+			Z3Numeral[Numerator[n], intSort],
+			Z3Numeral[Denominator[n], intSort]
+		]
+	]
+
 
 integerString[n_] :=
 	If[Negative[n],"-",""]<>StringJoin[ToString/@IntegerDigits[n]]

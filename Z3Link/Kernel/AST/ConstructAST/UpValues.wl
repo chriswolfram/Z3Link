@@ -66,6 +66,8 @@ Z3ASTObject /: And[ast_Z3ASTObject, rest___] := Z3And[ast, rest]
 
 Z3ASTObject /: Or[ast_Z3ASTObject, rest___] := Z3And[ast, rest]
 
+Z3ASTObject /: Boole[ast_Z3ASTObject] := Z3If[ast, Z3Numeral[1], Z3Numeral[0]]
+
 
 End[];
 EndPackage[];
