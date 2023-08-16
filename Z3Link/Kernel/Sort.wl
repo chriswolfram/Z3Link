@@ -34,6 +34,10 @@ iZ3SortCreate[ctx_, "Boolean"] := Z3SortObject[ctx, makeBooleanSortC[ctx["RawCon
 iZ3SortCreate[ctx_, "Integer"] := Z3SortObject[ctx, makeIntegerSortC[ctx["RawContext"]]]
 iZ3SortCreate[ctx_, "Real"] := Z3SortObject[ctx, makeRealSortC[ctx["RawContext"]]]
 
+iZ3SortCreate[ctx_, Booleans] := iZ3SortCreate[ctx, "Boolean"]
+iZ3SortCreate[ctx_, Integers] := iZ3SortCreate[ctx, "Integer"]
+iZ3SortCreate[ctx_, Reals] := iZ3SortCreate[ctx, "Real"]
+
 iZ3SortCreate[ctx_, elem_Z3SortObject] :=
 	Z3SortObject[ctx, makeSetSortC[ctx["RawContext"], elem["RawSort"]]]
 

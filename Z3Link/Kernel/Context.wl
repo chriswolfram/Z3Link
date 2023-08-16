@@ -68,21 +68,16 @@ Z3ContextCreate[opts_?AssociationQ, exceptionHandler_:($DefaultExceptionHandler[
 		gets the common context used by all of the objects. Returns a Failure if they use different contexts.
 *)
 
-Z3GetContext[ast_Z3ASTObject] := ast["Context"]
-Z3GetContext[sym_Z3SymbolObject] := sym["Context"]
-Z3GetContext[sort_Z3SortObject] := sort["Context"]
-Z3GetContext[decl_Z3FunctionDeclarationObject] := Information[decl, "Context"]
-Z3GetContext[solver_Z3SolverObject] := solver["Context"]
-Z3GetContext[model_Z3ModelObject] := model["Context"]
-
 (* TODO: Should this return a Failure instead? *)
-Z3GetContext[obj_] := $Z3Context
+Z3GetContext[obj_] :=
+	Replace[iZ3GetContext[obj], None :> $Z3Context]
 
 Z3GetContext[objs__] :=
-	With[{ctxs = DeleteDuplicates[Z3GetContext /@ {objs}]},
-		If[Length[ctxs] === 1,
-			First[ctxs],
-			Failure["IncompatibleContexts", <|
+	With[{ctxs = DeleteDuplicates[DeleteCases[Z3GetContext /@ {objs}, None]]},
+		Switch[Length[ctxs],
+			1, First[ctxs],
+			0, $Z3Context,
+			_, Failure["IncompatibleContexts", <|
 				"MessageTemplate" -> "Incompatible Z3 contexts `1` encountered among objects `2`.",
 				"MessageParameters" -> {ctxs, {objs}},
 				"Contexts" -> ctxs,
@@ -90,6 +85,15 @@ Z3GetContext[objs__] :=
 			|>]
 		]
 	]
+
+
+iZ3GetContext[ast_Z3ASTObject] := ast["Context"]
+iZ3GetContext[sym_Z3SymbolObject] := sym["Context"]
+iZ3GetContext[sort_Z3SortObject] := sort["Context"]
+iZ3GetContext[decl_Z3FunctionDeclarationObject] := Information[decl, "Context"]
+iZ3GetContext[solver_Z3SolverObject] := solver["Context"]
+iZ3GetContext[model_Z3ModelObject] := model["Context"]
+iZ3GetContext[obj_] := None
 
 
 (*

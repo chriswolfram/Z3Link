@@ -58,6 +58,7 @@ Z3Times
 Z3Subtract
 Z3Minus
 Z3Divide
+Z3Quotient
 Z3Mod
 Z3Remainder
 Z3Power
@@ -81,6 +82,10 @@ Z3ComplementSet
 Z3Element
 Z3Subset
 
+(* Other *)
+
+Z3IntegerToReal
+
 
 Begin["`Private`"];
 
@@ -93,7 +98,6 @@ Needs["ChristopherWolfram`Z3Link`Symbol`"]
 Needs["ChristopherWolfram`Z3Link`Sort`"]
 Needs["ChristopherWolfram`Z3Link`FunctionDeclaration`"]
 Needs["ChristopherWolfram`Z3Link`ASTVector`"]
-Needs["ChristopherWolfram`Z3Link`Cast`"]
 Needs["ChristopherWolfram`Z3Link`AST`"]
 Needs["ChristopherWolfram`Z3Link`Solve`"]
 Needs["ChristopherWolfram`Z3Link`Messages`"]

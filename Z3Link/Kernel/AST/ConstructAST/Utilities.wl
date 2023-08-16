@@ -1,12 +1,17 @@
 BeginPackage["ChristopherWolfram`Z3Link`AST`ConstructAST`Utilities`"];
 
 DefineASTConstructor
+DefineExpressionParsing
+ParseExpressionArguments
 
 Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
 Needs["ChristopherWolfram`Z3Link`Context`"]
+Needs["ChristopherWolfram`Z3Link`AST`ConstructAST`ToZ3`"]
 
+
+(* AST construction *)
 
 DefineASTConstructor[sym_, name_, argCount_Integer, argCheck_:(True&)] :=
 	Module[{ff, isym},
@@ -87,14 +92,30 @@ DefineASTConstructor[sym_, name_, argSorts: {(_?StringQ | _Z3SortObject | Automa
 
 		isym[Hold[args___], opts_] :=
 			Enclose@Module[{ctx, z3Args},
-				(* This relies on the fact that Z3GetContext returns $Z3Context when given a non-Z3 object. *)
-				ctx = Confirm@Z3GetContext[z3Args];
+				ctx = Confirm@Z3GetContext[args];
 				z3Args = MapThread[Confirm@ToZ3[#1, #2, Z3Context -> ctx]&, {{args}, argSorts}];
 				(* TODO: Add better message *)
 				ConfirmAssert[TrueQ[argCheck@@z3Args]];
 				Z3ASTObject[ctx, ff[ctx["RawContext"], Sequence@@(#["RawAST"]&/@z3Args)]]
 			];
 
+	]
+
+
+(* Expression parsing *)
+
+DefineExpressionParsing[head_, sym_] :=
+	(
+		iParseExpression[ctx_, HoldPattern[head][args___], Automatic, bindings_] :=
+			Enclose@Module[{newArgs, newBindings},
+				{newArgs, newBindings} = Confirm@ParseExpressionArguments[ctx, {args}, bindings];
+				{Confirm[sym@@newArgs], newBindings}
+			]
+	)
+
+ParseExpressionArguments[ctx_, args_, bindings_] :=
+	Enclose@With[{parses = Rest@FoldList[Confirm@ParseExpression[ctx, #2, Automatic, #1[[2]]]&, {None, bindings}, args]},
+		{parses[[All,1]], parses[[-1,2]]}
 	]
 
 

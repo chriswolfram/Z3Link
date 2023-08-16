@@ -5,6 +5,7 @@ Begin["`Private`"];
 Needs["ChristopherWolfram`Z3Link`"]
 Needs["ChristopherWolfram`Z3Link`Context`"]
 Needs["ChristopherWolfram`Z3Link`AST`ConstructAST`Utilities`"]
+Needs["ChristopherWolfram`Z3Link`AST`ConstructAST`ToZ3`"]
 
 
 (*
@@ -37,20 +38,26 @@ makeForAllC := makeForAllC =
 		} -> "OpaqueRawPointer"
 	];
 
-Z3ForAll[vars: {varSeq__Z3ASTObject}, body_Z3ASTObject] :=
-	Enclose@With[{ctx = Confirm@Z3GetContext[varSeq, body]},
+Z3ForAll[vars: {varSeq__}, body_] :=
+	Enclose@Module[{ctx, z3Body, z3Vars},
+		ctx = Confirm@Z3GetContext[varSeq, body];
+		z3Body = Confirm@ToZ3[body, "Boolean", Z3Context -> ctx];
+		z3Vars = Confirm@ToZ3[#, Automatic, Z3Context -> ctx]&/@vars;
 		Z3ASTObject[ctx,
 			makeForAllC[
 				ctx["RawContext"],
 				0,
 				Length[vars],
-				RawMemoryExport[#["RawAST"]&/@vars, "OpaqueRawPointer"],
+				RawMemoryExport[#["RawAST"]&/@z3Vars, "OpaqueRawPointer"],
 				0,
 				RawPointer[0, "OpaqueRawPointer"],
-				body["RawAST"]
+				z3Body["RawAST"]
 			]
 		]
 	]
+
+Z3ForAll[var_, body_] :=
+	Z3ForAll[{var}, body]
 
 
 (*
@@ -70,20 +77,26 @@ makeExistsC := makeExistsC =
 		} -> "OpaqueRawPointer"
 	];
 
-Z3Exists[vars: {varSeq__Z3ASTObject}, body_Z3ASTObject] :=
-	Enclose@With[{ctx = Confirm@Z3GetContext[varSeq, body]},
+Z3Exists[vars: {varSeq__}, body_] :=
+	Enclose@Module[{ctx, z3Body, z3Vars},
+		ctx = Confirm@Z3GetContext[varSeq, body];
+		z3Body = Confirm@ToZ3[body, "Boolean", Z3Context -> ctx];
+		z3Vars = Confirm@ToZ3[#, Automatic, Z3Context -> ctx]&/@vars;
 		Z3ASTObject[ctx,
 			makeExistsC[
 				ctx["RawContext"],
 				0,
 				Length[vars],
-				RawMemoryExport[#["RawAST"]&/@vars, "OpaqueRawPointer"],
+				RawMemoryExport[#["RawAST"]&/@z3Vars, "OpaqueRawPointer"],
 				0,
 				RawPointer[0, "OpaqueRawPointer"],
-				body["RawAST"]
+				z3Body["RawAST"]
 			]
 		]
 	]
+
+Z3Exists[var_, body_] :=
+	Z3Exists[{var}, body]
 
 
 End[];
