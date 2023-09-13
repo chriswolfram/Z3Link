@@ -1,6 +1,8 @@
 BeginPackage["ChristopherWolfram`Z3Link`AST`ConstructAST`Utilities`"];
 
-DefineASTConstructor
+DeclareZ3Function
+CoerceArguments
+DeclareASTConstructor
 DefineExpressionParsing
 ParseExpressionArguments
 
@@ -8,98 +10,84 @@ Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
 Needs["ChristopherWolfram`Z3Link`Context`"]
+Needs["ChristopherWolfram`Z3Link`Utilities`"]
 Needs["ChristopherWolfram`Z3Link`AST`ConstructAST`ToZ3`"]
 
 
-(* AST construction *)
 
-DefineASTConstructor[sym_, name_, argCount_Integer, argCheck_:(True&)] :=
-	Module[{ff, isym},
+(* DeclareZ3Function *)
 
-		ff := ff = ForeignFunctionLoad[$LibZ3, name, ConstantArray["OpaqueRawPointer", argCount+1] -> "OpaqueRawPointer"];
+DeclareZ3Function[wlName_, z3Name_, argCount_] :=
+	Module[{ff},
+		ff := ff = ForeignFunctionLoad[$LibZ3, z3Name, ConstantArray["OpaqueRawPointer", argCount+1] -> "OpaqueRawPointer"];
 
-		sym[args___] :=
-			With[{res = ArgumentsOptions[sym[args], argCount, <|"Head" -> Hold|>]},
-				If[FailureQ[res], res, isym@@res]
-			];
+		wlName[ctx_, args_] :=
+			Z3ASTObject[ctx, ff[ctx["RawContext"], Sequence@@(#["RawAST"]&/@args)]]
+	]
 
-		isym[Hold[args___], opts_] :=
-			Enclose@Module[{ctx},
-				ctx = Confirm@Z3GetContext[args];
-				z3Args = Confirm@ToZ3[#, Z3Context -> ctx] &/@ {args};
-				(* TODO: Add better message *)
-				ConfirmAssert[TrueQ[argCheck@@z3Args]];
-				Z3ASTObject[ctx, ff[ctx["RawContext"], Sequence@@(#["RawAST"]&/@z3Args)]]
-			];
+DeclareZ3Function[wlName_, z3Name_, Infinity] :=
+	Module[{ff},
+		ff := ff = ForeignFunctionLoad[$LibZ3, z3Name, {"OpaqueRawPointer", "CUnsignedInt", "RawPointer"::["OpaqueRawPointer"]} -> "OpaqueRawPointer"];
+
+		wlName[ctx_, args_] :=
+			Module[{argArray},
+				argArray = RawMemoryExport[#["RawAST"] &/@ args, "OpaqueRawPointer"];
+				Z3ASTObject[ctx, ff[ctx["RawContext"], Length[args], argArray]]
+			]
+	]
+
+
+(* CoerceArguments *)
+
+CoerceArguments[ctx_, args_, Automatic] :=
+	Enclose[Confirm@ToZ3[#, Z3Context -> ctx] &/@ args]
+
+CoerceArguments[ctx_, args_, sorts_List] :=
+	Enclose[MapThread[Confirm@ToZ3[#1, #2, Z3Context -> ctx]&, {args, sorts}]]
+
+CoerceArguments[ctx_, args_, sort_] :=
+	Enclose[Confirm@ToZ3[#, sort, Z3Context -> ctx] &/@ args]
+
+CoerceArguments[ctx_, args_] :=
+	CoerceArguments[ctx, args, Automatic]
+
+
+(* DeclareASTConstructor *)
+
+
+DeclareASTConstructor[sym_, name_, argSpec_, argSorts_:Automatic, argCheck_:(True&)] :=
+	Enclose@Module[{argCount, isym, cfunc},
+
+		argCount = Confirm@argSpecCount[argSpec];
+
+		DeclareZ3Function[cfunc, name, argCount];
+		DeclareFunction[sym, isym, argSpec];
+
+		If[argCount === 0,
+
+			Options[sym] = {Z3Context :> $Z3Context};
+			isym[opts_] :=
+				Enclose@Module[{ctx},
+					ctx = ConfirmMatch[OptionValue[sym, List@@opts, Z3Context], _Z3Context];
+					cfunc[ctx]
+				],
+
+			isym[args___, opts_] :=
+				Enclose@Module[{ctx, z3Args},
+					ctx = Confirm@Z3GetContext[args];
+					z3Args = Confirm@CoerceArguments[ctx, {args}, argSorts];
+					ConfirmAssert[TrueQ[argCheck@@z3Args]];
+					cfunc[ctx, z3Args]
+				]
+		]
 
 	]
 
 
-DefineASTConstructor[sym_, name_, 0, argCheck_:(True&)] :=
-	Module[{ff, isym},
+argSpecCount[n_Integer] := n
+argSpecCount[{_Integer, _Integer | Infinity}] := Infinity
+argSpecCount[spec_] := $Failed
 
-		ff := ff = ForeignFunctionLoad[$LibZ3, name, {"OpaqueRawPointer"} -> "OpaqueRawPointer"];
-
-		Options[sym] = {Z3Context :> $Z3Context};
-
-		sym[args___] :=
-			With[{res = ArgumentsOptions[sym[args], 0, <|"Head" -> Hold|>]},
-				If[FailureQ[res], res, isym@@res]
-			];
-
-		isym[Hold[], opts_] :=
-			With[{ctx = OptionValue[sym, List@@opts, Z3Context]},
-				Z3ASTObject[ctx, ff[ctx["RawContext"]]]
-			];
-
-	]
-
-
-DefineASTConstructor[sym_, name_, argCount_, argCheck_:(True&)] :=
-	Module[{ff, isym},
-
-		ff := ff = ForeignFunctionLoad[$LibZ3, name, {"OpaqueRawPointer", "CUnsignedInt", "RawPointer"::["OpaqueRawPointer"]} -> "OpaqueRawPointer"];
-
-		sym[args___] :=
-			With[{res = ArgumentsOptions[sym[args], argCount, <|"Head" -> Hold|>]},
-				If[FailureQ[res], res, isym@@res]
-			];
-
-		isym[Hold[args___], opts_] :=
-			Enclose@Module[{ctx, z3Args, argArray},
-				ctx = Confirm@Z3GetContext[args];
-				z3Args = Confirm@ToZ3[#, Z3Context -> ctx] &/@ {args};
-				(* TODO: Add better message *)
-				ConfirmAssert[TrueQ[argCheck@@z3Args]];
-				argArray = RawMemoryExport[#["RawAST"] &/@ z3Args, "OpaqueRawPointer"];
-				Z3ASTObject[ctx, ff[ctx["RawContext"], Length[z3Args], argArray]]
-			];
-
-	]
-
-
-DefineASTConstructor[sym_, name_, argSorts: {(_?StringQ | _Z3SortObject | Automatic)..}, argCheck_:(True&)] :=
-	Module[{ff, isym, argCount},
-
-		argCount = Length[argSorts];
-
-		ff := ff = ForeignFunctionLoad[$LibZ3, name, ConstantArray["OpaqueRawPointer", argCount+1] -> "OpaqueRawPointer"];
-
-		sym[args___] :=
-			With[{res = ArgumentsOptions[sym[args], argCount, <|"Head" -> Hold|>]},
-				If[FailureQ[res], res, isym@@res]
-			];
-
-		isym[Hold[args___], opts_] :=
-			Enclose@Module[{ctx, z3Args},
-				ctx = Confirm@Z3GetContext[args];
-				z3Args = MapThread[Confirm@ToZ3[#1, #2, Z3Context -> ctx]&, {{args}, argSorts}];
-				(* TODO: Add better message *)
-				ConfirmAssert[TrueQ[argCheck@@z3Args]];
-				Z3ASTObject[ctx, ff[ctx["RawContext"], Sequence@@(#["RawAST"]&/@z3Args)]]
-			];
-
-	]
 
 
 (* Expression parsing *)

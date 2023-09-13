@@ -3,6 +3,7 @@ BeginPackage["ChristopherWolfram`Z3Link`AST`ConstructAST`Quantifiers`"];
 Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
+Needs["ChristopherWolfram`Z3Link`Utilities`"]
 Needs["ChristopherWolfram`Z3Link`Context`"]
 Needs["ChristopherWolfram`Z3Link`AST`ConstructAST`Utilities`"]
 Needs["ChristopherWolfram`Z3Link`AST`ConstructAST`ToZ3`"]
@@ -15,7 +16,9 @@ Needs["ChristopherWolfram`Z3Link`AST`ConstructAST`ToZ3`"]
 makeBoundC := makeBoundC =
 	ForeignFunctionLoad[$LibZ3, "Z3_mk_bound", {"OpaqueRawPointer", "CUnsignedInt", "OpaqueRawPointer"} -> "OpaqueRawPointer"];
 
-Z3DeBruijnIndex[i_Integer, sortSpec_Z3SortObject] :=
+DeclareFunction[Z3DeBruijnIndex, iZ3DeBruijnIndex, 2];
+
+iZ3DeBruijnIndex[i_Integer, sortSpec_Z3SortObject, opts_] :=
 	Enclose@With[{ctx = Confirm@Z3GetContext[sortSpec]},
 		Z3ASTObject[ctx, makeBoundC[ctx["RawContext"], i, sortSpec["RawSort"]]]
 	]
@@ -38,7 +41,9 @@ makeForAllC := makeForAllC =
 		} -> "OpaqueRawPointer"
 	];
 
-Z3ForAll[vars: {varSeq__}, body_] :=
+DeclareFunction[Z3ForAll, iZ3ForAll, 2];
+
+iZ3ForAll[vars: {varSeq__}, body_, opts_] :=
 	Enclose@Module[{ctx, z3Body, z3Vars},
 		ctx = Confirm@Z3GetContext[varSeq, body];
 		z3Body = Confirm@ToZ3[body, "Boolean", Z3Context -> ctx];
@@ -56,8 +61,8 @@ Z3ForAll[vars: {varSeq__}, body_] :=
 		]
 	]
 
-Z3ForAll[var_, body_] :=
-	Z3ForAll[{var}, body]
+iZ3ForAll[var_, body_, opts_] :=
+	iZ3ForAll[{var}, body, opts]
 
 
 (*
@@ -77,7 +82,9 @@ makeExistsC := makeExistsC =
 		} -> "OpaqueRawPointer"
 	];
 
-Z3Exists[vars: {varSeq__}, body_] :=
+DeclareFunction[Z3Exists, iZ3Exists, 2];
+
+iZ3Exists[vars: {varSeq__}, body_, opts_] :=
 	Enclose@Module[{ctx, z3Body, z3Vars},
 		ctx = Confirm@Z3GetContext[varSeq, body];
 		z3Body = Confirm@ToZ3[body, "Boolean", Z3Context -> ctx];
@@ -95,8 +102,8 @@ Z3Exists[vars: {varSeq__}, body_] :=
 		]
 	]
 
-Z3Exists[var_, body_] :=
-	Z3Exists[{var}, body]
+iZ3Exists[var_, body_, opts_] :=
+	iZ3Exists[{var}, body, opts]
 
 
 End[];
