@@ -3,6 +3,7 @@ BeginPackage["ChristopherWolfram`Z3Link`Sort`"];
 Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
+Needs["ChristopherWolfram`Z3Link`Utilities`"]
 Needs["ChristopherWolfram`Z3Link`ConstantsMap`"]
 
 
@@ -26,25 +27,27 @@ makeUninterpretedSortC := makeUninterpretedSortC =
 	Z3SortCreate
 *)
 
+DeclareFunction[Z3SortCreate, iZ3SortCreate, 1];
+
 Options[Z3SortCreate] = {Z3Context :> $Z3Context};
 
-Z3SortCreate[sortName_, opts:OptionsPattern[]] := iZ3SortCreate[OptionValue[Z3Context], sortName]
+iZ3SortCreate[sortName_, opts_] := iiZ3SortCreate[OptionValue[Z3SortCreate, opts, Z3Context], sortName]
 
-iZ3SortCreate[ctx_, "Boolean"] := Z3SortObject[ctx, makeBooleanSortC[ctx["RawContext"]]]
-iZ3SortCreate[ctx_, "Integer"] := Z3SortObject[ctx, makeIntegerSortC[ctx["RawContext"]]]
-iZ3SortCreate[ctx_, "Real"] := Z3SortObject[ctx, makeRealSortC[ctx["RawContext"]]]
+iiZ3SortCreate[ctx_, "Boolean"] := Z3SortObject[ctx, makeBooleanSortC[ctx["RawContext"]]]
+iiZ3SortCreate[ctx_, "Integer"] := Z3SortObject[ctx, makeIntegerSortC[ctx["RawContext"]]]
+iiZ3SortCreate[ctx_, "Real"] := Z3SortObject[ctx, makeRealSortC[ctx["RawContext"]]]
 
-iZ3SortCreate[ctx_, Booleans] := iZ3SortCreate[ctx, "Boolean"]
-iZ3SortCreate[ctx_, Integers] := iZ3SortCreate[ctx, "Integer"]
-iZ3SortCreate[ctx_, Reals] := iZ3SortCreate[ctx, "Real"]
+iiZ3SortCreate[ctx_, Booleans] := iiZ3SortCreate[ctx, "Boolean"]
+iiZ3SortCreate[ctx_, Integers] := iiZ3SortCreate[ctx, "Integer"]
+iiZ3SortCreate[ctx_, Reals] := iiZ3SortCreate[ctx, "Real"]
 
-iZ3SortCreate[ctx_, elem_Z3SortObject] :=
+iiZ3SortCreate[ctx_, elem_Z3SortObject] :=
 	Z3SortObject[ctx, makeSetSortC[ctx["RawContext"], elem["RawSort"]]]
 
-iZ3SortCreate[ctx_, sym_Z3SymbolObject] :=
+iiZ3SortCreate[ctx_, sym_Z3SymbolObject] :=
 	Z3SortObject[ctx, makeUninterpretedSortC[ctx["RawContext"], sym["RawSymbol"]]]
 
-iZ3SortCreate[ctx_, sortSpec_] :=
+iiZ3SortCreate[ctx_, sortSpec_] :=
 	If[MatchQ[ctx, _Z3ContextObject],
 		Failure["InvalidSortSpecification", <|
 			"MessageTemplate" :> "Invalid sort specification `1` encountered.",
@@ -64,29 +67,15 @@ iZ3SortCreate[ctx_, sortSpec_] :=
 	Z3SortObject
 *)
 
-Z3SortObject[args___] /; !argumentsZ3SortObject[args] :=
-	With[{res = ArgumentsOptions[Z3SortObject[args], 2]},
-		If[FailureQ[res],
-			res,
-			Message[Z3SortObject::inv, {args}];
-			Failure["InvalidZ3SortObject", <|
-				"MessageTemplate" :> Z3SortObject::inv,
-				"MessageParameters" -> {{args}},
-				"Arguments" -> {args}
-			|>]
-		]
-	]
-
-argumentsZ3SortObject[_Z3ContextObject, _OpaqueRawPointer] := True
-argumentsZ3SortObject[___] := False
+DeclareObject[Z3SortObject, {_Z3ContextObject, _OpaqueRawPointer}];
 
 
 (*
 	Accessors
 *)
 
-HoldPattern[Z3SortObject][ctx_Z3ContextObject, rawSort_]["RawSort"] := rawSort
-HoldPattern[Z3SortObject][ctx_Z3ContextObject, rawSort_]["Context"] := ctx
+sort_Z3SortObject["Context"] := sort[[1]]
+sort_Z3SortObject["RawSort"] := sort[[2]]
 
 
 sortToASTC := sortToASTC =
@@ -135,16 +124,16 @@ sort_Z3SortObject["Kind"] :=
 	Replace[sort["RawKind"], $sortKindCookedNames]
 
 
-
-Z3SortObject /: MakeBoxes[sort:Z3SortObject[args___] /; argumentsZ3SortObject[args], form:StandardForm]:=
-	BoxForm`ArrangeSummaryBox[
-		Z3SortObject,
-		sort,
+DeclareObjectFormatting[Z3SortObject,
+	sort |-> {
 		None,
-		{BoxForm`SummaryItem@{"name: ", sort["Name"]}},
-		{BoxForm`SummaryItem@{"raw sort: ", sort["RawSort"]}},
-		form
-	]
+		{
+			{"name: ", sort["Name"]}
+		},
+		{
+			{"raw sort: ", sort["RawSort"]}
+		}
+	}]
 
 
 End[];

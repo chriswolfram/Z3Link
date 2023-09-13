@@ -3,6 +3,7 @@ BeginPackage["ChristopherWolfram`Z3Link`AST`Z3ASTObject`"];
 Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
+Needs["ChristopherWolfram`Z3Link`Utilities`"]
 Needs["ChristopherWolfram`Z3Link`ConstantsMap`"]
 
 
@@ -10,29 +11,15 @@ Needs["ChristopherWolfram`Z3Link`ConstantsMap`"]
 	Verifiers
 *)
 
-Z3ASTObject[args___] /; !argumentsZ3ASTObject[args] :=
-	With[{res = ArgumentsOptions[Z3ASTObject[args], 2]},
-		If[FailureQ[res],
-			res,
-			Message[Z3ASTObject::inv, {args}];
-			Failure["InvalidZ3ASTObject", <|
-				"MessageTemplate" :> Z3ASTObject::inv,
-				"MessageParameters" -> {{args}},
-				"Arguments" -> {args}
-			|>]
-		]
-	]
-
-argumentsZ3ASTObject[_Z3ContextObject, _OpaqueRawPointer] := True
-argumentsZ3ASTObject[___] := False
+DeclareObject[Z3ASTObject, {_Z3ContextObject, _OpaqueRawPointer}];
 
 
 (*
 	Accessors
 *)
 
-HoldPattern[Z3ASTObject][ctx_Z3ContextObject, rawAST_]["Context"] := ctx
-HoldPattern[Z3ASTObject][ctx_Z3ContextObject, rawAST_]["RawAST"] := rawAST
+ast_Z3ASTObject["Context"] := ast[[1]]
+ast_Z3ASTObject["RawAST"] := ast[[2]]
 
 (* String *)
 
@@ -190,18 +177,15 @@ getRawFunctionDeclaration[ast_] :=
 	Summary box
 *)
 
-Z3ASTObject /: MakeBoxes[ast:Z3ASTObject[args___] /; argumentsZ3ASTObject[args], form:StandardForm]:=
-	BoxForm`ArrangeSummaryBox[
-		Z3ASTObject,
-		ast,
+DeclareObjectFormatting[Z3ASTObject,
+	ast |-> {
 		None,
-		{BoxForm`SummaryItem@{"", ast["String"]}},
+		{{"", ast["String"]}},
 		{
-			BoxForm`SummaryItem@{"raw AST: ", ast["RawAST"]},
-			BoxForm`SummaryItem@{"context: ", ast["Context"]}
-		},
-		form
-	]
+			{"raw AST: ", ast["RawAST"]},
+			{"context: ", ast["Context"]}
+		}
+	}]
 
 
 End[];

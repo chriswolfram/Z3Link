@@ -3,6 +3,7 @@ BeginPackage["ChristopherWolfram`Z3Link`Solve`Z3SolverObject`"];
 Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
+Needs["ChristopherWolfram`Z3Link`Utilities`"]
 Needs["ChristopherWolfram`Z3Link`Context`"]
 
 
@@ -20,11 +21,13 @@ decSolverRefC := decSolverRefC =
 	Z3SolverCreate
 *)
 
+DeclareFunction[Z3SolverCreate, iZ3SolverCreate, 0];
+
 Options[Z3SolverCreate] = {Z3Context :> $Z3Context};
 
-Z3SolverCreate[opts:OptionsPattern[]] := iZ3SolverCreate[OptionValue[Z3Context]]
+iZ3SolverCreate[opts_] := iiZ3SolverCreate[OptionValue[Z3SolverCreate, opts, Z3Context]]
 
-iZ3SolverCreate[ctx_] :=
+iiZ3SolverCreate[ctx_] :=
 	With[{rawSolver = makeSolverC[ctx["RawContext"]]},
 		incSolverRefC[ctx["RawContext"], rawSolver];
 		Z3SolverObject[ctx, CreateManagedObject[rawSolver, decSolverRefC[ctx,#]&]]
@@ -35,44 +38,29 @@ iZ3SolverCreate[ctx_] :=
 	Z3SolverObject
 *)
 
-Z3SolverObject[args___] /; !argumentsZ3SolverObject[args] :=
-	With[{res = ArgumentsOptions[Z3SolverObject[args], 2]},
-		If[FailureQ[res],
-			res,
-			Message[Z3SolverObject::inv, {args}];
-			Failure["InvalidZ3SolverObject", <|
-				"MessageTemplate" :> Z3SolverObject::inv,
-				"MessageParameters" -> {{args}},
-				"Arguments" -> {args}
-			|>]
-		]
-	]
-
-argumentsZ3SolverObject[_Z3ContextObject, man_ManagedObject /; MatchQ[man["Value"], _OpaqueRawPointer]] := True
-argumentsZ3SolverObject[___] := False
+DeclareObject[Z3SolverObject, {_Z3ContextObject, man_ManagedObject /; MatchQ[man["Value"], _OpaqueRawPointer]}];
 
 
 (*
 	Accessors
 *)
 
-HoldPattern[Z3SolverObject][ctx_Z3ContextObject, rawSolver_]["RawSolver"] := rawSolver
-HoldPattern[Z3SolverObject][ctx_Z3ContextObject, rawSolver_]["Context"] := ctx
+solver_Z3SolverObject["Context"] := solver[[1]]
+solver_Z3SolverObject["RawSolver"] := solver[[2]]
 
 
 (*
 	Summary box
 *)
 
-Z3SolverObject /: MakeBoxes[solver:Z3SolverObject[args___] /; argumentsZ3SolverObject[args], form:StandardForm]:=
-	BoxForm`ArrangeSummaryBox[
-		Z3SolverObject,
-		solver,
+DeclareObjectFormatting[Z3SolverObject,
+	solver |-> {
 		None,
-		{BoxForm`SummaryItem@{"raw solver: ", solver["RawSolver"]}},
-		{},
-		form
-	]
+		{
+			{"raw solver: ", solver["RawSolver"]}
+		},
+		{}
+	}]
 
 
 End[];

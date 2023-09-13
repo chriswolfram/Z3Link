@@ -68,8 +68,8 @@ DeclareASTConstructor[sym_, name_, argSpec_, argSorts_:Automatic, argCheck_:(Tru
 			Options[sym] = {Z3Context :> $Z3Context};
 			isym[opts_] :=
 				Enclose@Module[{ctx},
-					ctx = ConfirmMatch[OptionValue[sym, List@@opts, Z3Context], _Z3Context];
-					cfunc[ctx]
+					ctx = ConfirmMatch[OptionValue[sym, List@@opts, Z3Context], _Z3ContextObject];
+					cfunc[ctx, {}]
 				],
 
 			isym[args___, opts_] :=

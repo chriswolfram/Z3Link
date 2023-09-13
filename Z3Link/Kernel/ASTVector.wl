@@ -6,6 +6,7 @@ Z3ASTVectorObject
 Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
+Needs["ChristopherWolfram`Z3Link`Utilities`"]
 
 
 (*
@@ -19,15 +20,11 @@ vectorDecRefC := vectorDecRefC =
 	ForeignFunctionLoad[$LibZ3, "Z3_ast_vector_dec_ref", {"OpaqueRawPointer", "OpaqueRawPointer"} -> "Void"];
 
 
+DeclareFunction[Z3ASTVectorCreate, iZ3ASTVectorCreate, 2];
+
 Options[Z3ASTVectorCreate] = {};
 
-Z3ASTVectorCreate[args___] :=
-	With[{res = ArgumentsOptions[Z3ASTVectorCreate[args], 2, <|"Head" -> Hold|>]},
-		If[FailureQ[res], res, iZ3ASTVectorCreate@@res]
-	]
-
-(* TODO: Add fallthrough *)
-iZ3ASTVectorCreate[Hold[ctx_Z3ContextObject, ptr_OpaqueRawPointer], Hold[opts___]] :=
+iZ3ASTVectorCreate[ctx_Z3ContextObject, ptr_OpaqueRawPointer, opts_] :=
 	With[{man = CreateManagedObject[ptr, vectorDecRefC[ctx["RawContext"], #]&]},
 		vectorIncRefC[ctx["RawContext"], ptr];
 		Z3ASTVectorObject[ctx, man]
@@ -38,29 +35,15 @@ iZ3ASTVectorCreate[Hold[ctx_Z3ContextObject, ptr_OpaqueRawPointer], Hold[opts___
 	Z3ASTVectorObject
 *)
 
-Z3ASTVectorObject[args___] /; !argumentsZ3ASTVectorObject[args] :=
-	With[{res = ArgumentsOptions[Z3ASTVectorObject[args], 2]},
-		If[FailureQ[res],
-			res,
-			Message[Z3ASTVectorObject::inv, {args}];
-			Failure["InvalidZ3ASTVectorObject", <|
-				"MessageTemplate" :> Z3ASTVectorObject::inv,
-				"MessageParameters" -> {{args}},
-				"Arguments" -> {args}
-			|>]
-		]
-	]
-
-argumentsZ3ASTVectorObject[_Z3ContextObject, man_ManagedObject /; MatchQ[man["Value"], _OpaqueRawPointer]] := True
-argumentsZ3ASTVectorObject[___] := False
+DeclareObject[Z3ASTVectorObject, {_Z3ContextObject, man_ManagedObject /; MatchQ[man["Value"], _OpaqueRawPointer]}];
 
 
 (*
 	Accessors
 *)
 
-HoldPattern[Z3ASTVectorObject][ctx_Z3ContextObject, rawASTVector_]["RawASTVector"] := rawASTVector
-HoldPattern[Z3ASTVectorObject][ctx_Z3ContextObject, rawASTVector_]["Context"] := ctx
+vec_Z3ASTVectorObject["Context"] := vec[[1]]
+vec_Z3ASTVectorObject["RawASTVector"] := vec[[2]]
 
 
 (* Length *)
@@ -99,15 +82,14 @@ vec_Z3ASTVectorObject["Elements"] :=
 	Summary boxes
 *)
 
-Z3ASTVectorObject /: MakeBoxes[vec:Z3ASTVectorObject[args___] /; argumentsZ3ASTVectorObject[args], form:StandardForm]:=
-	BoxForm`ArrangeSummaryBox[
-		Z3ASTVectorObject,
-		vec,
+DeclareObjectFormatting[Z3ASTVectorObject,
+	vec |-> {
 		None,
-		{BoxForm`SummaryItem@{"raw vector: ", vec["RawASTVector"]}},
-		{},
-		form
-	]
+		{
+			{"raw vector: ", vec["RawASTVector"]}
+		},
+		{}
+	}]
 
 
 End[];

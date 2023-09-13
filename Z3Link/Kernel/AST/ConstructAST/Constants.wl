@@ -15,7 +15,7 @@ makeConstantC := makeConstantC =
 	Z3Constant
 *)
 
-DeclareFunction[Z3Contstant, iZ3Constant, 2];
+DeclareFunction[Z3Constant, iZ3Constant, 2];
 
 iZ3Constant[symSpec_Z3SymbolObject, sortSpec_Z3SortObject, opts_] :=
 	Enclose@With[{ctx = Confirm@Z3GetContext[symSpec, sortSpec]},

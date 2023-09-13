@@ -36,7 +36,7 @@ DeclareFunction[Z3FullSet, iZ3FullSet, 1];
 
 Options[Z3FullSet] = {Z3Context :> $Z3Context};
 
-Z3FullSet[sort_Z3SortObject, opts_] :=
+iZ3FullSet[sort_Z3SortObject, opts_] :=
 	With[{ctx = OptionValue[Z3FullSet, opts, Z3Context]},
 		Z3ASTObject[ctx, makeFullSetC[ctx["RawContext"], sort["RawSort"]]]
 	]

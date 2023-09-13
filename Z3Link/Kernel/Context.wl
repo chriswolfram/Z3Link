@@ -8,6 +8,7 @@ $DefaultExceptionHandler
 Begin["`Private`"];
 
 Needs["ChristopherWolfram`Z3Link`"]
+Needs["ChristopherWolfram`Z3Link`Utilities`"]
 
 
 (*
@@ -53,9 +54,12 @@ makeRawContext[config_] := CreateManagedObject[makeContextC[config], deleteConfi
 (* TODO: Check that the context pointer is valid *)
 
 (* Enable proof generation by default *)
-Z3ContextCreate[opts_?AssociationQ, exceptionHandler_:($DefaultExceptionHandler[##]&)] :=
+
+DeclareFunction[Z3ContextCreate, iZ3ContextCreate, {1,2}];
+
+iZ3ContextCreate[params_?AssociationQ, exceptionHandler_:($DefaultExceptionHandler[##]&), opts_] :=
 	Z3ContextObject[
-		makeRawContext[makeConfig[opts]],
+		makeRawContext[makeConfig[params]],
 		CreateForeignCallback[exceptionHandler, {"OpaqueRawPointer", "CInt"} -> "Void"]
 	]
 
@@ -100,48 +104,33 @@ iZ3GetContext[obj_] := None
 	Z3ContextObject
 *)
 
-
-Z3ContextObject[args___] /; !argumentsZ3ContextObject[args] :=
-	With[{res = ArgumentsOptions[Z3ContextObject[args], 2]},
-		If[FailureQ[res],
-			res,
-			Message[Z3ContextObject::inv, {args}];
-			Failure["InvalidZ3ContextObject", <|
-				"MessageTemplate" :> Z3ContextObject::inv,
-				"MessageParameters" -> {{args}},
-				"Arguments" -> {args}
-			|>]
-		]
-	]
-
-argumentsZ3ContextObject[
-	man_ManagedObject /; MatchQ[man["Value"], _OpaqueRawPointer],
-	errorHandler_ManagedObject /; MatchQ[errorHandler["Value"], _ForeignCallback]
-] := True
-argumentsZ3ContextObject[___] := False
-
+DeclareObject[Z3ContextObject, {
+		man_ManagedObject /; MatchQ[man["Value"], _OpaqueRawPointer],
+		errorHandler_ManagedObject /; MatchQ[errorHandler["Value"], _ForeignCallback]
+	}];
 
 (*
 	Accessors
 *)
 
-HoldPattern[Z3ContextObject][rawCtx_, exceptionHandler_]["RawContext"] := rawCtx
-HoldPattern[Z3ContextObject][rawCtx_, exceptionHandler_]["ExceptionHandler"] := exceptionHandler
+context_Z3ContextObject["RawContext"] := context[[1]]
+context_Z3ContextObject["ExceptionHandler"] := context[[2]]
 
 
 (*
 	Summary boxes
 *)
 
-Z3ContextObject /: MakeBoxes[ctx:Z3ContextObject[args___] /; argumentsZ3ContextObject[args], form:StandardForm]:=
-	BoxForm`ArrangeSummaryBox[
-		Z3ContextObject,
-		ctx,
+DeclareObjectFormatting[Z3ContextObject,
+	ctx |-> {
 		None,
-		{BoxForm`SummaryItem@{"raw context: ", ctx["RawContext"]}},
-		{BoxForm`SummaryItem@{"exception handler: ", ctx["ExceptionHandler"]}},
-		form
-	]
+		{
+			{"raw context", ctx["RawContext"]}
+		},
+		{
+			{"exception handler: ", ctx["ExceptionHandler"]}
+		}
+	}]
 
 
 (*
