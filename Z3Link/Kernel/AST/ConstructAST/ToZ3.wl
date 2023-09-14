@@ -154,6 +154,9 @@ iParseExpression[ctx_, num_Integer, Automatic, bindings_] :=
 
 (* Rationals *)
 
+iParseExpression[ctx_, num_Rational, sort_, bindings_] /; sort["Kind"] === "Real" :=
+	{Z3Numeral[num], bindings}
+
 iParseExpression[ctx_, num_Rational, Automatic, bindings_] :=
 	{Z3Numeral[num], bindings}
 

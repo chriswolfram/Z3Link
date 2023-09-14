@@ -22,7 +22,7 @@ DeclareASTConstructor[Z3Less, "Z3_mk_lt", 2];
 DeclareASTConstructor[Z3LessEqual, "Z3_mk_le", 2];
 DeclareASTConstructor[Z3Greater, "Z3_mk_gt", 2];
 DeclareASTConstructor[Z3GreaterEqual, "Z3_mk_ge", 2];
-DeclareASTConstructor[Z3Divisible, "Z3_mk_divides", 2];
+DeclareASTConstructor[Z3Divisible, "Z3_mk_divides", 2, {"Integer", "Integer"}];
 
 
 (* Logic *)
@@ -30,10 +30,10 @@ DeclareASTConstructor[Z3Divisible, "Z3_mk_divides", 2];
 DeclareASTConstructor[Z3True, "Z3_mk_true", 0];
 DeclareASTConstructor[Z3False, "Z3_mk_false", 0];
 DeclareASTConstructor[Z3Equal, "Z3_mk_eq", 2, Automatic, #1["Sort"]["Hash"] === #2["Sort"]["Hash"]&];
-DeclareASTConstructor[Z3Distinct, "Z3_mk_distinct", {1,Infinity}];
+DeclareASTConstructor[Z3Distinct, "Z3_mk_distinct", {1,Infinity}, Automatic, SameQ@@(#["Sort"]["Hash"]&/@{##})&];
 DeclareASTConstructor[Z3Not, "Z3_mk_not", 1, {"Boolean"}];
 DeclareASTConstructor[Z3If, "Z3_mk_ite", 3, {"Boolean", Automatic, Automatic}, #2["Sort"]["Hash"] === #3["Sort"]["Hash"]&];
-DeclareASTConstructor[Z3Equivalent, "Z3_mk_iff", 2];
+DeclareASTConstructor[Z3Equivalent, "Z3_mk_iff", 2, Automatic, #1["Sort"]["Hash"] === #2["Sort"]["Hash"]&];
 DeclareASTConstructor[Z3Implies, "Z3_mk_implies", 2, {"Boolean", "Boolean"}];
 DeclareASTConstructor[Z3Xor, "Z3_mk_xor", 2, {"Boolean", "Boolean"}];
 DeclareASTConstructor[Z3And, "Z3_mk_and", {1,Infinity}, "Boolean"];
